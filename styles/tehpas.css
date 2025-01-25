@@ -1,0 +1,263 @@
+#generalInfoBlock,
+#wellParamsBlock,
+#wbBlock,
+#rbBlock{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.blockHeader{
+    grid-area: blockHeader;
+    text-align: center;
+}
+
+#headerUploadButton,
+#headerUploadLabel{
+    grid-area: headerUploadButton;
+}
+
+#openFileButton,
+#openFileLabel{
+    grid-area: openFileButton;
+}
+
+#saveFileButton{
+    grid-area: saveFileButton;
+}
+
+#fileSaveContainer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.inputContainer{
+    display: grid;
+    column-gap: 10px;
+    row-gap: 0;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: min-content auto;
+    grid-template-areas:
+        "lb lb"
+        "inp cb";
+}
+
+.inputContainerNoCheckbox{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+label.lb{
+    margin-left: 5px;
+    grid-area: lb;
+    height: min-content;
+}
+
+.inp{
+    grid-area: inp;
+    width: 100%;
+}
+
+input.cb{
+    grid-area: cb;
+    width: 18px;
+    height: 18px;
+}
+
+#geoSectionContainer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+#gsShowLabel{
+    grid-area: gsShowLabel;
+    align-self: center;
+    width: max-content;
+}
+#gsDrawSLLabel{
+    grid-area: gsDrawSLLabel;
+    align-self: center;
+    width: max-content;
+}
+
+#gsShowCheckbox{
+    grid-area: gsShowCheckbox;
+    width: 18px;
+    height: 18px;
+}
+
+#gsDrawSLCheckbox{
+    grid-area: gsDrawSLCheckbox;
+    width: 18px;
+    height: 18px;
+}
+
+#printControlContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#dsPrintCheckbox{
+    grid-area: dsPrintCheckbox;
+    justify-self: end;
+    width: 18px;
+    height: 18px;
+}
+#signaturesPrintCheckbox{
+    grid-area: signaturesPrintCheckbox;
+    width: 18px;
+    height: 18px;
+}
+
+#depthLabel{
+    text-align: center;
+    grid-area: depthLabel;
+}
+
+.layer{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+        "depthLabel depthLabel"
+        "startDepthContainer endDepthContainer"
+        "layerNameContainer layerColorContainer"
+        "wellConstructionContainer wellConstructionContainer"
+        "removeLayerButton addLayerButton";
+
+    padding: 10px;
+    background-color: var(--secondaryColor);
+    border-radius: 10px;
+    box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.5);
+}
+#startDepthContainer{
+    grid-area: startDepthContainer;
+}
+
+#endDepthContainer{
+    align-items: end;
+}
+
+#endDepth{
+    text-align: end;
+}
+
+#layerNameContainer{
+    grid-area: layerNameContainer;
+}
+
+#layerColorContainer{
+    grid-area: layerColorContainer;
+}
+
+#wellConstructionContainer{
+    grid-area: wellConstructionContainer;
+    width: min(420px, 100%);
+}
+
+#addLayerButton{
+    grid-area: addLayerButton;
+    width: min(200px, 100%);
+}
+
+#removeLayerButton{
+    grid-area: removeLayerButton;
+    width: min(200px, 100%);
+}
+
+#layerColor{
+    transition: background-color 0.5s;
+}
+
+/*========================grid areas==================*/
+
+#controlsDiv{
+    grid-area: controlsDiv;
+}
+#generalInfoBlockItems{
+    grid-area: generalInfoBlockItems;
+}
+#wellParamsBlockItems{
+    grid-area: wellParamsBlockItems;
+}
+#wbBlockItems{
+    grid-area: wbBlockItems;
+}
+#rbBlockItems{
+    grid-area: rbBlockItems;
+}
+#geoSectionContainer{
+    grid-area: geoSectionContainer;
+}
+#printControlContainer{
+    grid-area: printControlContainer;
+}
+#dsPrintLabel{
+    grid-area: dsPrintLabel;
+}
+#signaturesPrintLabel{
+    grid-area: signaturesPrintLabel;
+}
+#formPassButton{
+    grid-area: formPassButton;
+}
+
+
+#passNumberContainer{
+    grid-area: passNumberContainer;
+}
+#wellLocationContainer{
+    grid-area: wellLocationContainer;
+    height: auto;
+}
+#drillMasterContainer{
+    grid-area: drillMasterContainer;
+}
+#drillMasterContactsContainer{
+    grid-area: drillMasterContactsContainer;
+}
+#customerContainer{
+    grid-area: customerContainer;
+}
+#customerContactsContainer{
+    grid-area: customerContactsContainer;
+}
+#startWorkContainer{
+    grid-area: startWorkContainer;
+}
+#endWorkContainer{
+    grid-area: endWorkContainer;
+}
+
+#wellTypeContainer{
+    grid-area: wellTypeContainer;
+}
+#pipesUsedContainer{
+    grid-area: pipesUsedContainer;
+}
+#wellDepthContainer{
+    grid-area: wellDepthContainer;
+}
+#appliedFilterContainer{
+    grid-area: appliedFilterContainer;
+}
+#filterLengthContainer{
+    grid-area: filterLengthContainer;
+}
+#staticLevelContainer{
+    grid-area: staticLevelContainer;
+}
+#dynamicLevelContainer{
+    grid-area: dynamicLevelContainer;
+}
+#flowRateContainer{
+    grid-area: flowRateContainer;
+}

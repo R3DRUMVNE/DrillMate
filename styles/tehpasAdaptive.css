@@ -1,0 +1,250 @@
+@media screen and (min-width: 320px) and (max-width: 479px) {
+    #tehPasDiv{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #controlsDiv{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "headerUploadButton headerUploadButton"
+        "openFileButton saveFileButton";
+    }
+
+    #generalInfoBlockItems,
+    #wellParamsBlockItems,
+    #wbBlockItems,
+    #rbBlockItems{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #wellLocation{
+        height: 100px;
+    }
+
+    #gsCheckboxContainer{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "gsShowCheckbox gsShowLabel"
+        "gsDrawSLCheckbox gsDrawSLLabel";
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #wb,
+    #pump,
+    #extraRecommend{
+        height: 150px;
+    }
+
+    #printCheckboxContainer{
+        align-items: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "dsPrintCheckbox dsPrintLabel"
+        "signaturesPrintCheckbox signaturesPrintLabel";
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    #tehPasDiv{
+        width: min(580px, 100%);
+        justify-self: center;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #controlsDiv{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 3fr 2fr 2fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "headerUploadButton openFileButton saveFileButton";
+    }
+
+    #generalInfoBlockItems{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-template-areas:
+        "wellLocationContainer passNumberContainer"
+        "wellLocationContainer drillMasterContainer"
+        "wellLocationContainer drillMasterContactsContainer"
+        "startWorkContainer customerContainer"
+        "endWorkContainer customerContactsContainer";
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    #wellLocation{
+        height: 100%;
+    }
+
+    #wellParamsBlockItems{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1.2fr;
+        grid-auto-rows: auto;
+        grid-template-areas:
+        "wellTypeContainer filterLengthContainer"
+        "pipesUsedContainer staticLevelContainer"
+        "wellDepthContainer dynamicLevelContainer"
+        "appliedFilterContainer flowRateContainer";
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #wbBlockItems,
+    #rbBlockItems{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #layersContainer{
+        align-items: center;
+    }
+
+    .layer{
+        width: 360px;
+        align-self: center;
+    }
+
+    #gsCheckboxContainer{
+        align-self: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content auto min-content auto;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "gsShowCheckbox gsShowLabel gsDrawSLCheckbox gsDrawSLLabel";
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    #gsDrawSLLabel{
+        justify-self: end;
+    }
+
+    #wb,
+    #pump,
+    #extraRecommend{
+        height: 150px;
+    }
+
+    #printCheckboxContainer{
+        align-self: center;
+        align-items: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content auto 20px min-content auto;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "dsPrintCheckbox dsPrintLabel . signaturesPrintCheckbox signaturesPrintLabel";
+    }
+}
+
+@media screen and (min-width: 768px){
+    #tehPasDiv{
+        width: 100%;
+        justify-self: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+            "moduleHeader moduleHeader"
+            "controlsDiv controlsDiv"
+            "generalInfoBlockItems wellParamsBlockItems"
+            "wbBlockItems rbBlockItems"
+            "geoSectionContainer geoSectionContainer"
+            "printControlContainer printControlContainer";
+    }
+
+    #controlsDiv{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 3fr 2fr 2fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "headerUploadButton openFileButton saveFileButton";
+    }
+
+    #generalInfoBlockItems,
+    #wellParamsBlockItems,
+    #wbBlockItems,
+    #rbBlockItems{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #wellLocation{
+        height: 87px;
+    }
+
+    #wbBlockItems{
+        flex-grow: 1;
+    }
+    #wbContainer{
+        height: 100%;
+    }
+    #wb{
+        height: 100%;
+    }
+
+    #pump,
+    #extraRecommend{
+        height: 150px;
+    }
+
+    #gsCheckboxContainer{
+        align-self: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content max-content 40px min-content max-content;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "gsShowCheckbox gsShowLabel . gsDrawSLCheckbox gsDrawSLLabel";
+    }
+    #gsDrawSLLabel{
+        justify-self: end;
+    }
+
+    #layersContainer{
+        align-items: center;
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    #printCheckboxContainer{
+        align-self: center;
+        align-items: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: min-content max-content 40px min-content max-content;
+        grid-template-rows: auto;
+        grid-template-areas:
+        "dsPrintCheckbox dsPrintLabel . signaturesPrintCheckbox signaturesPrintLabel";
+    }
+}

@@ -1,0 +1,241 @@
+@media print {
+    html,
+    body,
+    #fakeBody {
+        background-color: white !Important;
+        padding: 0 !Important;
+        margin: 0 !Important;
+        height: 100% !Important;
+        width: 100% !Important;
+    }
+
+    #fakeBody,
+    #mainDiv {
+        display: none !Important;
+    }
+
+    .print {
+        display: flex !Important;
+    }
+
+    @page {
+        size: A4 portrait !Important;
+        padding: 0;
+        margin-left: 30mm;
+        margin-right: 10mm;
+        margin-top: 20mm;
+        margin-bottom: 20mm;
+    }
+
+    #frame {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 10px double var(--primaryColor);
+        box-sizing: border-box;
+    }
+}
+
+#passportContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto !Important;
+    width: 100% !Important;
+
+    box-sizing: border-box;
+    background-color: white;
+
+    margin: 0;
+    padding: 30px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+
+    display: none;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+    z-index: 6;
+
+    text-shadow: none;
+    font-family: inherit;
+    font-size: 14pt;
+    color: black;
+}
+
+#passportHeaderImage {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--primaryColor);
+    margin-bottom: 5px;
+}
+
+#passportHeaderContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+label {
+    text-shadow: inherit;
+    font-family: inherit;
+    color: inherit;
+}
+
+#passportHeaderLabel {
+    font-size: 20pt;
+    text-align: center;
+    page-break-before: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+#passportUnderHeaderLabel {
+    font-size: 16pt;
+    text-align: center;
+}
+
+.tableBlock {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    border: none;
+    table-layout: fixed;
+}
+
+.tableBlock > caption,
+#signTable > caption,
+#gsTable > caption {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.tableBlock > col {
+    width: 50%;
+}
+
+.tableBlock > caption,
+#signTable > caption {
+    page-break-before: auto;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+.tableBlock > tbody > tr {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+}
+
+.tableBlock > tbody > tr > td {
+    padding: 5px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    color: inherit;
+    word-wrap: normal;
+    vertical-align: top;
+
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+}
+
+#gsTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 20px;
+}
+
+#gsTable > caption {
+    page-break-before: auto;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+#gsTable > tbody > tr.headerRow {
+    page-break-before: avoid;
+    page-break-after: auto;
+    page-break-inside: avoid;
+}
+
+#gsTable > tbody > tr {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: auto;
+}
+
+#gsTable > tbody > tr > td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: auto;
+}
+
+#signTable {
+    width: 100%;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    border: 1px solid black;
+    table-layout: fixed;
+}
+
+#signTable > caption {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#signTable > tbody > tr {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+}
+
+#signTable > tbody > tr > td {
+    padding: 10px 5px 10px 5px;
+    text-align: center;
+
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+}
+
+#signTable > tbody > tr > .leftText {
+    text-align: left;
+}
+
+#signTable > tbody > tr > .noBreak {
+    page-break-before: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+html, body {
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    color: var(--primaryText);
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+}

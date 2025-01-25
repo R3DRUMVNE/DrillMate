@@ -1,0 +1,22 @@
+@media print {
+    @page {
+        padding: 0 !Important;
+        margin: 0 !Important;
+    }
+
+    @page :right {
+        padding: 0 !Important;
+        margin-left: 30mm !Important;
+        margin-right: 10mm !Important;
+        margin-top: 20mm !Important;
+        margin-bottom: 20mm !Important;
+    }
+
+    @page :left {
+        padding: 0 !Important;
+        margin-right: 30mm !Important;
+        margin-left: 10mm !Important;
+        margin-top: 20mm !Important;
+        margin-bottom: 20mm !Important;
+    }
+}

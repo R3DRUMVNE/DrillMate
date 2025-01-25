@@ -1,0 +1,66 @@
+#DNSelect {
+    flex-grow: 1;
+}
+
+#camlockImage{
+    grid-area: camlockImage;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+#answerContainer{
+    text-align: center;
+    grid-area: answerContainer;
+}
+
+#fatherLabel,
+#motherLabel{
+    text-align: center;
+    align-content: center;
+}
+
+#hoseFittingLabel{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+#stubLabel{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#fittingDiv{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#sizesBlock{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#fittingDiv {
+    grid-area: fittingDiv;
+    gap: 0;
+}
+
+#DNSelectLabel{
+    white-space: nowrap;
+}
+
+#sizesBlock{
+    grid-area: sizesBlock;
+    gap: 10px;
+}
+
+#sizeLabel1,
+#sizeLabel2,
+#sizeLabel3{
+    margin: 0 10px;
+}
+
+
+
+

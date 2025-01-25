@@ -1,0 +1,494 @@
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-attachment: fixed;
+    background-color: black;
+
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    color: var(--primaryText);
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+#fakeBody {
+    background-color: black;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    padding: 0;
+}
+
+.defaultContainer,
+.unPadContainer,
+input,
+textarea,
+select{
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 50% 0;
+    }
+    50% {
+        background-position: 50% 100%;
+    }
+    100% {
+        background-position: 50% 0;
+    }
+}
+
+.unPadContainer,
+.defaultContainer{
+    background-color: var(--primaryColor);
+    border-radius: 10px;
+    font-size: inherit;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.unPadContainer{
+    padding: 0 0 10px 0;
+}
+
+.popUp{
+    text-shadow: inherit;
+    font-family: inherit;
+    color: inherit;
+    box-sizing: border-box;
+    border: 1px solid white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-height: 100vh;
+    overflow-y: scroll;
+
+    width: min(100%, 360px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.itemsContainer{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.inpContainer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+}
+
+.inpContainer > label{
+    margin-left: 5px;
+}
+
+.inpContainer > input,
+.inpContainer > select,
+.inpContainer > textarea{
+    width: 100%;
+}
+
+/*====================================именные стили*/
+
+#infoHeader,
+#bugReportHeader{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+}
+
+#mainDiv {
+    display: grid;
+    box-sizing: border-box;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "headerDiv"
+        "fragment";
+    background-color: var(--secondaryColor);
+    min-height: 100vh;
+}
+
+#programHeader {
+    grid-area: headerDiv;
+    display: flex;
+    gap: 10px;
+    box-sizing: border-box;
+    z-index: 50;
+    position: sticky;
+    top: 0;
+    margin: 0;
+    padding: 10px;
+    background-color: var(--primaryColor);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 0 0 rgba(0, 0, 0, 0);
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+#programName {
+    flex-grow: 1;
+    font-size: 24px;
+    align-self: center;
+    justify-content: flex-start;
+    text-shadow: 0 3px 3px rgba(0, 0, 0, 0.5);
+}
+.programHeaderButton {
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+}
+
+#fragmentDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: max-content;
+    grid-area: fragment;
+    padding: 10px;
+}
+
+.menuOption {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "ico header"
+        "description description";
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: var(--button);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 0 rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    transition: box-shadow 0.3s, background-color 0.5s;
+    cursor: pointer;
+}
+.menuOption > .image {
+    grid-area: ico;
+    width: 35px;
+    height: auto;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+.menuOption > .header {
+    grid-area: header;
+    justify-self: start;
+    align-self: center;
+    padding: 0;
+    margin: 0;
+    max-height: max-content;
+    font-size: 18px;
+}
+.menuOption > .description {
+    grid-area: description;
+    padding: 0;
+    max-height: max-content;
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+#moduleHeader{
+    grid-area: moduleHeader;
+    text-align: center;
+    max-height: max-content;
+    display: flex;
+    justify-items: end;
+
+    padding: 5px 5px 5px 27px;
+}
+
+#moduleHeader > .name{
+    flex-grow: 1;
+    font-size: 20px;
+    vertical-align: center;
+}
+
+#moduleHeader > button{
+    width: 27px;
+    height: 27px;
+    padding: 2px;
+}
+
+.iconButton{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: start!Important;
+    padding: 10px!Important;
+}
+.iconButton > img{
+    order: -1;
+    width: 30px;
+    height: 30px;
+}
+
+#copyButton{
+    justify-self: center;
+}
+
+#clientInfoContainer{
+    background-color: var(--button);
+    user-select: text;
+}
+
+.iconButton:hover,
+.menuOption:hover {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+#buttonsContainer{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
+
+#buttonsContainer > *{
+    flex-basis: 100%;
+}
+
+#blockInfoButton{
+    cursor: help;
+}
+
+/*=====================alert===================*/
+
+#dialogContainer{
+    z-index: 9999;
+    width: min(90%, 500px);
+    overflow-y: scroll;
+    max-height: 100vh;
+    filter: none!Important;
+}
+
+#dialogHeader{
+    font-size: 18px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+/*=======================toast==================*/
+
+#toastContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    z-index: 9999;
+    width: min(90%, 500px);
+    height: min-content;
+
+    text-shadow: inherit;
+    text-align: center;
+    font-family: inherit;
+    color: inherit;
+    box-sizing: border-box;
+
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--secondaryColor);
+}
+
+.show{
+    opacity: 0;
+    animation: show 300ms forwards;
+}
+@keyframes show {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.hide{
+    opacity: 1;
+    animation: hide 300ms forwards;
+}
+@keyframes hide {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+
+/*=====================Общие стили===================*/
+
+*:disabled{
+    opacity: 0.7;
+}
+
+a{
+    color: inherit;
+}
+
+input[type="file"]{
+    display: none;
+}
+
+input[type="file"] + label.of,
+.iconButton,
+button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background-color: var(--button);
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    font-size: inherit;
+    text-shadow: inherit;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 0 0 rgba(0, 0, 0, 0);
+    transition: box-shadow 0.3s;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+button > img{
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+    width: 100%;
+    height: auto;
+}
+
+input[type="file"] + label.of:hover,
+button:hover {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+select{
+    background-color: var(--button);
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    color:var(--primaryText);
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+}
+select:focus{
+    outline: 1px solid var(--primaryText);
+}
+
+textarea{
+    box-sizing: border-box;
+    text-align: left;
+    padding: 5px;
+    background-color: var(--button);
+    color: var(--primaryText);
+    border-radius: 5px;
+    border: none;
+    align-self: center;
+    font-size: inherit;
+    font-family: inherit;
+    resize: none;
+    overflow-y: scroll;
+}
+
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="datetime-local"]{
+    box-sizing: border-box;
+    text-align: left;
+    padding: 5px;
+    background-color: var(--button);
+    color: var(--primaryText);
+    border-radius: 5px;
+    border: none;
+    height: min-content;
+    align-self: center;
+    font-size: inherit;
+}
+input[type="tel"]:focus,
+input[type="text"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus,
+button:focus{
+    outline: 1px solid var(--primaryText);
+}
+
+input::placeholder,
+textarea::placeholder{
+    color: var(--primaryText);
+    opacity: 0.5;
+}
+
+input[type="checkbox"]{
+    box-sizing: border-box;
+    appearance: none;
+    background-color: unset;
+    outline: 3px solid var(--button);
+    outline-offset: 2px;
+    border: none;
+    border-radius: 1px;
+    margin: 5px;
+    padding: 0;
+    transition: background-color 0.3s;
+    box-shadow: none;
+    filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.7));
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked{
+    background-color: var(--button);
+}
+
+input[type="checkbox"]:focus{
+    outline: 3px solid var(--primaryText);
+    outline-offset: 2px;
+}
+
+input[type = "radio"]{
+    appearance: none;
+    position: absolute;
+    display: none;
+}
+
+input[type = "radio"] + label.radioLabel{
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 0 0 rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+input[type = "radio"]:checked + label.radioLabel{
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+    background-color: var(--primaryColor);
+}
+
+label.radioLabel{
+    background-color: var(--button);
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    align-content: center;
+}
+
+:root {
+    --primaryColor: #0060b9;
+    --secondaryColor: #303F9F;
+    --button: #007cc1;
+    --stop: #b42c38;
+    --ready: #009950;
+
+    --primaryText: white;
+}

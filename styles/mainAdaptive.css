@@ -1,0 +1,82 @@
+@media screen and (min-width: 320px) and (max-width: 479px) {
+    div.background {
+        background-color: black;
+    }
+
+    #mainDiv {
+        width: 100%;
+    }
+
+    #menuDiv{
+        display: grid;
+        justify-content: center;
+        gap: 10px;
+        grid-template-columns: 1fr;
+        grid-auto-rows: min(150px);
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    div.background {
+        background-color: black;
+    }
+
+    #mainDiv {
+        width: 100%;
+    }
+
+    #menuDiv{
+        width: min(580px, 100%);
+        justify-self: center;
+        display: grid;
+        justify-content: center;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: min(180px);
+    }
+}
+
+@media screen and (min-width: 768px){
+    #fakeBody{
+        background-color: unset;
+    }
+
+    div.background {
+        background: linear-gradient(180deg, var(--secondaryColor), var(--primaryColor), var(--button));
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
+        background-attachment: fixed;
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    #mainDiv {
+        width: 768px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%);
+    }
+
+    #menuDiv{
+        width: min(580px, 100%);
+        display: grid;
+        justify-content: center;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: min(180px);
+    }
+
+    div::-webkit-scrollbar,
+    textarea::-webkit-scrollbar{
+        display: none;
+    }
+    div,
+    textarea{
+        -ms-overflow-style: none;  /* IE и Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+}
