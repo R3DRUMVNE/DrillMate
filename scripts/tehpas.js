@@ -89,16 +89,24 @@ function createFormPassportButton(container) {
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
+            if(document.querySelector("#osPrint") !== null){
+                document.querySelector("#osPrint").remove();
+            }
         } else {
-            document.querySelector("#dsPrint").remove();
+            linkNewStylesheet("osPrint");
+            if(document.querySelector("#dsPrint") !== null){
+                document.querySelector("#dsPrint").remove();
+            }
         }
     }
+    dsPrintCheckbox.onchange();
     newEl(printCheckboxContainer, "label", "id=dsPrintLabel / for=dsPrintCheckbox", tehpasStr);
     newEl(printCheckboxContainer, "input", "id=signaturesPrintCheckbox / type=checkbox / file=cb / checked");
     newEl(printCheckboxContainer, "label", "id=signaturesPrintLabel / for=signaturesPrintCheckbox", tehpasStr);
 
     let formPassButton = newEl(printControlContainer, "button", "id=formPassButton", tehpasStr);
     formPassButton.onclick = function () {
+
         let error = createPassport();
         if (error === false) {
             window.print();
@@ -117,11 +125,11 @@ function createPassport() {
 
     let passportContainer = newEl(document.body, "div", "id=passportContainer / class=print");
 
+    newEl(passportContainer, "div", "id=frame");
+
     if (passportHeaderImage !== undefined) {
         passportContainer.appendChild(passportHeaderImage);
     }
-
-    newEl(passportContainer, "div", "id=frame");
 
     let passportHeaderContainer = newEl(passportContainer, "div", "id=passportHeaderContainer");
 
@@ -570,7 +578,7 @@ function createControls(container) {
 
 function setReadedData(content) {
     let rowData = content.split("\n");
-    let newLayer, layerElements = false, cleanContainer = false;
+    let newLayer = null, layerElements = false, cleanContainer = false;
     let layersContainer = document.querySelector("#layersContainer");
     for (let i = 0; i < rowData.length; i++) {
         if (rowData[i] !== "") {

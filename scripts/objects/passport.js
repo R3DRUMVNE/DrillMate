@@ -1,4 +1,4 @@
-export let passportBlock = [
+export const passportBlock = [
     {
         header: "generalInfo",
         input: [
