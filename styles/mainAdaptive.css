@@ -14,6 +14,7 @@
         grid-template-columns: 1fr;
         grid-auto-rows: min(150px);
     }
+
 }
 
 @media screen and (min-width: 480px) and (max-width: 767px) {
@@ -59,6 +60,7 @@
         top: 0;
         left: 50%;
         transform: translate(-50%);
+        border: 1px solid var(--primaryColor);
     }
 
     #menuDiv{
@@ -68,6 +70,15 @@
         gap: 10px;
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: min(180px);
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    input[type="file"] + label.of:hover,
+    button:hover,
+    .iconButton:hover,
+    .menuOption:hover{
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
     }
 
     div::-webkit-scrollbar,

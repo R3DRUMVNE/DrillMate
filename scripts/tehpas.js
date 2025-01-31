@@ -22,7 +22,7 @@ export function startTehPasModule(container, moduleName, moduleID) {
     createInputBlocks(tehPasDiv);
     createGeoSectionBlock(tehPasDiv);
     createFormPassportButton(tehPasDiv);
-    if(getCookie("firstTime") === undefined){
+    if (getCookie("firstTime") === undefined) {
         let currentDate = new Date();
         setCookie("firstTime", false, {expires: currentDate.setDate(currentDate.getDate() + 30)});
         appAlert("Внимание", "Для корректного отображения техпаспорта на печати рекомендуется использовать браузер Google Chrome");
@@ -36,6 +36,12 @@ function createInputBlocks(container) {
         newEl(block, "div", "id=" + passportBlock[i].header + "Header / class=shadow defaultContainer blockHeader", tehpasStr);
 
         let itemsContainer = newEl(block, "div", "id=" + block.id + "Items");
+
+        if (passportBlock[i].blockCheckbox === true) {
+            let blockCheckboxContainer = newEl(itemsContainer, "div", "class=blockCheckboxContainer");
+            let blockCheckbox = newEl(blockCheckboxContainer, "input", "id=" + block.id + "Checkbox / class=cb / type=checkbox / file=cb");
+            newEl(blockCheckboxContainer, "label", "id=" + blockCheckbox.id + "Label / for=" + blockCheckbox.id, tehpasStr);
+        }
 
         let inputContainer;
         for (let j = 0; j < passportBlock[i].input.length; j++) {
@@ -78,6 +84,16 @@ function createInputBlocks(container) {
         changeWellConstructionOptions(true);
     }
     document.querySelector("#wellType").onchange();
+
+    document.querySelector("#startWork").oninput = function () {
+        if (document.querySelector("#endWork").value === "") {
+            const startDate = new Date(document.querySelector("#startWork").value);
+            let endDate = new Date(startDate);
+            endDate.setHours(startDate.getHours() + 6);
+            const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+            document.querySelector("#endWork").value = (new Date(endDate - tzOffset)).toISOString().slice(0, -1);
+        }
+    }
 }
 
 function createFormPassportButton(container) {
@@ -89,12 +105,12 @@ function createFormPassportButton(container) {
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
-            if(document.querySelector("#osPrint") !== null){
+            if (document.querySelector("#osPrint") !== null) {
                 document.querySelector("#osPrint").remove();
             }
         } else {
             linkNewStylesheet("osPrint");
-            if(document.querySelector("#dsPrint") !== null){
+            if (document.querySelector("#dsPrint") !== null) {
                 document.querySelector("#dsPrint").remove();
             }
         }
@@ -138,50 +154,58 @@ function createPassport() {
     newEl(passportHeaderContainer, "label", "id=passportUnderHeaderLabel", tehpasStr);
 
     for (let i = 0; i < passportBlock.length; i++) {
-        let tableBlock = newEl(passportContainer, "table", "class=tableBlock");
-
-        newEl(tableBlock, "col", "");
-        newEl(tableBlock, "col", "");
-
-        newEl(tableBlock, "caption", "class=tableCaption", tehpasStr[passportBlock[i].header + "Header"]);
-
-        for (let j = 0; j < passportBlock[i].input.length; j++) {
-            if (passportBlock[i].input[j].name === "passNumber") {
-                if (document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
-                    if (document.querySelector("#" + passportBlock[i].input[j].name).value === "") {
-                        passportHeaderLabel.innerHTML += " №_____";
-                    } else {
-                        passportHeaderLabel.innerHTML += " №" + document.querySelector("#" + passportBlock[i].input[j].name).value;
-                    }
-                }
-            } else if (passportBlock[i].input[j].checkbox) {
-                if (!document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
-                    passportBlock[i].input[j].passportDisplay = false;
-                    if (passportBlock[i].header === "wb") {
-                        tableBlock.remove();
-                    }
-                } else {
-                    passportBlock[i].input[j].passportDisplay = true;
-                }
+        let hideBlock = false;
+        if (passportBlock[i].blockCheckbox) {
+            if (!document.querySelector("#" + passportBlock[i].header + "BlockCheckbox").checked) {
+                hideBlock = true;
             }
+        }
+        if (!hideBlock) {
+            let tableBlock = newEl(passportContainer, "table", "class=tableBlock");
 
-            if (passportBlock[i].input[j].passportDisplay) {
-                if (passportBlock[i].input[j].inTableVision.includes("default")) {
-                    let row = tableBlock.insertRow();
-                    let cell = row.insertCell();
-                    cell.innerHTML = tehpasStr[passportBlock[i].input[j].name + "Label"];
-                    cell = row.insertCell();
-                    cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
-                } else if (passportBlock[i].input[j].inTableVision.includes("noLabel")) {
-                    let row = tableBlock.insertRow();
-                    let cell = row.insertCell();
-                    cell.colSpan = 2;
-                    cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
-                } else if (passportBlock[i].input[j].inTableVision.includes("upperLabel")) {
-                    let row = tableBlock.insertRow();
-                    let cell = row.insertCell();
-                    cell.colSpan = 2;
-                    cell.innerHTML = "<b>" + tehpasStr[passportBlock[i].input[j].name + "Label"] + "</b><br>" + getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
+            newEl(tableBlock, "col");
+            newEl(tableBlock, "col");
+
+            newEl(tableBlock, "caption", "class=tableCaption", tehpasStr[passportBlock[i].header + "Header"]);
+
+            for (let j = 0; j < passportBlock[i].input.length; j++) {
+                if (passportBlock[i].input[j].name === "passNumber") {
+                    if (document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
+                        if (document.querySelector("#" + passportBlock[i].input[j].name).value === "") {
+                            passportHeaderLabel.innerHTML += " №_____";
+                        } else {
+                            passportHeaderLabel.innerHTML += " №" + document.querySelector("#" + passportBlock[i].input[j].name).value;
+                        }
+                    }
+                } else if (passportBlock[i].input[j].checkbox) {
+                    if (!document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
+                        passportBlock[i].input[j].passportDisplay = false;
+                        if (passportBlock[i].header === "wb") {
+                            tableBlock.remove();
+                        }
+                    } else {
+                        passportBlock[i].input[j].passportDisplay = true;
+                    }
+                }
+
+                if (passportBlock[i].input[j].passportDisplay) {
+                    if (passportBlock[i].input[j].inTableVision.includes("default")) {
+                        let row = tableBlock.insertRow();
+                        let cell = row.insertCell();
+                        cell.innerHTML = tehpasStr[passportBlock[i].input[j].name + "Label"];
+                        cell = row.insertCell();
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
+                    } else if (passportBlock[i].input[j].inTableVision.includes("noLabel")) {
+                        let row = tableBlock.insertRow();
+                        let cell = row.insertCell();
+                        cell.colSpan = 2;
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
+                    } else if (passportBlock[i].input[j].inTableVision.includes("upperLabel")) {
+                        let row = tableBlock.insertRow();
+                        let cell = row.insertCell();
+                        cell.colSpan = 2;
+                        cell.innerHTML = "<b>" + tehpasStr[passportBlock[i].input[j].name + "Label"] + "</b><br>" + getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
+                    }
                 }
             }
         }
@@ -568,6 +592,7 @@ function createControls(container) {
     let openFileLabel = newEl(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStr);
     openFileLabel.onclick = function () {
         this.style.backgroundColor = colors.button;
+        currentFile = "";
     }
 
     let saveButton = newEl(controlsDiv, "button", "id=saveFileButton", tehpasStr);
@@ -596,10 +621,12 @@ function setReadedData(content) {
             } else {
                 layerElements = false;
                 let element = document.querySelector("#" + rowData[i].split("#:# ")[0]);
-                if (element.getAttribute("file") === "cb") {
-                    element.checked = JSON.parse(rowData[i].split("#:# ")[1]);
-                } else if (element.getAttribute("file") === "inp") {
-                    element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
+                if (element !== null) {
+                    if (element.getAttribute("file") === "cb") {
+                        element.checked = JSON.parse(rowData[i].split("#:# ")[1]);
+                    } else if (element.getAttribute("file") === "inp") {
+                        element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
+                    }
                 }
             }
         }
@@ -674,6 +701,7 @@ function saveFile(fileName, data) {
     a.href = URL.createObjectURL(file);
     a.download = fileName.trim() + ".tehpas";
     a.click();
+    currentFile = fileName.trim();
 }
 
 function createGeoSectionBlock(container) {

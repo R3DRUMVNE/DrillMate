@@ -67,6 +67,15 @@ input.cb{
     height: 18px;
 }
 
+.blockCheckboxContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
 #geoSectionContainer{
     display: flex;
     flex-direction: column;
@@ -202,9 +211,11 @@ input.cb{
 }
 #dsPrintLabel{
     grid-area: dsPrintLabel;
+    width: max-content;
 }
 #signaturesPrintLabel{
     grid-area: signaturesPrintLabel;
+    width: max-content;
 }
 #formPassButton{
     grid-area: formPassButton;

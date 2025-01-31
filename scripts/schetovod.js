@@ -17,46 +17,48 @@ export function startSchetoVodModule(container, moduleName, moduleID) {
 }
 
 function createInputBlock(blockDiv) {
-    let inputBlock = newEl(blockDiv, "div", "id=inputBlock / class=defaultContainer inputBlock");
+    let inputBlock = newEl(blockDiv, "div", "id=inputBlock / class=defaultContainer inputBlockRC");
+
+    let volumeInputContainer = newEl(inputBlock, "div", "id=volumeInputContainer / class=inpContainer");
+    newEl(volumeInputContainer, "label", "id=volumeText", schetovodStr);
+    let volumeInput = newEl(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStr.volumeInputHint);
 
     let realtimeCheckbox = newEl(inputBlock, "input", "id=realtimeCheckbox / type=checkbox / checked");
+    let startButton, timeInputContainer;
     realtimeCheckbox.onchange = function () {
-        startButton.name = false;
-        realtimeCalculate(startButton);
-        setTimeInput(realtimeCheckbox.checked, inputBlock);
-    }
+        if (realtimeCheckbox.checked) {
+            inputBlock.className = "defaultContainer inputBlockRC";
+            volumeInput.removeEventListener("input", standartCalculate, true);
+            if (timeInputContainer !== undefined) timeInputContainer.remove();
 
-    let realtimeText = newEl(inputBlock, "label", "id=realtimeText", schetovodStr);
-    realtimeText.onclick = function () {
-        if(!realtimeCheckbox.disabled) {
-            realtimeCheckbox.checked = !realtimeCheckbox.checked;
-            realtimeCheckbox.onchange();
-        }
-    }
-
-    let inpContainer = newEl(inputBlock, "div", "id=volumeInputContainer / class=inpContainer");
-
-    newEl(inpContainer, "label", "id=volumeText", schetovodStr);
-
-    let volumeInput = newEl(inpContainer, "input", "id=volumeInput / type=tel");
-    volumeInput.placeholder = schetovodStr.volumeInputHint;
-
-    let startButton = newEl(inputBlock, "button", "id=startButton", schetovodStr);
-    startButton.name = "true";
-    startButton.onclick = function () {
-        flowRate.volume = tryFormatToNumber(volumeInput.value);
-        if (flowRate.volume !== false) {
-            if (realtimeCheckbox.checked) {
-                volumeInput.disabled = !volumeInput.disabled;
-                realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
-                realtimeCalculate(this);
-            } else {
-                standartCalculate();
+            startButton = newEl(inputBlock, "button", "id=startButton", schetovodStr);
+            startButton.name = "true";
+            startButton.onclick = function () {
+                flowRate.volume = tryFormatToNumber(volumeInput.value);
+                if (flowRate.volume !== false) {
+                    volumeInput.disabled = !volumeInput.disabled;
+                    realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
+                    realtimeCalculate(this);
+                } else {
+                    appAlert("Ошибка", "Укажите заполняемый объём числом!");
+                }
             }
         } else {
-            appAlert("Ошибка", "Укажите заполняемый объём числом!");
+            inputBlock.className = "defaultContainer inputBlockSC";
+            if (startButton !== undefined) startButton.remove();
+
+            timeInputContainer = newEl(inputBlock, "div", "id=timeInputContainer / class=inpContainer");
+            newEl(timeInputContainer, "label", "id=userTimeText", schetovodStr);
+            let userTimeInput = newEl(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
+            userTimeInput.oninput = function () {
+                standartCalculate();
+            }
+            volumeInput.addEventListener("input", standartCalculate, true);
+
         }
     }
+    realtimeCheckbox.onchange();
+    newEl(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStr);
 }
 
 function createOutputBlock(frg) {
@@ -72,22 +74,6 @@ function createOutputBlock(frg) {
     newEl(fRContainer, "label", "id=flowRateLHOutput", schetovodStr);
     return frg;
 }
-
-function setTimeInput(flag, container) {
-    if (!flag) {
-        container.className = "defaultContainer inputBlockALT";
-
-        let inpContainer = newEl(container, "div", "id=timeInputContainer / class=inpContainer");
-
-        newEl(inpContainer, "label", "id=userTimeText", schetovodStr);
-
-        newEl(inpContainer, "input", "id=userTimeInput / type=time / value=00:00:00 / step=1");
-    } else {
-        container.className = "defaultContainer inputBlock";
-        document.querySelector("#timeInputContainer").remove();
-    }
-}
-
 
 function realtimeCalculate(button) {
     let startTime;
@@ -108,11 +94,15 @@ function realtimeCalculate(button) {
 }
 
 function standartCalculate() {
-    let seconds = getInputTimeInSeconds();
-    if (seconds > 0) {
-        showFlowRate(seconds, flowRate.volume);
+    flowRate.volume = tryFormatToNumber(document.querySelector("#volumeInput").value);
+    if (flowRate.volume !== false) {
+        let seconds = getInputTimeInSeconds();
+        if (seconds > 0) {
+            showFlowRate(seconds);
+        }
     } else {
-        appAlert("Ошибка", "Укажите время заполнения!");
+        appAlert("Ошибка", "Укажите заполняемый объём числом!");
+        document.querySelector("#volumeInput").value = "";
     }
 }
 

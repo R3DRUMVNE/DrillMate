@@ -130,6 +130,7 @@ select{
     z-index: 50;
     position: sticky;
     top: 0;
+    height: max-content;
     margin: 0;
     padding: 10px;
     background-color: var(--primaryColor);
@@ -137,6 +138,12 @@ select{
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
 }
+#logo{
+    height: 40px;
+    width: auto;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
 #programName {
     flex-grow: 1;
     font-size: 24px;
@@ -242,11 +249,6 @@ select{
 #clientInfoContainer{
     background-color: var(--button);
     user-select: text;
-}
-
-.iconButton:hover,
-.menuOption:hover {
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
 #buttonsContainer{
@@ -367,8 +369,10 @@ button > img{
     height: auto;
 }
 
-input[type="file"] + label.of:hover,
-button:hover {
+input[type="file"] + label.of:active,
+button:active,
+.iconButton:active,
+.menuOption:active{
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 4px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -383,6 +387,7 @@ select{
     font-size: inherit;
     font-family: inherit;
     cursor: pointer;
+    height: min-content;
 }
 select:focus{
     outline: 1px solid var(--primaryText);
@@ -481,6 +486,7 @@ label.radioLabel{
     padding: 10px;
     transition: background-color 0.3s, box-shadow 0.3s;
     align-content: center;
+    height: min-content;
 }
 
 :root {
