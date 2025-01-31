@@ -1,11 +1,11 @@
-.inputBlock,
-.inputBlockALT{
+.inputBlockRC,
+.inputBlockSC{
     grid-area: inputBlock;
     display: grid;
     gap: 10px;
 }
 
-.inputBlock{
+.inputBlockRC{
     grid-template-columns: min-content 1fr;
     grid-template-rows: min-content min-content auto;
     grid-template-areas:
@@ -14,14 +14,13 @@
         "startButton startButton";
 }
 
-.inputBlockALT{
+.inputBlockSC{
     grid-template-columns: min-content 1fr;
-    grid-template-rows: min-content min-content min-content auto;
+    grid-template-rows: min-content min-content auto;
     grid-template-areas:
         "realtimeCheckbox realtimeText"
         "volumeInputContainer volumeInputContainer"
-        "timeInputContainer timeInputContainer"
-        "startButton startButton";
+        "timeInputContainer timeInputContainer";
 }
 
 #volumeInputContainer{
@@ -29,6 +28,7 @@
 }
 
 #timeInputContainer{
+    height: min-content;
     grid-area: timeInputContainer;
 }
 

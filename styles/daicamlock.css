@@ -2,13 +2,6 @@
     flex-grow: 1;
 }
 
-#camlockImage{
-    grid-area: camlockImage;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
 #answerContainer{
     text-align: center;
     grid-area: answerContainer;

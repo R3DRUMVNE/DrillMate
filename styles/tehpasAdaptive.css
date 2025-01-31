@@ -42,7 +42,9 @@
         margin-right: 10px;
     }
 
-    #wb,
+    #wb{
+        height: 200px;
+    }
     #pump,
     #extraRecommend{
         height: 150px;
@@ -132,10 +134,10 @@
         align-self: center;
         display: grid;
         gap: 10px;
-        grid-template-columns: min-content auto min-content auto;
+        grid-template-columns: min-content auto 5px min-content auto;
         grid-template-rows: auto;
         grid-template-areas:
-        "gsShowCheckbox gsShowLabel gsDrawSLCheckbox gsDrawSLLabel";
+        "gsShowCheckbox gsShowLabel . gsDrawSLCheckbox gsDrawSLLabel";
         margin-left: 10px;
         margin-right: 10px;
     }
@@ -143,7 +145,9 @@
         justify-self: end;
     }
 
-    #wb,
+    #wb{
+        height: 200px;
+    }
     #pump,
     #extraRecommend{
         height: 150px;

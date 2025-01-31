@@ -1,6 +1,7 @@
 export const passportBlock = [
     {
         header: "generalInfo",
+        blockCheckbox: false,
         input: [
             {
                 name: "passNumber",
@@ -70,6 +71,7 @@ export const passportBlock = [
     },
     {
         header: "wellParams",
+        blockCheckbox: false,
         input: [
             {
                 name: "wellType",
@@ -139,19 +141,21 @@ export const passportBlock = [
     },
     {
         header: "wb",
+        blockCheckbox: true,
         input: [
             {
                 name: "wb",
                 passportDisplay: true,
                 kind: "textarea",
                 type: null,
-                checkbox: true,
+                checkbox: false,
                 inTableVision: "noLabel",
             },
         ],
     },
     {
         header: "rb",
+        blockCheckbox: false,
         input: [
             {
                 name: "pump",

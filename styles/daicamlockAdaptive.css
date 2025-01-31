@@ -13,6 +13,13 @@
         "sizesBlock sizesBlock";
     }
 
+    #camlockImage{
+        grid-area: camlockImage;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
     #camlockInputBlock{
         grid-area: camlockInputBlock;
         display: grid;
@@ -73,11 +80,18 @@
         "sizesBlock sizesBlock";
     }
 
+    #camlockImage{
+        grid-area: camlockImage;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
     #camlockInputBlock{
         grid-area: camlockInputBlock;
         display: grid;
         grid-template-columns: 2fr 3fr;
-        grid-template-rows: auto auto;
+        grid-template-rows: max-content auto;
         gap: 10px;
         grid-template-areas:
         "fatherMotherContainer fittingDiv"
@@ -90,11 +104,13 @@
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 0;
+        height: min-content;
+        align-self: end;
     }
 
     #fatherMotherContainer{
         grid-area: fatherMotherContainer;
-        flex-grow: 1;
+        height: max-content;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
@@ -126,26 +142,33 @@
         justify-self: center;
         max-height: max-content;
         display: grid;
-        grid-template-columns: 1.8fr 1fr;
+        grid-template-columns: 1fr 460px;
         grid-template-rows: auto auto max-content auto;
         gap: 10px;
         grid-template-areas:
         "moduleHeader moduleHeader"
-        "camlockImage camlockInputBlock"
-        "sizesBlock answerContainer"
-        "sizesBlock .";
+        "camlockImage camlockImage"
+        "answerContainer answerContainer"
+        "sizesBlock camlockInputBlock";
+    }
+
+    #camlockImage{
+        grid-area: camlockImage;
+        width: 80%;
+        height: auto;
+        border-radius: 10px;
+        justify-self: center;
     }
 
     #camlockInputBlock{
         grid-area: camlockInputBlock;
         display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
+        grid-template-columns: 2fr 3fr;
+        grid-template-rows: max-content auto;
         gap: 10px;
         grid-template-areas:
-        "fatherMotherContainer"
-        "fittingDiv"
-        "DNSelectContainer";
+        "fatherMotherContainer fittingDiv"
+        "DNSelectContainer fittingDiv";
     }
 
     #DNSelectContainer{
@@ -154,25 +177,35 @@
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 0;
+        height: min-content;
+        align-self: end;
     }
 
     #fatherMotherContainer{
         grid-area: fatherMotherContainer;
-        flex-grow: 1;
+        height: max-content;
         display: flex;
         flex-wrap: nowrap;
-        flex-direction: row;
+        flex-direction: column;
         gap: 0;
     }
-    #fatherLabel{
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
 
+    #fatherLabel{
+        flex-basis: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
     }
 
     #motherLabel{
-        border-top-right-radius: 10px;
+        border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
+    }
+
+    #hoseFittingLabel,
+    #internalThreadLabel,
+    #externalThreadLabel,
+    #stubLabel{
+        text-align: center;
     }
 
     #sizesBlockHeader{

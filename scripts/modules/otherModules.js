@@ -88,7 +88,7 @@ export function newEl(container, elementName, elementAttributes, stringsObj) {
         container.appendChild(element);
     }
 
-    if (elementAttributes !== "") {
+    if (elementAttributes !== "" && elementAttributes !== undefined) {
         let attributes = elementAttributes.split(" / ");
         for (let i = 0; i < attributes.length; i++) {
             if (attributes[i].includes("=")) {
