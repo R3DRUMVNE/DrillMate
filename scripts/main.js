@@ -4,7 +4,8 @@ import {startSchetoVodModule} from "./schetovod.js";
 import {startDaiCamlockModule} from "./daicamlock.js";
 import {startTehPasModule} from "./tehpas.js";
 import {mainStr} from "./objects/strings.js";
-import {destroyTimer} from "./modules/bufferModule.js";
+import {destroyAllTempElements, destroyTimer} from "./modules/bufferModule.js";
+import {appTheme} from "./objects/colors.js";
 
 let title = document.querySelector("#programTitle");
 let menuButton = document.querySelector("#menuButton");
@@ -13,6 +14,7 @@ let aboutProgramButton = document.querySelector("#aboutProgramButton");
 let fragmentDiv = document.querySelector("#fragmentDiv");
 
 menuButton.onclick = function () {
+    destroyAllTempElements();
     destroyTimer("flowRateTimer");
     createMenuButtons();
     title.innerHTML = "DrillMate - маленький помощник бурильщика";
@@ -23,6 +25,10 @@ menuButton.click();
 aboutProgramButton.onclick = function () {
     showAbout();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    appTheme.change(localStorage.getItem('appTheme'));
+});
 
 window.onbeforeunload = function () {
     window.scrollTo(0, 0);
@@ -88,6 +94,14 @@ function showAbout() {
 
     newEl(itemsContainer, "div", "id=infoText", mainStr);
 
+    let themeSelectContainer = newEl(itemsContainer, "div", "id=themeSelectContainer / class=inpContainer");
+    newEl(themeSelectContainer, "label", "id=themeSelectLabel", mainStr);
+    let themeSelect = newEl(themeSelectContainer, "select", "id=themeSelect", mainStr);
+    themeSelect.value = localStorage.getItem("appTheme");
+    themeSelect.onchange = function () {
+        appTheme.change(themeSelect.value);
+    }
+
     let bugButton = newEl(itemsContainer, "div", "id=bugButton / class=iconButton", mainStr);
     newEl(bugButton, "img", "id=bugButtonImg / src=./assets/bugReport.svg");
     bugButton.onclick = function () {
@@ -128,7 +142,7 @@ function showBugReport() {
             });
 
         }, function() {
-            appToast("Произошла ошибка при копировании текста", 3000).then();
+            appToast("Произошла ошибка при копировании текста", 1500).then();
         });
     }
 

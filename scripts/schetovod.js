@@ -1,7 +1,13 @@
-import {createModuleHeader, tryFormatToNumber, appAlert, newEl} from "./modules/otherModules.js";
+import {
+    createModuleHeader,
+    tryFormatToNumber,
+    newEl,
+    appToast,
+    filterValueByNumber
+} from "./modules/otherModules.js";
 import {schetovodStr} from "./objects/strings.js";
 import {destroyTimer, setTimer} from "./modules/bufferModule.js";
-import {colors} from "./objects/colors.js";
+import {appTheme} from "./objects/colors.js";
 
 let flowRate = {
     volume: 0,
@@ -28,7 +34,9 @@ function createInputBlock(blockDiv) {
     realtimeCheckbox.onchange = function () {
         if (realtimeCheckbox.checked) {
             inputBlock.className = "defaultContainer inputBlockRC";
-            volumeInput.removeEventListener("input", standartCalculate, true);
+            volumeInput.oninput = function () {
+                filterValueByNumber(this);
+            }
             if (timeInputContainer !== undefined) timeInputContainer.remove();
 
             startButton = newEl(inputBlock, "button", "id=startButton", schetovodStr);
@@ -39,8 +47,8 @@ function createInputBlock(blockDiv) {
                     volumeInput.disabled = !volumeInput.disabled;
                     realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
                     realtimeCalculate(this);
-                } else {
-                    appAlert("Ошибка", "Укажите заполняемый объём числом!");
+                } else{
+                    appToast("Ошибка: укажите заполняемый объём числом!", 1500).then();
                 }
             }
         } else {
@@ -51,13 +59,15 @@ function createInputBlock(blockDiv) {
             newEl(timeInputContainer, "label", "id=userTimeText", schetovodStr);
             let userTimeInput = newEl(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
             userTimeInput.oninput = function () {
-                standartCalculate();
+                standardCalculate();
             }
-            volumeInput.addEventListener("input", standartCalculate, true);
-
+            volumeInput.oninput = function () {
+                filterValueByNumber(this);
+                standardCalculate();
+            }
         }
     }
-    realtimeCheckbox.onchange();
+    realtimeCheckbox.dispatchEvent(new Event('change'));
     newEl(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStr);
 }
 
@@ -83,26 +93,24 @@ function realtimeCalculate(button) {
         startTime = getTimeInSeconds();
         setTimer("flowRateTimer", setInterval(calculateRealTimeDifference, 20, startTime));
         button.innerHTML = "Стоп!";
-        button.style.backgroundColor = colors.stop;
+        button.style.backgroundColor = appTheme.getColor("stop");
         button.name = false;
     } else {
         destroyTimer("flowRateTimer");
         button.innerHTML = "Старт!";
-        button.style.backgroundColor = colors.button;
+        button.style.backgroundColor = appTheme.getColor("button");
         button.name = true;
     }
 }
 
-function standartCalculate() {
-    flowRate.volume = tryFormatToNumber(document.querySelector("#volumeInput").value);
+function standardCalculate() {
+    let volumeInput = document.querySelector("#volumeInput");
+    flowRate.volume = tryFormatToNumber(volumeInput.value);
     if (flowRate.volume !== false) {
         let seconds = getInputTimeInSeconds();
         if (seconds > 0) {
             showFlowRate(seconds);
         }
-    } else {
-        appAlert("Ошибка", "Укажите заполняемый объём числом!");
-        document.querySelector("#volumeInput").value = "";
     }
 }
 

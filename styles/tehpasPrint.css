@@ -27,7 +27,7 @@
         box-sizing: border-box;
         width: 100%;
         height: 100%;
-        border: 10px double var(--primaryColor);
+        border: 10px double #0060b9;
         page-break-inside: avoid;
         z-index: 7;
     }
@@ -64,7 +64,7 @@
     width: 100%;
     height: auto;
     padding-bottom: 10px;
-    border-bottom: 3px solid var(--primaryColor);
+    border-bottom: 3px solid #0060b9;
     margin-bottom: 5px;
 }
 
@@ -226,10 +226,6 @@ label {
     page-break-inside: avoid;
 }
 
-html, body {
-    font-family: Verdana, Geneva, sans-serif;
-    font-weight: normal;
-    font-size: 16px;
-    color: var(--primaryText);
-    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+.breakBefore{
+    page-break-before: always !important;
 }

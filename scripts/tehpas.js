@@ -4,11 +4,12 @@ import {
     tryFormatToNumber,
     appAlert,
     scrollController,
-    linkNewStylesheet, setCookie, getCookie
+    linkNewStylesheet, setCookie, getCookie, createCheckboxField
 } from "./modules/otherModules.js";
 import {tehpasStr} from "./objects/strings.js";
 import {passportBlock} from "./objects/passport.js";
-import {colors} from "./objects/colors.js";
+import {appTheme} from "./objects/colors.js";
+import {addTempElement} from "./modules/bufferModule.js";
 
 let passportHeaderImage;
 let currentFile;
@@ -24,7 +25,8 @@ export function startTehPasModule(container, moduleName, moduleID) {
     createFormPassportButton(tehPasDiv);
     if (getCookie("firstTime") === undefined) {
         let currentDate = new Date();
-        setCookie("firstTime", false, {expires: currentDate.setDate(currentDate.getDate() + 30)});
+        currentDate.setDate(currentDate.getDate() + 14);
+        setCookie("firstTime", false, {expires: currentDate});
         appAlert("Внимание", "Для корректного отображения техпаспорта на печати рекомендуется использовать браузер Google Chrome");
     }
 }
@@ -35,13 +37,17 @@ function createInputBlocks(container) {
 
         newEl(block, "div", "id=" + passportBlock[i].header + "Header / class=shadow defaultContainer blockHeader", tehpasStr);
 
-        let itemsContainer = newEl(block, "div", "id=" + block.id + "Items");
-
-        if (passportBlock[i].blockCheckbox === true) {
-            let blockCheckboxContainer = newEl(itemsContainer, "div", "class=blockCheckboxContainer");
-            let blockCheckbox = newEl(blockCheckboxContainer, "input", "id=" + block.id + "Checkbox / class=cb / type=checkbox / file=cb");
-            newEl(blockCheckboxContainer, "label", "id=" + blockCheckbox.id + "Label / for=" + blockCheckbox.id, tehpasStr);
+        if(passportBlock[i].displayBlockCheckbox || passportBlock[i].toNextPageCheckbox){
+            let blockCheckboxContainer = newEl(block, "div", "id="+ block.id +"CheckboxContainer / class=blockCheckboxContainer");
+            if(passportBlock[i].displayBlockCheckbox){
+                createCheckboxField(blockCheckboxContainer, "id=" + block.id + "Checkbox / file=cb", "id=" + block.id + "CheckboxLabel", tehpasStr);
+            }
+            if(passportBlock[i].toNextPageCheckbox){
+                createCheckboxField(blockCheckboxContainer, "id=" + block.id + "ToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
+            }
         }
+
+        let itemsContainer = newEl(block, "div", "id=" + block.id + "Items");
 
         let inputContainer;
         for (let j = 0; j < passportBlock[i].input.length; j++) {
@@ -67,23 +73,17 @@ function createInputBlocks(container) {
                 }
                 inputContainer.id = input.id + "Container";
             } else if (passportBlock[i].input[j].kind === "select") {
-                let select = newEl(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp");
-                if (typeof tehpasStr[passportBlock[i].input[j].name + "Select"] !== undefined) {
-                    for (let k = 0; k < tehpasStr[passportBlock[i].input[j].name + "Select"][0].length; k++) {
-                        let option = newEl(select, "option", "", tehpasStr[passportBlock[i].input[j].name + "Select"][0][k]);
-                        option.value = tehpasStr[passportBlock[i].input[j].name + "Select"][1][k];
-                    }
-                    inputContainer.id = select.id + "Container";
-                }
-
+                let select = newEl(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp", tehpasStr);
+                inputContainer.id = select.id + "Container";
             }
         }
     }
+
     document.querySelector("#wellType").onchange = function () {
         document.querySelector("#dynamicLevelCheckbox").checked = !(document.querySelector("#wellType").value === "abyss" || document.querySelector("#wellType").value === "abyssNeedle");
         changeWellConstructionOptions(true);
     }
-    document.querySelector("#wellType").onchange();
+    document.querySelector("#wellType").dispatchEvent(new Event('change'));
 
     document.querySelector("#startWork").oninput = function () {
         if (document.querySelector("#endWork").value === "") {
@@ -99,9 +99,9 @@ function createInputBlocks(container) {
 function createFormPassportButton(container) {
     let printControlContainer = newEl(container, "div", "id=printControlContainer / class=defaultContainer");
 
-    let printCheckboxContainer = newEl(printControlContainer, "div", "id=printCheckboxContainer");
+    let printCheckboxContainer = newEl(printControlContainer, "div", "id=printCheckboxContainer / class=blockCheckboxContainer");
 
-    let dsPrintCheckbox = newEl(printCheckboxContainer, "input", "id=dsPrintCheckbox / type=checkbox");
+    let dsPrintCheckbox = createCheckboxField(printCheckboxContainer, "id=dsPrintCheckbox / file=cb","id=dsPrintLabel", tehpasStr);
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
@@ -115,10 +115,8 @@ function createFormPassportButton(container) {
             }
         }
     }
-    dsPrintCheckbox.onchange();
-    newEl(printCheckboxContainer, "label", "id=dsPrintLabel / for=dsPrintCheckbox", tehpasStr);
-    newEl(printCheckboxContainer, "input", "id=signaturesPrintCheckbox / type=checkbox / file=cb / checked");
-    newEl(printCheckboxContainer, "label", "id=signaturesPrintLabel / for=signaturesPrintCheckbox", tehpasStr);
+    dsPrintCheckbox.dispatchEvent(new Event('change'));
+    createCheckboxField(printCheckboxContainer,"id=signaturesPrintCheckbox / file=cb / checked", "id=signaturesPrintLabel", tehpasStr);
 
     let formPassButton = newEl(printControlContainer, "button", "id=formPassButton", tehpasStr);
     formPassButton.onclick = function () {
@@ -140,6 +138,7 @@ function createPassport() {
     let error = false;
 
     let passportContainer = newEl(document.body, "div", "id=passportContainer / class=print");
+    addTempElement(passportContainer.id);
 
     newEl(passportContainer, "div", "id=frame");
 
@@ -155,13 +154,18 @@ function createPassport() {
 
     for (let i = 0; i < passportBlock.length; i++) {
         let hideBlock = false;
-        if (passportBlock[i].blockCheckbox) {
+        if (passportBlock[i].displayBlockCheckbox) {
             if (!document.querySelector("#" + passportBlock[i].header + "BlockCheckbox").checked) {
                 hideBlock = true;
             }
         }
         if (!hideBlock) {
             let tableBlock = newEl(passportContainer, "table", "class=tableBlock");
+            if(passportBlock[i].toNextPageCheckbox){
+                if(document.querySelector("#" + passportBlock[i].header + "BlockToNextPageCheckbox").checked){
+                    tableBlock.className = "tableBlock breakBefore";
+                }
+            }
 
             newEl(tableBlock, "col");
             newEl(tableBlock, "col");
@@ -231,7 +235,7 @@ function createPassport() {
         return datetime.split("T")[1] + " " + datetime.split("T")[0].split("-")[2] + "." + datetime.split("T")[0].split("-")[1] + "." + datetime.split("T")[0].split("-")[0];
     }
 
-    if (document.querySelector("#gsShowCheckbox").checked) {
+    if (document.querySelector("#gsBlockShowCheckbox").checked) {
         error = createGeoSectionTable(passportContainer);
     }
 
@@ -302,6 +306,9 @@ function createSignaturesTable(container) {
 function createGeoSectionTable(container) {
     let error = false;
     let gsTable = newEl(container, "table", "id=gsTable");
+    if(document.querySelector("#gsBlockToNextPageCheckbox").checked){
+        gsTable.className = "breakBefore";
+    }
 
     let colWidth = [21, 25, 2, 3, 2, 3, 2, 3, 2, 37];
     for (let i = 0; i < colWidth.length; i++) {
@@ -551,10 +558,11 @@ function createControls(container) {
                     if (img.naturalWidth !== 900 || img.naturalHeight > 150) {
                         appAlert("Ошибка", "Недопустимые размеры изображения. Размеры для шапки техпаспорта:<br>Ширина: 900px<br>Высота: не более 150px");
                     } else {
+                        img.id = "passportHeaderImage";
                         passportHeaderImage = img;
-                        passportHeaderImage.id = "passportHeaderImage";
-                        headerUploadLabel.style.backgroundColor = colors.ready;
+                        headerUploadLabel.style.backgroundColor = appTheme.getColor("ready");
                         headerUploadButton.value = "";
+                        URL.revokeObjectURL(img.src);
                     }
                 }
             } else {
@@ -564,7 +572,7 @@ function createControls(container) {
     }
     let headerUploadLabel = newEl(controlsDiv, "label", "id=headerUploadLabel / for=headerUploadButton / class=of", tehpasStr);
     headerUploadLabel.onclick = function () {
-        this.style.backgroundColor = colors.button;
+        this.style.backgroundColor = appTheme.getColor("button");
     }
 
     let openFileButton = newEl(controlsDiv, "input", "id=openFileButton / type=file / accept=.tehpas");
@@ -574,7 +582,7 @@ function createControls(container) {
             if (inputFile.name.split(".").pop() === "tehpas") {
                 let fr = new FileReader();
                 fr.onloadend = function () {
-                    openFileLabel.style.backgroundColor = colors.ready;
+                    openFileLabel.style.backgroundColor = appTheme.getColor("ready");
                     currentFile = inputFile.name.replace(".tehpas", "");
                     let fileText = this.result;
                     setReadedData(fileText);
@@ -591,7 +599,7 @@ function createControls(container) {
     }
     let openFileLabel = newEl(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStr);
     openFileLabel.onclick = function () {
-        this.style.backgroundColor = colors.button;
+        this.style.backgroundColor = appTheme.getColor("button");
         currentFile = "";
     }
 
@@ -617,13 +625,14 @@ function setReadedData(content) {
             } else if (layerElements) {
                 let element = newLayer.querySelector("#" + rowData[i].split("#:# ")[0]);
                 element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
-                if (element.id === "layerColor") element.onchange();
+                if (element.id === "layerColor") element.dispatchEvent(new Event('change'));
             } else {
                 layerElements = false;
                 let element = document.querySelector("#" + rowData[i].split("#:# ")[0]);
                 if (element !== null) {
                     if (element.getAttribute("file") === "cb") {
                         element.checked = JSON.parse(rowData[i].split("#:# ")[1]);
+                        element.dispatchEvent(new Event('change'));
                     } else if (element.getAttribute("file") === "inp") {
                         element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
                     }
@@ -709,28 +718,14 @@ function createGeoSectionBlock(container) {
 
     newEl(geoSectionContainer, "div", "id=geoSectionHeader / class=defaultContainer blockHeader", tehpasStr);
 
-    let gsCheckboxContainer = newEl(geoSectionContainer, "div", "id=gsCheckboxContainer");
-    newEl(gsCheckboxContainer, "label", "id=gsShowLabel / for=gsShowCheckbox", tehpasStr);
-    newEl(gsCheckboxContainer, "input", "id=gsShowCheckbox / type=checkbox / file=cb");
-    newEl(gsCheckboxContainer, "label", "id=gsDrawSLLabel / for=gsDrawSLCheckbox", tehpasStr);
-    newEl(gsCheckboxContainer, "input", "id=gsDrawSLCheckbox / type=checkbox / file=cb");
+    let gsCheckboxContainer = newEl(geoSectionContainer, "div", "id=gsCheckboxContainer / class=blockCheckboxContainer");
+    createCheckboxField(gsCheckboxContainer, "id=gsBlockShowCheckbox / file=cb", "id=gsBlockShowLabel", tehpasStr);
+    createCheckboxField(gsCheckboxContainer, "id=gsBlockToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
+    createCheckboxField(gsCheckboxContainer, "id=gsDrawSLCheckbox / file=cb", "id=gsDrawSLLabel", tehpasStr);
 
     let itemsContainer = newEl(geoSectionContainer, "div", "id=layersContainer / class=itemsContainer");
 
     addLayer(null, itemsContainer);
-}
-
-function addOptionToSelect(select, optionsName) {
-    if (!Array.isArray(tehpasStr[optionsName][0])) {
-        for (let i = 0; i < tehpasStr[optionsName].length; i++) {
-            newEl(select, "option", "", tehpasStr[optionsName][i]);
-        }
-    } else {
-        for (let i = 0; i < tehpasStr[optionsName][0].length; i++) {
-            let option = newEl(select, "option", "", tehpasStr[optionsName][0][i]);
-            option.value = tehpasStr[optionsName][1][i];
-        }
-    }
 }
 
 function addLayer(prevLayer, container) {
@@ -772,17 +767,15 @@ function addLayer(prevLayer, container) {
     let layerNameContainer = newEl(layer, "div", "id=layerNameContainer / class=inpContainer");
 
     newEl(layerNameContainer, "label", "id=layerNameLabel", tehpasStr);
-    let layerName = newEl(layerNameContainer, "select", "id=layerName / file");
-    addOptionToSelect(layerName, layerName.id + "Select");
+    newEl(layerNameContainer, "select", "id=layerName / file", tehpasStr);
 
     let layerColorContainer = newEl(layer, "div", "id=layerColorContainer / class=inpContainer");
 
     newEl(layerColorContainer, "label", "id=layerColorLabel", tehpasStr);
-    let layerColor = newEl(layerColorContainer, "select", "id=layerColor / file");
-    addOptionToSelect(layerColor, layerColor.id + "Select");
+    let layerColor = newEl(layerColorContainer, "select", "id=layerColor / file", tehpasStr);
     layerColor.style.backgroundColor = layerColor.value;
     layerColor.onchange = function () {
-        if (layerColor.value === "Khaki" || layerColor.value === "White") {
+        if (layerColor.value === "Khaki" || layerColor.value === "AliceBlue") {
             layerColor.style.color = "black";
         } else {
             layerColor.style.color = "white";
@@ -793,8 +786,7 @@ function addLayer(prevLayer, container) {
     let wellConstructionContainer = newEl(layer, "div", "id=wellConstructionContainer / class=inpContainer");
 
     newEl(wellConstructionContainer, "label", "id=wellConstructionLabel", tehpasStr);
-    let wellConstruction = newEl(wellConstructionContainer, "select", "id=wellConstruction / file");
-    addOptionToSelect(wellConstruction, wellConstruction.id + "Select");
+    newEl(wellConstructionContainer, "select", "id=wellConstruction / file", tehpasStr);
     changeWellConstructionOptions(false);
 
     let addLayerButton = newEl(layer, "button", "id=addLayerButton", tehpasStr);

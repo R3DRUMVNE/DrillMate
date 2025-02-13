@@ -1,7 +1,8 @@
 export const passportBlock = [
     {
         header: "generalInfo",
-        blockCheckbox: false,
+        displayBlockCheckbox: false,
+        toNextPageCheckbox: false,
         input: [
             {
                 name: "passNumber",
@@ -71,7 +72,8 @@ export const passportBlock = [
     },
     {
         header: "wellParams",
-        blockCheckbox: false,
+        displayBlockCheckbox: false,
+        toNextPageCheckbox: true,
         input: [
             {
                 name: "wellType",
@@ -141,7 +143,8 @@ export const passportBlock = [
     },
     {
         header: "wb",
-        blockCheckbox: true,
+        displayBlockCheckbox: true,
+        toNextPageCheckbox: true,
         input: [
             {
                 name: "wb",
@@ -155,7 +158,8 @@ export const passportBlock = [
     },
     {
         header: "rb",
-        blockCheckbox: false,
+        displayBlockCheckbox: false,
+        toNextPageCheckbox: true,
         input: [
             {
                 name: "pump",

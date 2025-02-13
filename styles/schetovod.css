@@ -32,11 +32,6 @@
     grid-area: timeInputContainer;
 }
 
-#realtimeCheckbox{
-    width: 18px;
-    height: 18px;
-}
-
 #realtimeText{
     grid-area: realtimeText;
     align-self: center;

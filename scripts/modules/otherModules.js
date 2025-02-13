@@ -1,6 +1,5 @@
 import {blockInfoStrings} from "../objects/strings.js";
 
-
 export function createModuleHeader(moduleName, moduleID, parentDiv) {
     let container = newEl(parentDiv, "div", "id=moduleHeader / class=defaultContainer");
     newEl(container, "div", "id=moduleHeaderName / class=name", moduleName);
@@ -101,9 +100,13 @@ export function newEl(container, elementName, elementAttributes, stringsObj) {
         }
     }
 
-    if (stringsObj !== undefined) {
-        if (stringsObj[element.id] !== undefined && element.id !== undefined) {
-            element.innerHTML = stringsObj[element.id];
+    if(stringsObj !== undefined) {
+        if (stringsObj[element.id] !== undefined) {
+            if (elementName === "select") {
+                addOptionsToSelect(element, stringsObj[element.id]);
+            } else {
+                element.innerHTML = stringsObj[element.id];
+            }
         } else if (typeof stringsObj === 'string') {
             element.innerHTML = stringsObj;
         }
@@ -148,3 +151,24 @@ export function setCookie(name, value, options = {}) {
     document.cookie = updatedCookie;
 }
 
+function addOptionsToSelect(select, optionsArray) {
+    for (let i = 0; i < optionsArray.length; i++) {
+        if (Array.isArray(optionsArray[i])) {
+            let option = newEl(select, "option", "", optionsArray[i][0]);
+            option.value = optionsArray[i][1];
+        } else {
+            newEl(select, "option", "", optionsArray[i]);
+        }
+    }
+}
+
+export function filterValueByNumber(element){
+    element.value !== "" ? element.value = element.value.replace(/\D/g, "") : "";
+}
+
+export function createCheckboxField(parentContainer, checkboxAttributes, labelAttributes, stringObj){
+    let container = newEl(parentContainer, "div", "class=checkboxField");
+    let cb = newEl(container, "input", "type=checkbox / " + checkboxAttributes);
+    newEl(container, "label", labelAttributes + " / for=" + cb.id, stringObj);
+    return cb;
+}

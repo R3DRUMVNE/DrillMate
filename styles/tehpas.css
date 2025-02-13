@@ -63,17 +63,6 @@ label.lb{
 
 input.cb{
     grid-area: cb;
-    width: 18px;
-    height: 18px;
-}
-
-.blockCheckboxContainer{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 10px;
-    box-sizing: border-box;
-    align-items: center;
 }
 
 #geoSectionContainer{
@@ -84,45 +73,10 @@ input.cb{
     box-sizing: border-box;
 }
 
-#gsShowLabel{
-    grid-area: gsShowLabel;
-    align-self: center;
-    width: max-content;
-}
-#gsDrawSLLabel{
-    grid-area: gsDrawSLLabel;
-    align-self: center;
-    width: max-content;
-}
-
-#gsShowCheckbox{
-    grid-area: gsShowCheckbox;
-    width: 18px;
-    height: 18px;
-}
-
-#gsDrawSLCheckbox{
-    grid-area: gsDrawSLCheckbox;
-    width: 18px;
-    height: 18px;
-}
-
 #printControlContainer{
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-#dsPrintCheckbox{
-    grid-area: dsPrintCheckbox;
-    justify-self: end;
-    width: 18px;
-    height: 18px;
-}
-#signaturesPrintCheckbox{
-    grid-area: signaturesPrintCheckbox;
-    width: 18px;
-    height: 18px;
 }
 
 #depthLabel{

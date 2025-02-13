@@ -92,13 +92,13 @@ function createInputBlock(blockDiv) {
 
     newEl(DNSelectContainer, "label", "id=DNSelectLabel / for=DNSelect", daicamlockStr);
 
-    DNSelect = newEl(DNSelectContainer, "select", "id=DNSelect");
-    fillDNSelect(DNSelect);
+    DNSelect = newEl(DNSelectContainer, "select", "id=DNSelect", daicamlockStr);
+    DNSelect.options[3].selected = true;
     DNSelect.onchange = function () {
         changeSizes();
     }
-    father.onchange();
-    hoseFitting.onchange();
+    father.dispatchEvent(new Event('change'));
+    hoseFitting.dispatchEvent(new Event('change'));
 }
 
 function createSizesBlock(blockDiv) {
@@ -127,16 +127,6 @@ function getCamlockInfo() {
             currentCamlock.type = camlockObject.type[i].name;
         }
     }
-}
-
-function fillDNSelect(select) {
-    let DNList = ["10мм | 3/8\"", "15мм | 1/2\"", "20мм | 3/4\"", "25мм | 1\"", "32мм | 1-1/4\"", "40мм | 1-1/2\"", "50мм | 2\"", "65мм | 2-1/2\"", "80мм | 3\"", "100мм | 4\"", "125мм | 5\""];
-
-    for (let i = 0; i < DNList.length; i++) {
-        let newOption = newEl(select, "option", "", DNList[[i]]);
-        newOption.value = DNList[i].split("мм")[0];
-    }
-    select.options[3].selected = true;
 }
 
 function changeSizes() {
