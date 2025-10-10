@@ -17,4 +17,10 @@ export const menuOption=[
         description: "Сформируй техпаспорт своей скважины.<br><u>Без сбора данных и геолокации</u>",
         class: "menuOption",
     },
+    {
+        name: "Прокачайка",
+        id: "prokachaika",
+        description: "Подбери поверхностный самовсасывающий насос для своей абиссинской скважины</u>",
+        class: "menuOption",
+    },
 ];

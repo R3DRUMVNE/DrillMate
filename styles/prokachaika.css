@@ -1,0 +1,257 @@
+#prokachaikaDiv{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#filterBlock{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#filterBlockHeader{
+    text-align: center;
+}
+
+#wellFlowRateControls{
+    width: 100%;
+    height: min-content;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+.pumpContainer{
+    background-color: var(--button);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.pumpContainerHide{
+    display: none;
+}
+
+.pumpContainer > label.pumpName{
+    cursor: pointer;
+    flex-grow: 1;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+.pumpContainer > label.pumpPoints{
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+#additionalPanelContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: end;
+}
+
+#compareButton{
+    flex-grow: 1;
+}
+
+#compareListContainer{
+    width: min(100%, 960px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#cL_header{
+    position: sticky;
+    left: 0;
+    text-align: center;
+}
+
+#compareTable{
+    overflow-x: scroll;
+    width: max-content;
+    border-collapse: collapse;
+    border-radius: 10px;
+    margin-right: 7px;
+    margin-left: 7px;
+}
+
+#compareTable > thead{
+    background-color: var(--secondaryColor);
+    position: sticky;
+    top: 0;
+}
+
+#compareTable > thead > tr > td{
+    width: max-content;
+    text-align: center;
+    border: 2px solid var(--button);
+    padding: 7px;
+}
+
+#compareTable > tbody > tr > td{
+    width: max-content;
+    border: 2px solid var(--button);
+    padding: 7px;
+}
+
+#cL_deleteButton{
+    margin: auto;
+}
+
+#cL_buttonsContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: end;
+    position: sticky;
+    left: 7px;
+    margin-right: 7px;
+    margin-left: 7px;
+}
+
+#cL_clearButton,
+#cL_closeButton{
+    flex-grow: 1;
+}
+
+#pumpInfoContainer{
+    width: min(100%, 768px);
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: height 0.5s;
+}
+
+#pumpNameContainer{
+    font-size: 18px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    user-select: all;
+}
+
+.paramContainer{
+    align-content: center;
+    padding: 5px;
+    background-color: var(--button);
+}
+.valueContainer{
+    align-content: center;
+    padding: 5px;
+}
+
+#pumpInfoButtons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+}
+
+#relayHAContainer{
+    width: min(100%, 430px);
+}
+
+#rHA_header{
+    text-align: center;
+}
+
+/*======================grid areas*/
+
+#findPumpContainer{
+    grid-area: findPumpContainer;
+}
+#pumpTypeContainer{
+    grid-area: pumpTypeContainer;
+}
+#pumpControlContainer{
+    grid-area: pumpControlContainer;
+}
+#bodyMaterialContainer{
+    grid-area: bodyMaterialContainer;
+}
+#wellFlowRateContainer{
+    grid-area: wellFlowRateContainer;
+}
+#pressureContainer{
+    grid-area: pressureContainer;
+}
+
+#paramsTableBody{
+    grid-area: paramsTableBody;
+}
+#pumpInfoButtons{
+    grid-area: pumpInfoButtons;
+}
+#pumpInfoControls{
+    grid-area: pumpInfoControls;
+}
+
+#pumpTypeLabel{
+    grid-area: pumpTypeLabel;
+}
+#pumpTypeValue{
+    grid-area: pumpTypeValue;
+}
+#pumpVersionLabel{
+    grid-area: pumpVersionLabel;
+}
+#pumpVersionValue{
+    grid-area: pumpVersionValue;
+}
+#pumpControlLabel{
+    grid-area: pumpControlLabel;
+}
+#pumpControlValue{
+    grid-area: pumpControlValue;
+}
+#bodyMaterialLabel{
+    grid-area: bodyMaterialLabel;
+}
+#bodyMaterialValue{
+    grid-area: bodyMaterialValue;
+}
+#capacityLabel{
+    grid-area: capacityLabel;
+}
+#capacityValue{
+    grid-area: capacityValue;
+}
+#maxPerfLabel{
+    grid-area: maxPerfLabel;
+}
+#maxPerfValue{
+    grid-area: maxPerfValue;
+}
+#liftingHeightLabel{
+    grid-area: liftingHeightLabel;
+}
+#liftingHeightValue{
+    grid-area: liftingHeightValue;
+}
+#maxPressureLabel{
+    grid-area: maxPressureLabel;
+}
+#maxPressureValue{
+    grid-area: maxPressureValue;
+}
+#forLowStaticLevelLabel{
+    grid-area: forLowStaticLevelLabel;
+}
+#forLowStaticLevelValue{
+    grid-area: forLowStaticLevelValue;
+}
+#accumulatorLabel{
+    grid-area: accumulatorLabel;
+}
+#accumulatorValue{
+    grid-area: accumulatorValue;
+}

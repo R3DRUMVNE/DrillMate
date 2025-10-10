@@ -37,8 +37,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: auto !Important;
-    width: 100% !Important;
+    height: auto;
+    width: 100%;
 
     box-sizing: border-box;
     background-color: white;

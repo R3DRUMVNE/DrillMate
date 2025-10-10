@@ -27,7 +27,7 @@ html, body {
 .unPadContainer,
 input,
 textarea,
-select{
+select {
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
 }
 
@@ -44,18 +44,19 @@ select{
 }
 
 .unPadContainer,
-.defaultContainer{
+.defaultContainer {
     background-color: var(--primaryColor);
     border-radius: 10px;
     font-size: inherit;
     box-sizing: border-box;
-    padding: 10px;
-}
-.unPadContainer{
-    padding: 0 0 10px 0;
+    padding: 7px;
 }
 
-.popUp{
+.unPadContainer {
+    padding: 0 0 7px 0;
+}
+
+.popUp {
     text-shadow: inherit;
     font-family: inherit;
     color: inherit;
@@ -75,36 +76,36 @@ select{
     gap: 10px;
 }
 
-.itemsContainer{
+.itemsContainer {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 7px;
+    margin-right: 7px;
 }
 
-.inpContainer{
+.inpContainer {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 0;
 }
 
-.inpContainer > label{
+.inpContainer > label {
     margin-left: 5px;
 }
 
 .inpContainer > input,
 .inpContainer > select,
-.inpContainer > textarea{
+.inpContainer > textarea {
     width: 100%;
 }
 
 /*====================================именные стили*/
 
 #infoHeader,
-#bugReportHeader{
+#bugReportHeader {
     position: sticky;
     top: 0;
     left: 0;
@@ -132,13 +133,14 @@ select{
     top: 0;
     height: max-content;
     margin: 0;
-    padding: 10px;
+    padding: 7px;
     background-color: var(--primaryColor);
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
 }
-#logo{
+
+#logo {
     height: 40px;
     width: auto;
     filter: drop-shadow(0 2px 2px var(--shadow));
@@ -151,13 +153,14 @@ select{
     justify-content: flex-start;
     text-shadow: 0 3px 3px var(--shadow);
 }
+
 .programHeaderButton {
     padding: 5px;
     width: 40px;
     height: 40px;
 }
 
-#fragmentDiv{
+#fragmentDiv {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -175,19 +178,21 @@ select{
         "description description";
     gap: 10px;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 7px;
     background-color: var(--primaryColor);
     box-shadow: 0 4px 4px 0 var(--shadow), inset 0 0 0 0 var(--noShadow);
     border-radius: 10px;
     transition: box-shadow 0.3s;
     cursor: pointer;
 }
+
 .menuOption > .image {
     grid-area: ico;
     width: 35px;
     height: auto;
     filter: drop-shadow(0 2px 2px var(--shadow));
 }
+
 .menuOption > .header {
     grid-area: header;
     justify-self: start;
@@ -197,6 +202,7 @@ select{
     max-height: max-content;
     font-size: 18px;
 }
+
 .menuOption > .description {
     grid-area: description;
     padding: 0;
@@ -205,67 +211,69 @@ select{
     word-wrap: break-word;
 }
 
-#moduleHeader{
+#moduleHeader {
     grid-area: moduleHeader;
     text-align: center;
     max-height: max-content;
     display: flex;
     justify-items: end;
+    gap: 5px;
 
-    padding: 5px 5px 5px 27px;
+    padding: 5px 5px 5px 59px;
 }
 
-#moduleHeader > .name{
+#moduleHeaderName {
     flex-grow: 1;
     font-size: 20px;
-    vertical-align: center;
 }
 
-#moduleHeader > button{
+#moduleHeader > button {
     width: 27px;
     height: 27px;
-    padding: 2px;
+    padding: 3px;
+    border-radius: 7px;
 }
 
-.iconButton{
+.iconButton {
     display: flex;
     gap: 10px;
     flex-direction: row;
     align-items: center;
     align-content: center;
-    justify-content: start!Important;
-    padding: 10px!Important;
+    justify-content: start !Important;
+    padding: 7px !Important;
 }
-.iconButton > img{
+
+.iconButton > img {
     order: -1;
     width: 30px;
     height: 30px;
 }
 
-#copyButton{
+#copyButton {
     justify-self: center;
 }
 
-#clientInfoContainer{
+#clientInfoContainer {
     background-color: var(--button);
     user-select: text;
 }
 
-#buttonsContainer{
+#buttonsContainer {
     display: flex;
     gap: 10px;
     flex-direction: row;
 }
 
-#buttonsContainer > *{
+#buttonsContainer > * {
     flex-basis: 100%;
 }
 
-#blockInfoButton{
+#blockInfoButton {
     cursor: help;
 }
 
-.checkboxField{
+.checkboxContainer {
     display: flex;
     width: max-content;
     flex-direction: row;
@@ -273,21 +281,21 @@ select{
     align-items: center;
 }
 
-.checkboxField > label{
+.checkboxContainer > label {
     width: max-content;
 }
 
 /*=====================alert===================*/
 
-#dialogContainer{
+#dialogContainer {
     z-index: 9999;
-    width: min(90%, 500px);
+    width: min(100%, 500px);
     overflow-y: scroll;
     max-height: 100vh;
-    filter: none!Important;
+    filter: none !Important;
 }
 
-#dialogHeader{
+#dialogHeader {
     font-size: 18px;
     position: sticky;
     top: 0;
@@ -297,7 +305,7 @@ select{
 
 /*=======================toast==================*/
 
-#toastContainer{
+#toastContainer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -318,46 +326,142 @@ select{
 
     border: 1px solid white;
     border-radius: 10px;
-    padding: 10px;
+    padding: 7px;
     background-color: var(--secondaryColor);
 }
 
-.show{
+.show {
     opacity: 0;
     animation: show 300ms forwards;
 }
+
 @keyframes show {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-.hide{
+.hide {
     opacity: 1;
     animation: hide 300ms forwards;
 }
+
 @keyframes hide {
-    0% {opacity: 1;}
-    100% {opacity: 0;}
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
+/*=====================SHARE===================*/
+
+#shareContainer {
+    z-index: 1001;
+    width: min(100%, 320px);
+}
+
+#shareItemsContainer {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    grid-auto-rows: max-content;
+    gap: 10px;
+    grid-template-areas:
+        "URLInput URLInput URLInput"
+        "vkShareButton tgShareButton copyURLButton"
+        "closeButton closeButton closeButton";
+    padding: 7px;
+}
+
+#URLInput {
+    grid-area: URLInput;
+}
+
+#vkShareButton,
+#tgShareButton {
+    width: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
+    transition: box-shadow 0.3s;
+    cursor: pointer;
+}
+
+#vkShareButton {
+    grid-area: vkShareButton;
+}
+
+#tgShareButton {
+    grid-area: tgShareButton;
+}
+
+#vkShareButton:hover,
+#tgShareButton:hover {
+    box-shadow: 0 7px 7px var(--shadow), inset 0 0 0 0 var(--noShadow);
+}
+
+#copyURLButton {
+    height: max-content;
+    align-self: center;
+    grid-area: copyURLButton;
+}
+
+#closeButton {
+    grid-area: closeButton;
+}
+
+/*=====================getContainer=================*/
+
+.getContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    width: auto;
+    justify-items: center;
+}
+
+.getItemButton {
+    cursor: pointer;
+    width: 50px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
+    transition: box-shadow 0.3s;
+}
+
+.getItemButton:hover {
+    box-shadow: 0 7px 7px var(--shadow), inset 0 0 0 0 var(--noShadow);
+}
 
 /*=====================Общие стили===================*/
 
-*:disabled{
+*:disabled {
     opacity: 0.7;
 }
 
-a{
+a {
     color: inherit;
 }
 
-input[type="file"]{
+p {
+    margin: 0 0 7px 0;
+    padding: 0;
+}
+
+input[type="file"] {
     display: none;
 }
 
 input[type="file"] + label.of,
 .iconButton,
-button{
+button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -371,11 +475,11 @@ button{
     text-shadow: inherit;
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
     transition: box-shadow 0.3s;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 15px;
+    padding: 7px;
 }
 
-button > img{
+button > img {
     filter: drop-shadow(0 2px 2px var(--shadow));
     width: 100%;
     height: auto;
@@ -384,34 +488,35 @@ button > img{
 input[type="file"] + label.of:active,
 button:active,
 .iconButton:active,
-.menuOption:active{
-    box-shadow: 0 4px 4px var(--shadow), inset 0 4px 4px 0 var(--shadow);
+.menuOption:active {
+    box-shadow: inset 0 4px 4px 0 var(--shadow);
 }
 
-select{
+select {
     background-color: var(--button);
     box-sizing: border-box;
     width: 100%;
     border: none;
     padding: 5px;
-    border-radius: 5px;
-    color:var(--primaryText);
+    border-radius: 10px;
+    color: var(--primaryText);
     font-size: inherit;
     font-family: inherit;
     cursor: pointer;
     height: min-content;
 }
-select:focus{
+
+select:focus {
     outline: 1px solid var(--primaryText);
 }
 
-textarea{
+textarea {
     box-sizing: border-box;
     text-align: left;
     padding: 5px;
     background-color: var(--button);
     color: var(--primaryText);
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     align-self: center;
     font-size: inherit;
@@ -423,34 +528,35 @@ textarea{
 input[type="tel"],
 input[type="text"],
 input[type="time"],
-input[type="datetime-local"]{
+input[type="datetime-local"] {
     box-sizing: border-box;
     text-align: left;
     padding: 5px;
     background-color: var(--button);
     color: var(--primaryText);
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
-    height: min-content;
+    height: 31px;
     align-self: center;
     font-size: inherit;
 }
+
 input[type="tel"]:focus,
 input[type="text"]:focus,
 input[type="time"]:focus,
 input[type="datetime-local"]:focus,
 textarea:focus,
-button:focus{
+button:focus {
     outline: 1px solid var(--primaryText);
 }
 
 input::placeholder,
-textarea::placeholder{
+textarea::placeholder {
     color: var(--primaryText);
     opacity: 0.5;
 }
 
-input[type="checkbox"]{
+input[type="checkbox"] {
     width: 18px;
     height: 18px;
 
@@ -460,7 +566,7 @@ input[type="checkbox"]{
     outline: 3px solid var(--button);
     outline-offset: 2px;
     border: none;
-    border-radius: 1px;
+    border-radius: 5px;
     margin: 5px;
     padding: 0;
     transition: background-color 0.3s;
@@ -469,36 +575,36 @@ input[type="checkbox"]{
     cursor: pointer;
 }
 
-input[type="checkbox"]:checked{
+input[type="checkbox"]:checked {
     background-color: var(--button);
 }
 
-input[type="checkbox"]:focus{
+input[type="checkbox"]:focus {
     outline: 3px solid var(--primaryText);
     outline-offset: 2px;
 }
 
-input[type = "radio"]{
+input[type = "radio"] {
     appearance: none;
     position: absolute;
     display: none;
 }
 
-input[type = "radio"] + label.radioLabel{
+input[type = "radio"] + label.radioLabel {
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
     cursor: pointer;
 }
 
-input[type = "radio"]:checked + label.radioLabel{
+input[type = "radio"]:checked + label.radioLabel {
     box-shadow: 0 4px 4px 0 var(--shadow), inset 0 4px 4px 0 var(--shadow);
     background-color: var(--primaryColor);
 }
 
-label.radioLabel{
+label.radioLabel {
     background-color: var(--button);
     flex-grow: 1;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 7px;
     transition: background-color 0.3s, box-shadow 0.3s;
     align-content: center;
     height: min-content;
@@ -513,4 +619,6 @@ label.radioLabel{
     --shadow: none;
     --noShadow: none;
     --primaryText: none;
+    --badResult: none;
+    --goodResult: none;
 }

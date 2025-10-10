@@ -3,8 +3,24 @@
 }
 
 #answerContainer{
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 5px 5px 32px;
     grid-area: answerContainer;
+}
+
+#answerContainer > button{
+    width: 27px;
+    height: 27px;
+    padding: 3px;
+    border-radius: 7px;
+}
+
+#answerContainer u{
+    user-select: all;
 }
 
 #fatherLabel,
@@ -51,9 +67,22 @@
 #sizeLabel1,
 #sizeLabel2,
 #sizeLabel3{
-    margin: 0 10px;
+    margin: 0 7px;
 }
 
+#getCamlockBlock{
+    grid-area: getCamlockBlock;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 10px;
+}
 
+#getCamlockHeader{
+    text-align: center;
+}
 
+#getCamlockItemsContainer{
+    align-items: center;
+}
 
