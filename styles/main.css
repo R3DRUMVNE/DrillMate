@@ -291,7 +291,6 @@ select {
     z-index: 9999;
     width: min(100%, 500px);
     overflow-y: scroll;
-    max-height: 100vh;
     filter: none !Important;
 }
 
