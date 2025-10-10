@@ -1,0 +1,187 @@
+@media screen and (min-width: 320px) and (max-width: 479px) {
+    #filterFieldsContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+    }
+
+    #pumpListContainer{
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+        gap: 10px;
+    }
+
+    #paramsTableBody{
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+        "pumpTypeLabel"
+        "pumpTypeValue"
+        "pumpVersionLabel"
+        "pumpVersionValue"
+        "pumpControlLabel"
+        "pumpControlValue"
+        "bodyMaterialLabel"
+        "bodyMaterialValue"
+        "capacityLabel"
+        "capacityValue"
+        "maxPerfLabel"
+        "maxPerfValue"
+        "liftingHeightLabel"
+        "liftingHeightValue"
+        "maxPressureLabel"
+        "maxPressureValue"
+        "forLowStaticLevelLabel"
+        "forLowStaticLevelValue"
+        "accumulatorLabel"
+        "accumulatorValue";
+        gap: 0;
+
+        border-radius: 10px;
+        padding: 0;
+        border: 1px solid white;
+        overflow: hidden;
+    }
+
+    #relayHAButton{
+        align-self: stretch;
+    }
+
+    #pumpInfoControls{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    #filterFieldsContainer{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+            "findPumpContainer pumpTypeContainer"
+            "pumpControlContainer bodyMaterialContainer"
+            "wellFlowRateContainer pressureContainer";
+    }
+
+    #filtersResetButton{
+        width: max-content;
+        align-self: center;
+    }
+
+    #pumpListContainer{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+    }
+
+    #paramsTableBody{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+        "pumpTypeLabel pumpTypeValue"
+        "pumpVersionLabel pumpVersionValue"
+        "pumpControlLabel pumpControlValue"
+        "bodyMaterialLabel bodyMaterialValue"
+        "capacityLabel capacityValue"
+        "maxPerfLabel maxPerfValue"
+        "liftingHeightLabel liftingHeightValue"
+        "maxPressureLabel maxPressureValue"
+        "forLowStaticLevelLabel forLowStaticLevelValue"
+        "accumulatorLabel accumulatorValue";
+        gap: 0;
+
+        border-radius: 10px;
+        padding: 0;
+        border: 1px solid white;
+        overflow: hidden;
+    }
+
+    #relayHAButton {
+        align-self: auto;
+    }
+
+    #pumpInfoControls{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    #pumpInfoControls > button{
+        flex-grow: 1;
+    }
+}
+
+@media screen and (min-width: 768px){
+    #filterFieldsContainer{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+            "findPumpContainer pumpTypeContainer pumpControlContainer"
+            "bodyMaterialContainer wellFlowRateContainer pressureContainer";
+    }
+
+    #filtersResetButton{
+        width: max-content;
+        align-self: center;
+    }
+
+    #pumpListContainer{
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-auto-rows: max-content;
+    }
+
+    #pumpInfoItems{
+        display: grid;
+        grid-template-columns: 530px 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+            "paramsTableBody pumpInfoButtons"
+            "paramsTableBody pumpInfoControls";
+        align-items: center;
+    }
+
+    #paramsTableBody{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+        grid-template-areas:
+        "pumpTypeLabel pumpTypeValue"
+        "pumpVersionLabel pumpVersionValue"
+        "pumpControlLabel pumpControlValue"
+        "bodyMaterialLabel bodyMaterialValue"
+        "capacityLabel capacityValue"
+        "maxPerfLabel maxPerfValue"
+        "liftingHeightLabel liftingHeightValue"
+        "maxPressureLabel maxPressureValue"
+        "forLowStaticLevelLabel forLowStaticLevelValue"
+        "accumulatorLabel accumulatorValue";
+        gap: 0;
+
+        border-radius: 10px;
+        padding: 0;
+        border: 1px solid white;
+        overflow: hidden;
+        height: max-content;
+    }
+
+    #pumpInfoControls{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: end;
+    }
+}

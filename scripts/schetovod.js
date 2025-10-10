@@ -1,7 +1,7 @@
 import {
     createModuleHeader,
     tryFormatToNumber,
-    newEl,
+    createElement,
     appToast,
     filterValueByNumber
 } from "./modules/otherModules.js";
@@ -16,20 +16,20 @@ let flowRate = {
 }
 
 export function startSchetoVodModule(container, moduleName, moduleID) {
-    let schetovodDiv = newEl(container, 'div', 'id=schetovodDiv');
+    let schetovodDiv = createElement(container, 'div', 'id=schetovodDiv');
     createModuleHeader(moduleName, moduleID, schetovodDiv);
     createInputBlock(schetovodDiv);
     createOutputBlock(schetovodDiv);
 }
 
 function createInputBlock(blockDiv) {
-    let inputBlock = newEl(blockDiv, "div", "id=inputBlock / class=defaultContainer inputBlockRC");
+    let inputBlock = createElement(blockDiv, "div", "id=inputBlock / class=defaultContainer inputBlockRC");
 
-    let volumeInputContainer = newEl(inputBlock, "div", "id=volumeInputContainer / class=inpContainer");
-    newEl(volumeInputContainer, "label", "id=volumeText", schetovodStr);
-    let volumeInput = newEl(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStr.volumeInputHint);
+    let volumeInputContainer = createElement(inputBlock, "div", "id=volumeInputContainer / class=inpContainer");
+    createElement(volumeInputContainer, "label", "id=volumeText", schetovodStr);
+    let volumeInput = createElement(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStr.volumeInputHint);
 
-    let realtimeCheckbox = newEl(inputBlock, "input", "id=realtimeCheckbox / type=checkbox / checked");
+    let realtimeCheckbox = createElement(inputBlock, "input", "id=realtimeCheckbox / type=checkbox / checked");
     let startButton, timeInputContainer;
     realtimeCheckbox.onchange = function () {
         if (realtimeCheckbox.checked) {
@@ -39,7 +39,7 @@ function createInputBlock(blockDiv) {
             }
             if (timeInputContainer !== undefined) timeInputContainer.remove();
 
-            startButton = newEl(inputBlock, "button", "id=startButton", schetovodStr);
+            startButton = createElement(inputBlock, "button", "id=startButton", schetovodStr);
             startButton.name = "true";
             startButton.onclick = function () {
                 flowRate.volume = tryFormatToNumber(volumeInput.value);
@@ -55,9 +55,9 @@ function createInputBlock(blockDiv) {
             inputBlock.className = "defaultContainer inputBlockSC";
             if (startButton !== undefined) startButton.remove();
 
-            timeInputContainer = newEl(inputBlock, "div", "id=timeInputContainer / class=inpContainer");
-            newEl(timeInputContainer, "label", "id=userTimeText", schetovodStr);
-            let userTimeInput = newEl(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
+            timeInputContainer = createElement(inputBlock, "div", "id=timeInputContainer / class=inpContainer");
+            createElement(timeInputContainer, "label", "id=userTimeText", schetovodStr);
+            let userTimeInput = createElement(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
             userTimeInput.oninput = function () {
                 standardCalculate();
             }
@@ -68,20 +68,20 @@ function createInputBlock(blockDiv) {
         }
     }
     realtimeCheckbox.dispatchEvent(new Event('change'));
-    newEl(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStr);
+    createElement(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStr);
 }
 
 function createOutputBlock(frg) {
-    let currentTimeContainer = newEl(frg, "div", "id=currentTimeContainer / class=unPadContainer");
+    let currentTimeContainer = createElement(frg, "div", "id=currentTimeContainer / class=unPadContainer");
 
-    newEl(currentTimeContainer, "div", "id=currentTimeText / class=defaultContainer", schetovodStr);
-    newEl(currentTimeContainer, "label", "id=currentTimeOutput", schetovodStr);
+    createElement(currentTimeContainer, "div", "id=currentTimeText / class=defaultContainer", schetovodStr);
+    createElement(currentTimeContainer, "label", "id=currentTimeOutput", schetovodStr);
 
-    let fRContainer = newEl(frg, "div", "id=fRContainer / class=unPadContainer");
+    let fRContainer = createElement(frg, "div", "id=fRContainer / class=unPadContainer");
 
-    newEl(fRContainer, "div", "id=flowRateText / class=defaultContainer", schetovodStr);
-    newEl(fRContainer, "label", "id=flowRateLMOutput", schetovodStr);
-    newEl(fRContainer, "label", "id=flowRateLHOutput", schetovodStr);
+    createElement(fRContainer, "div", "id=flowRateText / class=defaultContainer", schetovodStr);
+    createElement(fRContainer, "label", "id=flowRateLMOutput", schetovodStr);
+    createElement(fRContainer, "label", "id=flowRateLHOutput", schetovodStr);
     return frg;
 }
 

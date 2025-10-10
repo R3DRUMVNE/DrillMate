@@ -62,6 +62,7 @@ label.lb{
 }
 
 input.cb{
+    align-self: center;
     grid-area: cb;
 }
 

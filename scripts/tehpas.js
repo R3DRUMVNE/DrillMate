@@ -1,10 +1,10 @@
 import {
-    newEl,
+    createElement,
     createModuleHeader,
     tryFormatToNumber,
     appAlert,
     scrollController,
-    linkNewStylesheet, setCookie, getCookie, createCheckboxField
+    linkNewStylesheet, setCookie, getCookie, createCheckboxContainer
 } from "./modules/otherModules.js";
 import {tehpasStr} from "./objects/strings.js";
 import {passportBlock} from "./objects/passport.js";
@@ -16,55 +16,55 @@ let currentFile;
 
 export function startTehPasModule(container, moduleName, moduleID) {
     currentFile = "";
-    let tehPasDiv = newEl(container, 'div', 'id=tehPasDiv');
+    let tehPasDiv = createElement(container, 'div', 'id=tehPasDiv');
     passportHeaderImage = undefined;
     createModuleHeader(moduleName, moduleID, tehPasDiv);
     createControls(tehPasDiv);
     createInputBlocks(tehPasDiv);
     createGeoSectionBlock(tehPasDiv);
     createFormPassportButton(tehPasDiv);
-    if (getCookie("firstTime") === undefined) {
+    if (getCookie("tehpas-firstTime") === undefined) {
         let currentDate = new Date();
         currentDate.setDate(currentDate.getDate() + 14);
-        setCookie("firstTime", false, {expires: currentDate});
+        setCookie("tehpas-firstTime", false, {expires: currentDate});
         appAlert("Внимание", "Для корректного отображения техпаспорта на печати рекомендуется использовать браузер Google Chrome");
     }
 }
 
 function createInputBlocks(container) {
     for (let i = 0; i < passportBlock.length; i++) {
-        let block = newEl(container, "div", "id=" + passportBlock[i].header + "Block" + " / class=unPadContainer");
+        let block = createElement(container, "div", "id=" + passportBlock[i].header + "Block" + " / class=unPadContainer");
 
-        newEl(block, "div", "id=" + passportBlock[i].header + "Header / class=shadow defaultContainer blockHeader", tehpasStr);
+        createElement(block, "div", "id=" + passportBlock[i].header + "Header / class=defaultContainer blockHeader", tehpasStr);
 
         if(passportBlock[i].displayBlockCheckbox || passportBlock[i].toNextPageCheckbox){
-            let blockCheckboxContainer = newEl(block, "div", "id="+ block.id +"CheckboxContainer / class=blockCheckboxContainer");
+            let blockCheckboxContainer = createElement(block, "div", "id="+ block.id +"CheckboxContainer / class=blockCheckboxContainer");
             if(passportBlock[i].displayBlockCheckbox){
-                createCheckboxField(blockCheckboxContainer, "id=" + block.id + "Checkbox / file=cb", "id=" + block.id + "CheckboxLabel", tehpasStr);
+                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "Checkbox / file=cb", "id=" + block.id + "CheckboxLabel", tehpasStr);
             }
             if(passportBlock[i].toNextPageCheckbox){
-                createCheckboxField(blockCheckboxContainer, "id=" + block.id + "ToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
+                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "ToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
             }
         }
 
-        let itemsContainer = newEl(block, "div", "id=" + block.id + "Items");
+        let itemsContainer = createElement(block, "div", "id=" + block.id + "Items");
 
         let inputContainer;
         for (let j = 0; j < passportBlock[i].input.length; j++) {
             if (passportBlock[i].input[j].checkbox) {
-                inputContainer = newEl(itemsContainer, "div", "class=inputContainer");
+                inputContainer = createElement(itemsContainer, "div", "class=inputContainer");
 
-                newEl(inputContainer, "input", "id=" + passportBlock[i].input[j].name + "Checkbox / class=cb / type=checkbox / file=cb / checked");
+                createElement(inputContainer, "input", "id=" + passportBlock[i].input[j].name + "Checkbox / class=cb / type=checkbox / file=cb / checked");
             } else {
-                inputContainer = newEl(itemsContainer, "div", "class=inputContainerNoCheckbox");
+                inputContainer = createElement(itemsContainer, "div", "class=inputContainerNoCheckbox");
             }
 
             if (tehpasStr[passportBlock[i].input[j].name + "Label"] !== undefined) {
-                newEl(inputContainer, "label", "id=" + passportBlock[i].input[j].name + "Label / class=lb", tehpasStr);
+                createElement(inputContainer, "label", "id=" + passportBlock[i].input[j].name + "Label / class=lb", tehpasStr);
             }
 
             if (passportBlock[i].input[j].kind === "input" || passportBlock[i].input[j].kind === "textarea") {
-                let input = newEl(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp");
+                let input = createElement(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp");
                 if (passportBlock[i].input[j].type !== null) {
                     input.setAttribute("type", passportBlock[i].input[j].type);
                 }
@@ -73,7 +73,7 @@ function createInputBlocks(container) {
                 }
                 inputContainer.id = input.id + "Container";
             } else if (passportBlock[i].input[j].kind === "select") {
-                let select = newEl(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp", tehpasStr);
+                let select = createElement(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp", tehpasStr);
                 inputContainer.id = select.id + "Container";
             }
         }
@@ -97,11 +97,11 @@ function createInputBlocks(container) {
 }
 
 function createFormPassportButton(container) {
-    let printControlContainer = newEl(container, "div", "id=printControlContainer / class=defaultContainer");
+    let printControlContainer = createElement(container, "div", "id=printControlContainer / class=defaultContainer");
 
-    let printCheckboxContainer = newEl(printControlContainer, "div", "id=printCheckboxContainer / class=blockCheckboxContainer");
+    let printCheckboxContainer = createElement(printControlContainer, "div", "id=printCheckboxContainer / class=blockCheckboxContainer");
 
-    let dsPrintCheckbox = createCheckboxField(printCheckboxContainer, "id=dsPrintCheckbox / file=cb","id=dsPrintLabel", tehpasStr);
+    let dsPrintCheckbox = createCheckboxContainer(printCheckboxContainer, "id=dsPrintCheckbox / file=cb","id=dsPrintLabel", tehpasStr);
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
@@ -116,9 +116,9 @@ function createFormPassportButton(container) {
         }
     }
     dsPrintCheckbox.dispatchEvent(new Event('change'));
-    createCheckboxField(printCheckboxContainer,"id=signaturesPrintCheckbox / file=cb / checked", "id=signaturesPrintLabel", tehpasStr);
+    createCheckboxContainer(printCheckboxContainer,"id=signaturesPrintCheckbox / file=cb / checked", "id=signaturesPrintLabel", tehpasStr);
 
-    let formPassButton = newEl(printControlContainer, "button", "id=formPassButton", tehpasStr);
+    let formPassButton = createElement(printControlContainer, "button", "id=formPassButton", tehpasStr);
     formPassButton.onclick = function () {
 
         let error = createPassport();
@@ -137,20 +137,20 @@ function createPassport() {
 
     let error = false;
 
-    let passportContainer = newEl(document.body, "div", "id=passportContainer / class=print");
+    let passportContainer = createElement(document.body, "div", "id=passportContainer / class=print");
     addTempElement(passportContainer.id);
 
-    newEl(passportContainer, "div", "id=frame");
+    createElement(passportContainer, "div", "id=frame");
 
     if (passportHeaderImage !== undefined) {
         passportContainer.appendChild(passportHeaderImage);
     }
 
-    let passportHeaderContainer = newEl(passportContainer, "div", "id=passportHeaderContainer");
+    let passportHeaderContainer = createElement(passportContainer, "div", "id=passportHeaderContainer");
 
-    let passportHeaderLabel = newEl(passportHeaderContainer, "label", "id=passportHeaderLabel", tehpasStr);
+    let passportHeaderLabel = createElement(passportHeaderContainer, "label", "id=passportHeaderLabel", tehpasStr);
 
-    newEl(passportHeaderContainer, "label", "id=passportUnderHeaderLabel", tehpasStr);
+    createElement(passportHeaderContainer, "label", "id=passportUnderHeaderLabel", tehpasStr);
 
     for (let i = 0; i < passportBlock.length; i++) {
         let hideBlock = false;
@@ -160,17 +160,17 @@ function createPassport() {
             }
         }
         if (!hideBlock) {
-            let tableBlock = newEl(passportContainer, "table", "class=tableBlock");
+            let tableBlock = createElement(passportContainer, "table", "class=tableBlock");
             if(passportBlock[i].toNextPageCheckbox){
                 if(document.querySelector("#" + passportBlock[i].header + "BlockToNextPageCheckbox").checked){
                     tableBlock.className = "tableBlock breakBefore";
                 }
             }
 
-            newEl(tableBlock, "col");
-            newEl(tableBlock, "col");
+            createElement(tableBlock, "col");
+            createElement(tableBlock, "col");
 
-            newEl(tableBlock, "caption", "class=tableCaption", tehpasStr[passportBlock[i].header + "Header"]);
+            createElement(tableBlock, "caption", "class=tableCaption", tehpasStr[passportBlock[i].header + "Header"]);
 
             for (let j = 0; j < passportBlock[i].input.length; j++) {
                 if (passportBlock[i].input[j].name === "passNumber") {
@@ -250,9 +250,9 @@ function createPassport() {
 }
 
 function createSignaturesTable(container) {
-    let signTable = newEl(container, "table", "id=signTable");
+    let signTable = createElement(container, "table", "id=signTable");
 
-    newEl(signTable, "caption", "", tehpasStr["signaturesTableHeader"]);
+    createElement(signTable, "caption", "", tehpasStr["signaturesTableHeader"]);
 
     let tableScheme = [
         ["jobDone / leftText", null, null],
@@ -263,9 +263,9 @@ function createSignaturesTable(container) {
         [null, null, "dateField"],
     ];
 
-    newEl(signTable, "col", "style=width: 32%;");
-    newEl(signTable, "col", "style=width: 18%;");
-    newEl(signTable, "col", "style=width: 50%;");
+    createElement(signTable, "col", "style=width: 32%;");
+    createElement(signTable, "col", "style=width: 18%;");
+    createElement(signTable, "col", "style=width: 50%;");
 
     for (let i = 0; i < tableScheme.length; i++) {
         let signTableRow = signTable.insertRow();
@@ -305,18 +305,18 @@ function createSignaturesTable(container) {
 
 function createGeoSectionTable(container) {
     let error = false;
-    let gsTable = newEl(container, "table", "id=gsTable");
+    let gsTable = createElement(container, "table", "id=gsTable");
     if(document.querySelector("#gsBlockToNextPageCheckbox").checked){
         gsTable.className = "breakBefore";
     }
 
     let colWidth = [21, 25, 2, 3, 2, 3, 2, 3, 2, 37];
     for (let i = 0; i < colWidth.length; i++) {
-        let col = newEl(gsTable, "col", "");
+        let col = createElement(gsTable, "col", "");
         col.width = colWidth[i] + "%";
     }
 
-    newEl(gsTable, "caption", "", tehpasStr["geoSectionHeader"]);
+    createElement(gsTable, "caption", "", tehpasStr["geoSectionHeader"]);
     let headerRow = gsTable.insertRow();
     headerRow.className = "headerRow";
     let headerCell;
@@ -545,9 +545,9 @@ function drawWellConstruction(table) {
 }
 
 function createControls(container) {
-    let controlsDiv = newEl(container, "div", "id=controlsDiv");
+    let controlsDiv = createElement(container, "div", "id=controlsDiv");
 
-    let headerUploadButton = newEl(controlsDiv, "input", "id=headerUploadButton / type=file / accept=image/*");
+    let headerUploadButton = createElement(controlsDiv, "input", "id=headerUploadButton / type=file / accept=image/*");
     headerUploadButton.onchange = function () {
         if (this.value.trim() !== "") {
             let imageFile = this.files[0];
@@ -570,12 +570,12 @@ function createControls(container) {
             }
         }
     }
-    let headerUploadLabel = newEl(controlsDiv, "label", "id=headerUploadLabel / for=headerUploadButton / class=of", tehpasStr);
+    let headerUploadLabel = createElement(controlsDiv, "label", "id=headerUploadLabel / for=headerUploadButton / class=of", tehpasStr);
     headerUploadLabel.onclick = function () {
         this.style.backgroundColor = appTheme.getColor("button");
     }
 
-    let openFileButton = newEl(controlsDiv, "input", "id=openFileButton / type=file / accept=.tehpas");
+    let openFileButton = createElement(controlsDiv, "input", "id=openFileButton / type=file / accept=.tehpas");
     openFileButton.onchange = function () {
         if (this.value.trim() !== "") {
             let inputFile = this.files[0];
@@ -597,13 +597,13 @@ function createControls(container) {
             }
         }
     }
-    let openFileLabel = newEl(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStr);
+    let openFileLabel = createElement(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStr);
     openFileLabel.onclick = function () {
         this.style.backgroundColor = appTheme.getColor("button");
         currentFile = "";
     }
 
-    let saveButton = newEl(controlsDiv, "button", "id=saveFileButton", tehpasStr);
+    let saveButton = createElement(controlsDiv, "button", "id=saveFileButton", tehpasStr);
     saveButton.onclick = function () {
         showFileSaveDialog();
     }
@@ -643,23 +643,23 @@ function setReadedData(content) {
 }
 
 function showFileSaveDialog() {
-    scrollController.disableScrolling();
-    let fileSaveContainer = newEl(document.body, "div", "id=fileSaveContainer / class=unPadContainer popUp");
+    scrollController.disableBodyScrolling();
+    let fileSaveContainer = createElement(document.body, "div", "id=fileSaveContainer / class=unPadContainer popUp");
 
-    newEl(fileSaveContainer, "div", "id=fileSaveHeader / class=defaultContainer", tehpasStr);
+    createElement(fileSaveContainer, "div", "id=fileSaveHeader / class=defaultContainer", tehpasStr);
 
-    let itemsContainer = newEl(fileSaveContainer, "div", "class=itemsContainer");
+    let itemsContainer = createElement(fileSaveContainer, "div", "class=itemsContainer");
 
-    let inpContainer = newEl(itemsContainer, "div", "class=inpContainer");
+    let inpContainer = createElement(itemsContainer, "div", "class=inpContainer");
 
-    newEl(inpContainer, "label", "id=fileNameLabel", tehpasStr);
-    let fileName = newEl(inpContainer, "input", "id=fileName / type=text");
+    createElement(inpContainer, "label", "id=fileNameLabel", tehpasStr);
+    let fileName = createElement(inpContainer, "input", "id=fileName / type=text");
     fileName.value = currentFile;
     fileName.placeholder = tehpasStr[fileName.id + "Hint"];
 
-    let buttonsContainer = newEl(itemsContainer, "div", "id=buttonsContainer");
+    let buttonsContainer = createElement(itemsContainer, "div", "id=buttonsContainer");
 
-    let saveFileButton = newEl(buttonsContainer, "button", "id=saveFileButton", tehpasStr);
+    let saveFileButton = createElement(buttonsContainer, "button", "id=saveFileButton", tehpasStr);
     saveFileButton.onclick = function () {
         if (fileName.value.trim() !== "") {
             saveFile(fileName.value, getDataToSave());
@@ -669,9 +669,9 @@ function showFileSaveDialog() {
         closeButton.onclick();
     }
 
-    let closeButton = newEl(buttonsContainer, "button", "id=closeButton", "Закрыть");
+    let closeButton = createElement(buttonsContainer, "button", "id=closeButton", "Закрыть");
     closeButton.onclick = function () {
-        scrollController.enableScrolling();
+        scrollController.enableBodyScrolling();
         fileSaveContainer.remove();
     }
 
@@ -714,22 +714,22 @@ function saveFile(fileName, data) {
 }
 
 function createGeoSectionBlock(container) {
-    let geoSectionContainer = newEl(container, "div", "id=geoSectionContainer / class=unPadContainer");
+    let geoSectionContainer = createElement(container, "div", "id=geoSectionContainer / class=unPadContainer");
 
-    newEl(geoSectionContainer, "div", "id=geoSectionHeader / class=defaultContainer blockHeader", tehpasStr);
+    createElement(geoSectionContainer, "div", "id=geoSectionHeader / class=defaultContainer blockHeader", tehpasStr);
 
-    let gsCheckboxContainer = newEl(geoSectionContainer, "div", "id=gsCheckboxContainer / class=blockCheckboxContainer");
-    createCheckboxField(gsCheckboxContainer, "id=gsBlockShowCheckbox / file=cb", "id=gsBlockShowLabel", tehpasStr);
-    createCheckboxField(gsCheckboxContainer, "id=gsBlockToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
-    createCheckboxField(gsCheckboxContainer, "id=gsDrawSLCheckbox / file=cb", "id=gsDrawSLLabel", tehpasStr);
+    let gsCheckboxContainer = createElement(geoSectionContainer, "div", "id=gsCheckboxContainer / class=blockCheckboxContainer");
+    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockShowCheckbox / file=cb", "id=gsBlockShowLabel", tehpasStr);
+    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
+    createCheckboxContainer(gsCheckboxContainer, "id=gsDrawSLCheckbox / file=cb", "id=gsDrawSLLabel", tehpasStr);
 
-    let itemsContainer = newEl(geoSectionContainer, "div", "id=layersContainer / class=itemsContainer");
+    let itemsContainer = createElement(geoSectionContainer, "div", "id=layersContainer / class=itemsContainer");
 
     addLayer(null, itemsContainer);
 }
 
 function addLayer(prevLayer, container) {
-    let layer = newEl(null, "div", "class=layer");
+    let layer = createElement(null, "div", "class=layer");
     if (prevLayer !== null) {
         prevLayer.insertAdjacentElement('afterend', layer);
     } else {
@@ -737,12 +737,12 @@ function addLayer(prevLayer, container) {
     }
 
 
-    newEl(layer, "label", "id=depthLabel", tehpasStr);
+    createElement(layer, "label", "id=depthLabel", tehpasStr);
 
-    let startDepthContainer = newEl(layer, "div", "id=startDepthContainer / class=inpContainer");
+    let startDepthContainer = createElement(layer, "div", "id=startDepthContainer / class=inpContainer");
 
-    newEl(startDepthContainer, "label", "id=startDepthLabel", tehpasStr);
-    let startDepth = newEl(startDepthContainer, "input", "id=startDepth / type=tel / file");
+    createElement(startDepthContainer, "label", "id=startDepthLabel", tehpasStr);
+    let startDepth = createElement(startDepthContainer, "input", "id=startDepth / type=tel / file");
     startDepth.placeholder = tehpasStr[startDepth.id + "Hint"];
     if (layer.previousElementSibling !== null) {
         startDepth.value = layer.previousElementSibling.children[2].children[1].value;
@@ -753,10 +753,10 @@ function addLayer(prevLayer, container) {
         }
     }
 
-    let endDepthContainer = newEl(layer, "div", "id=endDepthContainer / class=inpContainer");
+    let endDepthContainer = createElement(layer, "div", "id=endDepthContainer / class=inpContainer");
 
-    newEl(endDepthContainer, "label", "id=endDepthLabel", tehpasStr);
-    let endDepth = newEl(endDepthContainer, "input", "id=endDepth / type=tel / file");
+    createElement(endDepthContainer, "label", "id=endDepthLabel", tehpasStr);
+    let endDepth = createElement(endDepthContainer, "input", "id=endDepth / type=tel / file");
     endDepth.placeholder = tehpasStr[endDepth.id + "Hint"];
     endDepth.oninput = function () {
         if (layer.nextElementSibling !== null) {
@@ -764,15 +764,15 @@ function addLayer(prevLayer, container) {
         }
     }
 
-    let layerNameContainer = newEl(layer, "div", "id=layerNameContainer / class=inpContainer");
+    let layerNameContainer = createElement(layer, "div", "id=layerNameContainer / class=inpContainer");
 
-    newEl(layerNameContainer, "label", "id=layerNameLabel", tehpasStr);
-    newEl(layerNameContainer, "select", "id=layerName / file", tehpasStr);
+    createElement(layerNameContainer, "label", "id=layerNameLabel", tehpasStr);
+    createElement(layerNameContainer, "select", "id=layerName / file", tehpasStr);
 
-    let layerColorContainer = newEl(layer, "div", "id=layerColorContainer / class=inpContainer");
+    let layerColorContainer = createElement(layer, "div", "id=layerColorContainer / class=inpContainer");
 
-    newEl(layerColorContainer, "label", "id=layerColorLabel", tehpasStr);
-    let layerColor = newEl(layerColorContainer, "select", "id=layerColor / file", tehpasStr);
+    createElement(layerColorContainer, "label", "id=layerColorLabel", tehpasStr);
+    let layerColor = createElement(layerColorContainer, "select", "id=layerColor / file", tehpasStr);
     layerColor.style.backgroundColor = layerColor.value;
     layerColor.onchange = function () {
         if (layerColor.value === "Khaki" || layerColor.value === "AliceBlue") {
@@ -783,18 +783,18 @@ function addLayer(prevLayer, container) {
         layerColor.style.backgroundColor = layerColor.value;
     }
 
-    let wellConstructionContainer = newEl(layer, "div", "id=wellConstructionContainer / class=inpContainer");
+    let wellConstructionContainer = createElement(layer, "div", "id=wellConstructionContainer / class=inpContainer");
 
-    newEl(wellConstructionContainer, "label", "id=wellConstructionLabel", tehpasStr);
-    newEl(wellConstructionContainer, "select", "id=wellConstruction / file", tehpasStr);
+    createElement(wellConstructionContainer, "label", "id=wellConstructionLabel", tehpasStr);
+    createElement(wellConstructionContainer, "select", "id=wellConstruction / file", tehpasStr);
     changeWellConstructionOptions(false);
 
-    let addLayerButton = newEl(layer, "button", "id=addLayerButton", tehpasStr);
+    let addLayerButton = createElement(layer, "button", "id=addLayerButton", tehpasStr);
     addLayerButton.onclick = function () {
         addLayer(layer);
     }
 
-    let removeLayerButton = newEl(layer, "button", "id=removeLayerButton", tehpasStr);
+    let removeLayerButton = createElement(layer, "button", "id=removeLayerButton", tehpasStr);
     removeLayerButton.onclick = function () {
         let itemsContainer = layer.parentElement;
         layer.remove();

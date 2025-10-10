@@ -10,7 +10,8 @@
         "camlockImage camlockImage"
         "answerContainer answerContainer"
         "camlockInputBlock camlockInputBlock"
-        "sizesBlock sizesBlock";
+        "sizesBlock sizesBlock"
+        "getCamlockBlock getCamlockBlock";
     }
 
     #camlockImage{
@@ -69,7 +70,7 @@
         justify-self: center;
         max-height: max-content;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr 3fr;
         grid-template-rows: auto auto auto auto;
         gap: 10px;
         grid-template-areas:
@@ -77,7 +78,7 @@
         "camlockImage camlockImage"
         "answerContainer answerContainer"
         "camlockInputBlock camlockInputBlock"
-        "sizesBlock sizesBlock";
+        "getCamlockBlock sizesBlock";
     }
 
     #camlockImage{
@@ -148,8 +149,9 @@
         grid-template-areas:
         "moduleHeader moduleHeader"
         "camlockImage camlockImage"
-        "answerContainer answerContainer"
-        "sizesBlock camlockInputBlock";
+        "sizesBlock answerContainer"
+        "sizesBlock camlockInputBlock"
+        "getCamlockBlock camlockInputBlock";
     }
 
     #camlockImage{
@@ -164,7 +166,7 @@
         grid-area: camlockInputBlock;
         display: grid;
         grid-template-columns: 2fr 3fr;
-        grid-template-rows: max-content auto;
+        grid-template-rows: 1fr 1fr;
         gap: 10px;
         grid-template-areas:
         "fatherMotherContainer fittingDiv"
@@ -178,16 +180,19 @@
         flex-direction: column;
         gap: 0;
         height: min-content;
-        align-self: end;
+        align-self: start;
     }
 
     #fatherMotherContainer{
         grid-area: fatherMotherContainer;
-        height: max-content;
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
         gap: 0;
+    }
+
+    label.radioLabel{
+        height: auto;
     }
 
     #fatherLabel{

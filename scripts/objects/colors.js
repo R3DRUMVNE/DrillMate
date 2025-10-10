@@ -1,3 +1,5 @@
+import {createElement} from "../modules/otherModules.js";
+
 const themesList = {
     "default": {
         "primaryColor": "#0060b9",
@@ -8,6 +10,8 @@ const themesList = {
         "shadow": "rgba(0, 0, 0, 0.5)",
         "noShadow": "rgba(0, 0, 0, 0)",
         "primaryText": "#F4F4F4",
+        "excessPump": "#ffae00",
+        "greatPump": "#37ff00",
     },
     "dark":{
         "primaryColor": "#373737",
@@ -18,16 +22,20 @@ const themesList = {
         "shadow": "rgba(0, 0, 0, 0.5)",
         "noShadow": "rgba(0, 0, 0, 0)",
         "primaryText": "#F4F4F4",
+        "excessPump": "#ffae00",
+        "greatPump": "#37ff00",
     },
-    "blackAndWhite":{
-        "primaryColor": "Gray",
-        "secondaryColor": "DarkGray",
-        "button": "DimGray",
+    "gray":{
+        "primaryColor": "#5E6367",
+        "secondaryColor": "#323639",
+        "button": "#919499",
         "stop": "#b42c38",
         "ready": "#009950",
         "shadow": "rgba(0, 0, 0, 0.5)",
         "noShadow": "rgba(0, 0, 0, 0)",
         "primaryText": "#F4F4F4",
+        "excessPump": "#ffae00",
+        "greatPump": "#37ff00",
     },
 };
 
@@ -43,8 +51,7 @@ export let appTheme = {
         appTheme.currentTheme = "default";
         selectedTheme = appTheme.currentTheme;
     } else if(selectedTheme === "likeSystem"){
-        const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        appTheme.currentTheme = isSystemDarkMode ? "dark" : "default";
+        appTheme.currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "default";
     }else{
         appTheme.currentTheme = selectedTheme;
     }
@@ -54,5 +61,7 @@ export let appTheme = {
     for(let i = 0; i < colors.length; i++){
         document.documentElement.style.setProperty("--" + colors[i][0], colors[i][1]);
     }
+
+    createElement(document.head, "meta", "name=theme-color / content=" + this.getColor("primaryColor"));
 },
 }

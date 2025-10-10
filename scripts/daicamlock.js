@@ -1,8 +1,8 @@
-import {createModuleHeader, newEl} from "./modules/otherModules.js";
+import {createModuleHeader, createElement, appToast, share} from "./modules/otherModules.js";
 import {daicamlockStr} from "./objects/strings.js";
 import {camlockObject, camlockImageSizes, camlockSizes} from "./objects/camlock.js";
 
-let camlockImage, DNSelect, answerContainer;
+let camlockImage, DNSelect, answer;
 let sizeLabels = [];
 
 let currentCamlock = {
@@ -12,110 +12,132 @@ let currentCamlock = {
     extraConnection: "",
 };
 
-export function startDaiCamlockModule(container, moduleName, moduleID) {
-    let daicamlockDiv = newEl(container, 'div', 'id=daicamlockDiv');
+export function startDaiCamlockModule(container, moduleName, moduleID, addons) {
+    let daicamlockDiv = createElement(container, 'div', 'id=daicamlockDiv');
     createModuleHeader(moduleName, moduleID, daicamlockDiv);
     createOutputBlock(daicamlockDiv);
     createSizesBlock(daicamlockDiv);
-    createInputBlock(daicamlockDiv);
+    createInputBlock(daicamlockDiv, addons.URLCamlock);
+    createGetCamlockBlock(daicamlockDiv);
 }
 
 function createOutputBlock(blockDiv) {
-    camlockImage = newEl(blockDiv, "img", "id=camlockImage");
+    camlockImage = createElement(blockDiv, "img", "id=camlockImage");
 
-    answerContainer = newEl(blockDiv, "div", "id=answerContainer / class=defaultContainer", daicamlockStr);
+    let answerContainer = createElement(blockDiv, "div", "id=answerContainer / class=defaultContainer");
+    answer = createElement(answerContainer, "div", "id=answer", daicamlockStr);
+    let shareCamlockbutton = createElement(answerContainer, "button", "id=shareCamlockbutton");
+    createElement(shareCamlockbutton, "img", "id=shareModuleButtonImg / src=./assets/share.svg");
+    shareCamlockbutton.onclick = function () {
+        share("Поделиться камлоком", [["module", "daicamlock"], ["camlock", currentCamlock.type + "-" + currentCamlock.size]], "Камлок " + currentCamlock.type + "-" + currentCamlock.size);
+    }
 }
 
-function createInputBlock(blockDiv) {
-    let camlockInputBlock = newEl(blockDiv, "div", "id=camlockInputBlock / class=defaultContainer");
+function createInputBlock(blockDiv, URLCamlock) {
+    let camlockInputBlock = createElement(blockDiv, "div", "id=camlockInputBlock / class=defaultContainer");
 
-    let fatherMotherContainer = newEl(camlockInputBlock, "div", "id=fatherMotherContainer");
+    let connectionRadios = {};
 
-    let father = newEl(fatherMotherContainer, "input", "id=father / type=radio / value=Father / checked");
-    father.name = "mainConnection";
-    father.onchange = function () {
-        changeCamlock(this);
+    let fatherMotherContainer = createElement(camlockInputBlock, "div", "id=fatherMotherContainer");
+
+    connectionRadios.father = createElement(fatherMotherContainer, "input", "id=father / type=radio / value=Father / checked");
+    connectionRadios.father.name = "mainConnection";
+    connectionRadios.father.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
-    newEl(fatherMotherContainer, "label", "id=fatherLabel / class=radioLabel / for=father", daicamlockStr);
+    createElement(fatherMotherContainer, "label", "id=fatherLabel / class=radioLabel / for=father", daicamlockStr);
 
-    let mother = newEl(fatherMotherContainer, "input", "id=mother / type=radio / value=Mother");
-    mother.name = "mainConnection";
-    mother.onchange = function () {
-        changeCamlock(this);
+    connectionRadios.mother = createElement(fatherMotherContainer, "input", "id=mother / type=radio / value=Mother");
+    connectionRadios.mother.name = "mainConnection";
+    connectionRadios.mother.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
-    newEl(fatherMotherContainer, "label", "id=motherLabel / class=radioLabel / for=mother", daicamlockStr);
+    createElement(fatherMotherContainer, "label", "id=motherLabel / class=radioLabel / for=mother", daicamlockStr);
 
-    let fittingDiv = newEl(camlockInputBlock, "div", "id=fittingDiv");
+    let fittingDiv = createElement(camlockInputBlock, "div", "id=fittingDiv");
 
-    let hoseFitting = newEl(fittingDiv, "input", "id=hoseFitting / type=radio / value=HoseFitting / checked");
-    hoseFitting.name = "extraConnection";
-    hoseFitting.onchange = function () {
-        changeCamlock(this);
+    connectionRadios.hoseFitting = createElement(fittingDiv, "input", "id=hoseFitting / type=radio / value=HoseFitting / checked");
+    connectionRadios.hoseFitting.name = "extraConnection";
+    connectionRadios.hoseFitting.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
 
-    newEl(fittingDiv, "label", "id=hoseFittingLabel / class=radioLabel / for=hoseFitting", daicamlockStr);
+    createElement(fittingDiv, "label", "id=hoseFittingLabel / class=radioLabel / for=hoseFitting", daicamlockStr);
 
-    let internalThread = newEl(fittingDiv, "input", "id=internalThread / type=radio / value=InternalThread");
-    internalThread.name = "extraConnection";
-    internalThread.onchange = function () {
-        changeCamlock(this);
+    connectionRadios.internalThread = createElement(fittingDiv, "input", "id=internalThread / type=radio / value=InternalThread");
+    connectionRadios.internalThread.name = "extraConnection";
+    connectionRadios.internalThread.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
-    newEl(fittingDiv, "label", "id=internalThreadLabel / class=radioLabel / for=internalThread", daicamlockStr);
+    createElement(fittingDiv, "label", "id=internalThreadLabel / class=radioLabel / for=internalThread", daicamlockStr);
 
-    let externalThread = newEl(fittingDiv, "input", "id=externalThread / type=radio / value=ExternalThread");
-    externalThread.name = "extraConnection";
-    externalThread.onchange = function () {
-        changeCamlock(this);
+    connectionRadios.externalThread = createElement(fittingDiv, "input", "id=externalThread / type=radio / value=ExternalThread");
+    connectionRadios.externalThread.name = "extraConnection";
+    connectionRadios.externalThread.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
-    newEl(fittingDiv, "label", "id=externalThreadLabel / class=radioLabel / for=externalThread", daicamlockStr);
+    createElement(fittingDiv, "label", "id=externalThreadLabel / class=radioLabel / for=externalThread", daicamlockStr);
 
-    let stub = newEl(fittingDiv, "input", "id=stub / type=radio / value=Stub");
-    stub.name = "extraConnection";
-    stub.onchange = function () {
-        changeCamlock(this);
+    connectionRadios.stub = createElement(fittingDiv, "input", "id=stub / type=radio / value=Stub");
+    connectionRadios.stub.name = "extraConnection";
+    connectionRadios.stub.onchange = function () {
+        changeCamlock(this.name, this.value);
         changeSizes();
     }
 
-    newEl(fittingDiv, "label", "id=stubLabel / class=radioLabel / for=stub", daicamlockStr);
+    createElement(fittingDiv, "label", "id=stubLabel / class=radioLabel / for=stub", daicamlockStr);
 
-    let DNSelectContainer = newEl(camlockInputBlock, "div", "id=DNSelectContainer");
+    let DNSelectContainer = createElement(camlockInputBlock, "div", "id=DNSelectContainer");
 
-    newEl(DNSelectContainer, "label", "id=DNSelectLabel / for=DNSelect", daicamlockStr);
+    createElement(DNSelectContainer, "label", "id=DNSelectLabel / for=DNSelect", daicamlockStr);
 
-    DNSelect = newEl(DNSelectContainer, "select", "id=DNSelect", daicamlockStr);
+    DNSelect = createElement(DNSelectContainer, "select", "id=DNSelect", daicamlockStr);
     DNSelect.options[3].selected = true;
     DNSelect.onchange = function () {
         changeSizes();
     }
-    father.dispatchEvent(new Event('change'));
-    hoseFitting.dispatchEvent(new Event('change'));
+
+    if(URLCamlock !== null){
+        let URLCamlockFound = changeToCamlockFromURL(URLCamlock, connectionRadios);
+        if(!URLCamlockFound){
+            appToast("Указанный камлок не найден", 3000).then();
+            setDefaultCamlock();
+        }
+    } else{
+        setDefaultCamlock();
+    }
+
+    function setDefaultCamlock(){
+        connectionRadios.father.dispatchEvent(new Event('change'));
+        connectionRadios.hoseFitting.dispatchEvent(new Event('change'));
+    }
 }
 
 function createSizesBlock(blockDiv) {
-    let sizesBlock = newEl(blockDiv, "div", "id=sizesBlock / class=unPadContainer");
+    let sizesBlock = createElement(blockDiv, "div", "id=sizesBlock / class=unPadContainer");
 
-    newEl(sizesBlock, "div", "id=sizesBlockHeader / class=defaultContainer", daicamlockStr);
+    createElement(sizesBlock, "div", "id=sizesBlockHeader / class=defaultContainer", daicamlockStr);
 
-    sizeLabels[0] = newEl(sizesBlock, "label", "id=sizeLabel1", daicamlockStr);
-    sizeLabels[1]= newEl(sizesBlock, "label", "id=sizeLabel2", daicamlockStr)
-    sizeLabels[2] = newEl(sizesBlock, "label", "id=sizeLabel3", daicamlockStr)
+    sizeLabels[0] = createElement(sizesBlock, "label", "id=sizeLabel1", daicamlockStr);
+    sizeLabels[1] = createElement(sizesBlock, "label", "id=sizeLabel2", daicamlockStr)
+    sizeLabels[2] = createElement(sizesBlock, "label", "id=sizeLabel3", daicamlockStr)
 }
 
-function changeCamlock(radio) {
-    if (radio.name === "mainConnection") {
-        currentCamlock.mainConnection = radio.value;
-    } else if (radio.name === "extraConnection") {
-        currentCamlock.extraConnection = radio.value;
+function changeCamlock(connectionName, connectionValue) {
+    if (connectionName === "mainConnection") {
+        currentCamlock.mainConnection = connectionValue;
+    } else if (connectionName === "extraConnection") {
+        currentCamlock.extraConnection = connectionValue;
     }
     getCamlockInfo();
     camlockImage.src = "./assets/daicamlock/camlock" + currentCamlock.mainConnection + "_" + currentCamlock.extraConnection + ".png";
@@ -131,13 +153,15 @@ function getCamlockInfo() {
 
 function changeSizes() {
     currentCamlock.size = camlockSizes[DNSelect.selectedIndex];
-    answerContainer.innerHTML = "Ваш камлок: <u>" + currentCamlock.type + "-" + currentCamlock.size+"</u>";
+    answer.innerHTML = "Ваш камлок: <u>" + currentCamlock.type + "-" + currentCamlock.size + "</u>";
     let j = 0;
     for (let i = 0; i < sizeLabels.length; i++) {
         sizeLabels[i].innerHTML = "-";
         for (j; j < camlockImageSizes.length; j++) {
             if (camlockImageSizes[j].partOfType.includes(currentCamlock.type)) {
-                sizeLabels[i].innerHTML = "<u>" + camlockImageSizes[j].name + ":</u> " + camlockImageSizes[j].size[DNSelect.selectedIndex];
+                if(camlockImageSizes[j].size[DNSelect.selectedIndex] !== undefined) {
+                    sizeLabels[i].innerHTML = "<u>" + camlockImageSizes[j].name + ":</u> " + camlockImageSizes[j].size[DNSelect.selectedIndex];
+                }
                 j++;
                 break;
             }
@@ -145,3 +169,52 @@ function changeSizes() {
     }
 }
 
+function createGetCamlockBlock(container) {
+    let getCamlockBlock = createElement(container, "div", "id=getCamlockBlock / class=unPadContainer");
+    createElement(getCamlockBlock, "div", "id=getCamlockHeader / class=defaultContainer", daicamlockStr);
+
+    let itemsContainer = createElement(getCamlockBlock, "div", "id=getCamlockItemsContainer / class=itemsContainer");
+
+    let getContainer = createElement(itemsContainer, "div", "class=getContainer");
+
+    let ozonButton = createElement(getContainer, "img", "class=getItemButton / src=./assets/shops/ozon.png");
+    ozonButton.onclick = function () {
+        let str = ("Камлок " + currentCamlock.type + "-" + currentCamlock.size).replaceAll(" ", "+");
+        window.open("https://www.ozon.ru/search/?text=" + str + "&from_global=true", "_blank");
+    }
+    let wbButton = createElement(getContainer, "img", "class=getItemButton / src=./assets/shops/wb.png");
+    wbButton.onclick = function () {
+        let str = ("Камлок " + currentCamlock.type + "-" + currentCamlock.size).replaceAll(" ", "%20");
+        window.open("https://www.wildberries.ru/catalog/0/search.aspx?search=" + str, "_blank");
+    }
+    let ymButton = createElement(getContainer, "img", "class=getItemButton / src=./assets/shops/ym.png");
+    ymButton.onclick = function () {
+        let str = ("Камлок " + currentCamlock.type + "-" + currentCamlock.size).replaceAll(" ", "%20");
+        window.open("https://market.yandex.ru/search?text=" + str, "_blank");
+    }
+}
+
+function changeToCamlockFromURL(camlockAnswer, connectionRadios) {
+    let connectionsFound = false, sizesFound = false;
+    for (let i = 0; i < camlockObject.type.length; i++) {
+        if (camlockObject.type[i].name.toLowerCase() === camlockAnswer.split("-")[0].toLowerCase()) {
+            let mainConnection = camlockObject.type[i].connection.split("_")[0];
+            let extraConnection = camlockObject.type[i].connection.split("_")[1];
+            for (let radio in connectionRadios) {
+                if (connectionRadios[radio].value === mainConnection || connectionRadios[radio].value === extraConnection) {
+                    connectionRadios[radio].checked = true;
+                    connectionRadios[radio].dispatchEvent(new Event('change'));
+                    connectionsFound = true;
+                }
+            }
+        }
+    }
+    for (let i = 0; i < camlockSizes.length; i++) {
+        if (camlockAnswer.split("-")[1] === camlockSizes[i]) {
+            DNSelect.options[i].selected = true;
+            DNSelect.dispatchEvent(new Event('change'));
+            sizesFound = true;
+        }
+    }
+    return connectionsFound && sizesFound;
+}
