@@ -77,7 +77,7 @@ function createMenuButtons() {
 
     let menuOptionDiv = [];
     for (let i = 0; i < menuOption.length; i++) {
-        menuOptionDiv[i] = createElement(menuDiv, "div", "id=" + menuOption[i].id + " / module-name=" + menuOption[i].name + " / class=" + menuOption[i].class);
+        menuOptionDiv[i] = createElement(menuDiv, "div", "id=" + menuOption[i].id + " / module-name=" + menuOption[i].name + " / class=menuOption");
 
         createElement(menuOptionDiv[i], "img", "class=image / src=./assets/" + menuOptionDiv[i].id + ".svg");
 
