@@ -57,6 +57,12 @@
         gap: 10px;
         align-items: stretch;
     }
+
+    #checkboxFiltersContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 @media screen and (min-width: 480px) and (max-width: 767px) {
@@ -69,6 +75,13 @@
             "findPumpContainer pumpTypeContainer"
             "pumpControlContainer bodyMaterialContainer"
             "wellFlowRateContainer pressureContainer";
+    }
+
+    #checkboxFiltersContainer{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+        gap: 10px;
     }
 
     #filtersResetButton{
@@ -130,6 +143,13 @@
         grid-template-areas:
             "findPumpContainer pumpTypeContainer pumpControlContainer"
             "bodyMaterialContainer wellFlowRateContainer pressureContainer";
+    }
+
+    #checkboxFiltersContainer{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-auto-rows: max-content;
+        gap: 10px;
     }
 
     #filtersResetButton{
