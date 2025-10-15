@@ -56,6 +56,7 @@ function createFilterBlock(container) {
         wellFlowRate: "",
         pressure: "any",
         lowStatic: false,
+        hideExcessPump: false,
     }
     const resetFilters = {};
     Object.assign(resetFilters, filters);
@@ -119,9 +120,17 @@ function createFilterBlock(container) {
         filterPumpList(filters);
     }
 
-    let lowStatic = createCheckboxContainer(itemsContainer, "id=lowStatic", "id=lowStaticLabel", prokachaikaStr);
+    let checkboxFiltersContainer = createElement(itemsContainer, "div", "id=checkboxFiltersContainer");
+
+    let lowStatic = createCheckboxContainer(checkboxFiltersContainer, "id=lowStatic", "id=lowStaticLabel", prokachaikaStr);
     lowStatic.onchange = function () {
         filters.lowStatic = lowStatic.checked;
+        filterPumpList(filters);
+    }
+
+    let hideExcessPump = createCheckboxContainer(checkboxFiltersContainer, "id=hideExcessPump", "id=hideExcessPumpLabel", prokachaikaStr);
+    hideExcessPump.onchange = function () {
+        filters.hideExcessPump = hideExcessPump.checked;
         filterPumpList(filters);
     }
 
@@ -135,6 +144,7 @@ function createFilterBlock(container) {
         wellFlowRate.value = filters.wellFlowRate;
         pressureSelect.value = filters.pressure;
         lowStatic.checked = filters.lowStatic;
+        hideExcessPump.checked = filters.hideExcessPump;
         filterPumpList(filters);
     }
 }
@@ -176,10 +186,14 @@ function filterPumpList(filters) {
                         pumpList.models[i].pumpPoints.minPerfLPH = Math.round(pumpList.models[i].maxPerfLPH * pumpList.models[i].pumpPoints.factor / 100) * 100;
 
                         if (filters.wellFlowRate < pumpList.models[i].pumpPoints.minPerfLPH) {
-                            pumpList.models[i].pumpPoints.perfPoints = "ИЗБ";
-                            pumpList.models[i].pumpPoints.pointsColor = appTheme.getColor("excessPump");
+                            if(!filters.hideExcessPump){
+                                pumpList.models[i].pumpPoints.perfPoints = "ИЗБ";
+                                pumpList.models[i].pumpPoints.pointsColor = appTheme.getColor("excessPump");
+                            } else{
+                                hidePump = true;
+                            }
                         } else {
-                            pumpList.models[i].pumpPoints.perfPoints = (filters.wellFlowRate / pumpList.models[i].maxPerfLPH * 100).toFixed(2);
+                            pumpList.models[i].pumpPoints.perfPoints = Math.round(filters.wellFlowRate / pumpList.models[i].maxPerfLPH * 100);
                             pumpList.models[i].pumpPoints.pointsColor = "color-mix(in srgb-linear, " + appTheme.getColor("excessPump") + ", " + appTheme.getColor("greatPump") + " " + pumpList.models[i].pumpPoints.perfPoints + "%);";
                         }
                     }

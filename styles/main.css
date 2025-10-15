@@ -556,8 +556,8 @@ textarea::placeholder {
 }
 
 input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 21px;
+    height: 21px;
 
     box-sizing: border-box;
     appearance: none;
