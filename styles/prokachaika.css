@@ -58,7 +58,7 @@
 }
 
 #compareListContainer{
-    width: min(100%, 960px);
+    width: min(100%, 768px);
     display: flex;
     flex-direction: column;
     gap: 10px;

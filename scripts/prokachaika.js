@@ -385,7 +385,7 @@ function openPumpInfo(model) {
 
     let pumpInfoButtons = createElement(itemsContainer, "div", "id=pumpInfoButtons");
 
-    if (pumpInfo.params.pumpControl !== "Нет" && pumpInfo.params.pumpControl !== "Частотное") {
+    if (pumpInfo.params.pumpControl !== "Нет" && pumpInfo.params.accumulator !== "Нет" && pumpInfo.params.pumpControl !== "Частотное") {
         let relayHAButton = createElement(pumpInfoButtons, "button", "id=relayHAButton", prokachaikaStr);
         relayHAButton.onclick = function () {
             scrollController.disableElementScrolling(pumpInfoContainer);
