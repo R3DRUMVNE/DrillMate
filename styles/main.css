@@ -67,7 +67,7 @@ select {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    max-height: 80vh;
+    max-height: 100dvh;
     overflow-y: scroll;
 
     width: min(100%, 360px);
