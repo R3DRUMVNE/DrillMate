@@ -119,7 +119,7 @@ select {
     grid-template-areas:
         "headerDiv"
         "fragment";
-    min-height: 100svh;
+    min-height: 100vh;
 }
 
 #programHeader {
