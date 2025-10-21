@@ -78,6 +78,7 @@
     gap: 10px;
 }
 
+#sizesBlockHeader,
 #getCamlockHeader{
     text-align: center;
 }

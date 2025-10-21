@@ -52,7 +52,7 @@
     background-color: var(--button);
     color: var(--primaryText);
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 #currentTimeContainer{

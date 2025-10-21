@@ -33,13 +33,13 @@ select {
 
 @keyframes gradient {
     0% {
-        background-position: 50% 0;
+        background-position: 50% 10%;
     }
     50% {
         background-position: 50% 100%;
     }
     100% {
-        background-position: 50% 0;
+        background-position: 50% 10%;
     }
 }
 
@@ -119,8 +119,7 @@ select {
     grid-template-areas:
         "headerDiv"
         "fragment";
-    background-color: var(--secondaryColor);
-    min-height: 100vh;
+    min-height: 100svh;
 }
 
 #programHeader {
@@ -248,6 +247,13 @@ select {
     order: -1;
     width: 30px;
     height: 30px;
+}
+
+#settingsInfoHeader{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1001;
 }
 
 #copyButton {
@@ -603,7 +609,7 @@ label.radioLabel {
     background-color: var(--button);
     flex-grow: 1;
     box-sizing: border-box;
-    padding: 7px;
+    padding: 12px 7px 12px 7px;
     transition: background-color 0.3s, box-shadow 0.3s;
     align-content: center;
     height: min-content;

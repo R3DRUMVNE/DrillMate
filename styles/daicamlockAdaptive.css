@@ -19,6 +19,7 @@
         width: 100%;
         height: auto;
         border-radius: 10px;
+        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{
@@ -86,6 +87,7 @@
         width: 100%;
         height: auto;
         border-radius: 10px;
+        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{
@@ -160,6 +162,7 @@
         height: auto;
         border-radius: 10px;
         justify-self: center;
+        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{
