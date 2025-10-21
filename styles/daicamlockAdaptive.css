@@ -94,7 +94,7 @@
         grid-area: camlockInputBlock;
         display: grid;
         grid-template-columns: 2fr 3fr;
-        grid-template-rows: max-content auto;
+        grid-template-rows: max-content 1fr;
         gap: 10px;
         grid-template-areas:
         "fatherMotherContainer fittingDiv"
@@ -108,7 +108,6 @@
         flex-direction: column;
         gap: 0;
         height: min-content;
-        align-self: end;
     }
 
     #fatherMotherContainer{
@@ -169,7 +168,7 @@
         grid-area: camlockInputBlock;
         display: grid;
         grid-template-columns: 2fr 3fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: max-content 1fr;
         gap: 10px;
         grid-template-areas:
         "fatherMotherContainer fittingDiv"
