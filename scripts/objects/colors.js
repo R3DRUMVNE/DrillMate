@@ -2,9 +2,9 @@ import {createElement} from "../modules/otherModules.js";
 
 const themesList = {
     "default": {
-        "primaryColor": "#4A4AFF",
+        "primaryColor": "#4141D1",
         "secondaryColor": "#4A0094",
-        "button": "#0080FF",
+        "button": "#0077EC",
         "stop": "#b42c38",
         "ready": "#009950",
         "shadow": "rgba(0, 0, 0, 0.5)",
