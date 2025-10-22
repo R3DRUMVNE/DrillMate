@@ -41,6 +41,7 @@ const themesList = {
 
 export let appTheme = {
     currentTheme: "",
+    browserHead: createElement(document.head, "meta", "name=theme-color"),
 
     getColor: function(colorName){
         return themesList[appTheme.currentTheme][colorName];
@@ -62,6 +63,6 @@ export let appTheme = {
         document.documentElement.style.setProperty("--" + colors[i][0], colors[i][1]);
     }
 
-    createElement(document.head, "meta", "name=theme-color / content=" + this.getColor("primaryColor"));
+    this.browserHead.setAttribute("content", this.getColor("primaryColor"));
 },
 }
