@@ -37,6 +37,18 @@ const themesList = {
         "excessPump": "#ffae00",
         "greatPump": "#37ff00",
     },
+    "classic": {
+        "primaryColor": "#0060b9",
+        "secondaryColor": "#303F9F",
+        "button": "#007cc1",
+        "stop": "#b42c38",
+        "ready": "#009950",
+        "shadow": "rgba(0, 0, 0, 0.5)",
+        "noShadow": "rgba(0, 0, 0, 0)",
+        "primaryText": "#F4F4F4",
+        "excessPump": "#ffae00",
+        "greatPump": "#37ff00",
+    },
 };
 
 export let appTheme = {

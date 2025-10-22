@@ -4,7 +4,7 @@ export const mainStr = {
     "settingsInfoHeader": "Настройки и информация",
     "infoText": "DrillMate SPA версия "+version+"<br><a href='https://github.com/R3DRUMVNE/DrillMate/' target='_blank'>GitHub</a> | <a href='https://t.me/r3drumvne/' target='_blank'>Обратная связь</a><br><br>Веб-приложение разработано на некоммерческой основе специально для Ассоциации Объединённых Абиссинщиков, не собирает и не передаёт третьим лицам какую-либо информацию, вводимую пользователем.<br><br>Лицензия <a href='./LICENSE.txt' target='_blank'>CC-BY-SA-4.0</a><br>© П.С. Симолкин, 2025",
     "themeSelectLabel": "Тема веб-приложения:",
-    "themeSelect": [["Как в системе", "likeSystem"], ["Стандартная", "default"], ["Тёмная", "dark"], ["Серая", "gray"]],
+    "themeSelect": [["Как в системе", "likeSystem"], ["Стандартная", "default"], ["Тёмная", "dark"], ["Серая", "gray"], ["Классическая", "classic"]],
     "bugButton": "Сообщить об ошибке",
     "downloadButton": "Загрузить на устройство",
     "closeButton": "Закрыть",
