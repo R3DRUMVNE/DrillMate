@@ -25,6 +25,7 @@
 
 .pumpContainer{
     background-color: var(--button);
+    border-radius: 15px;
     display: flex;
     flex-direction: row;
     gap: 10px;
