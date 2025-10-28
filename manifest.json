@@ -1,0 +1,10 @@
+{
+  "name": "DrillMate - маленький помощник бурильщика",
+  "short_name": "DrillMate",
+  "description": "Progressive Web App that lists games submitted to the A-Frame category in the js13kGames 2017 competition.",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#4141D1",
+  "background_color": "#4A0094"
+}
