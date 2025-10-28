@@ -1,17 +1,22 @@
 import {
-    appAlert,
+    appAlert, appTheme_getColor,
     appToast,
     createCheckboxContainer,
     createElement,
     createModuleHeader,
-    filterValueByNumber,
+    filterValueByNumber, getJSONData,
     scrollController,
     share,
     tryFormatToNumber
-} from "./modules/otherModules.js";
-import {prokachaikaStr} from "./objects/strings.js";
-import {minPerfFactor, pL_ver, pumpList} from "./objects/pumpList.js";
-import {appTheme} from "./objects/colors.js";
+} from "./moduleScripts/otherModules.js";
+
+let prokachaikaStringList = null;
+
+const pumpList = {
+    version: "1.1",
+    models: [],
+    minPerfFactor: [[0, 0, 2000], [0.17, 2000, 3000], [0.2, 3000, 3600], [0.23, 3600, 3800], [0.26, 3800, 4200], [0.29, 4200, 10000]],
+}
 
 let compareList = {
     list: [],
@@ -34,17 +39,13 @@ let compareList = {
     },
 };
 
-export function startProkachaikaModule(container, moduleName, moduleID, addons) {
+export async function startProkachaikaModule(container, moduleName, moduleID, addons) {
     let prokachaikaDiv = createElement(container, 'div', 'id=prokachaikaDiv');
-    createModuleHeader(moduleName, moduleID, prokachaikaDiv);
+    prokachaikaStringList = await getJSONData("./objects/prokachaikaStringList.json");
+    createModuleHeader(moduleName, moduleID, prokachaikaDiv).then();
     createFilterBlock(prokachaikaDiv);
     createAdditionalPanel(prokachaikaDiv);
-    createPumpList(prokachaikaDiv, addons.URLPumpModel);
-
-    if(localStorage.getItem("pumpListVer") === null || localStorage.getItem("pumpListVer") !== pL_ver){
-        localStorage.setItem("pumpListVer", pL_ver);
-        appAlert("Список насосов", pumpList.whatsNew);
-    }
+    createPumpList(prokachaikaDiv, addons.URLPumpModel).then();
 }
 
 function createFilterBlock(container) {
@@ -63,49 +64,49 @@ function createFilterBlock(container) {
 
     let filterBlock = createElement(container, "div", "id=filterBlock / class=unPadContainer");
 
-    createElement(filterBlock, "div", "id=filterBlockHeader / class=defaultContainer", prokachaikaStr);
+    createElement(filterBlock, "div", "id=filterBlockHeader / class=defaultContainer", prokachaikaStringList);
 
     let itemsContainer = createElement(filterBlock, "div", "class=itemsContainer");
 
     let filterFieldsContainer = createElement(itemsContainer, "div", "id=filterFieldsContainer");
 
     let findPumpContainer = createElement(filterFieldsContainer, "div", "id=findPumpContainer / class=inpContainer");
-    createElement(findPumpContainer, "label", "id=findPumpLabel", prokachaikaStr);
+    createElement(findPumpContainer, "span", "id=findPumpSpan", prokachaikaStringList);
     let findPump = createElement(findPumpContainer, "input", "id=findPump / type=text");
-    findPump.placeholder = prokachaikaStr["findPumpHint"];
+    findPump.placeholder = prokachaikaStringList["findPumpHint"];
     findPump.oninput = function () {
         filters.name = findPump.value.trim();
         filterPumpList(filters);
     }
 
     let pumpTypeContainer = createElement(filterFieldsContainer, "div", "id=pumpTypeContainer / class=inpContainer");
-    createElement(pumpTypeContainer, "label", "id=pumpTypeLabel", prokachaikaStr);
-    let pumpTypeSelect = createElement(pumpTypeContainer, "select", "id=pumpTypeSelect", prokachaikaStr);
+    createElement(pumpTypeContainer, "span", "id=pumpTypeSpan", prokachaikaStringList);
+    let pumpTypeSelect = createElement(pumpTypeContainer, "select", "id=pumpTypeSelect", prokachaikaStringList);
     pumpTypeSelect.onchange = function () {
         filters.pumpType = pumpTypeSelect.options[pumpTypeSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
     let pumpControlContainer = createElement(filterFieldsContainer, "div", "id=pumpControlContainer / class=inpContainer");
-    createElement(pumpControlContainer, "label", "id=pumpControlLabel", prokachaikaStr);
-    let pumpControlSelect = createElement(pumpControlContainer, "select", "id=pumpControlSelect", prokachaikaStr);
+    createElement(pumpControlContainer, "span", "id=pumpControlSpan", prokachaikaStringList);
+    let pumpControlSelect = createElement(pumpControlContainer, "select", "id=pumpControlSelect", prokachaikaStringList);
     pumpControlSelect.onchange = function () {
         filters.pumpControl = pumpControlSelect.options[pumpControlSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
     let bodyMaterialContainer = createElement(filterFieldsContainer, "div", "id=bodyMaterialContainer / class=inpContainer");
-    createElement(bodyMaterialContainer, "label", "id=bodyMaterialLabel", prokachaikaStr);
-    let bodyMaterialSelect = createElement(bodyMaterialContainer, "select", "id=bodyMaterialSelect", prokachaikaStr);
+    createElement(bodyMaterialContainer, "span", "id=bodyMaterialSpan", prokachaikaStringList);
+    let bodyMaterialSelect = createElement(bodyMaterialContainer, "select", "id=bodyMaterialSelect", prokachaikaStringList);
     bodyMaterialSelect.onchange = function () {
         filters.bodyMaterial = bodyMaterialSelect.options[bodyMaterialSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
     let wellFlowRateContainer = createElement(filterFieldsContainer, "div", "id=wellFlowRateContainer / class=inpContainer");
-    createElement(wellFlowRateContainer, "label", "id=wellFlowRateLabel", prokachaikaStr);
+    createElement(wellFlowRateContainer, "span", "id=wellFlowRateSpan", prokachaikaStringList);
     let wellFlowRate = createElement(wellFlowRateContainer, "input", "id=wellFlowRate / type=tel");
-    wellFlowRate.placeholder = prokachaikaStr["wellFlowRateHint"];
+    wellFlowRate.placeholder = prokachaikaStringList["wellFlowRateHint"];
     wellFlowRate.oninput = function () {
         filterValueByNumber(wellFlowRate);
         filters.wellFlowRate = wellFlowRate.value;
@@ -113,8 +114,8 @@ function createFilterBlock(container) {
     }
 
     let pressureContainer = createElement(filterFieldsContainer, "div", "id=pressureContainer / class=inpContainer");
-    createElement(pressureContainer, "label", "id=pressureLabel", prokachaikaStr);
-    let pressureSelect = createElement(pressureContainer, "select", "id=pressure", prokachaikaStr);
+    createElement(pressureContainer, "span", "id=pressureSpan", prokachaikaStringList);
+    let pressureSelect = createElement(pressureContainer, "select", "id=pressure", prokachaikaStringList);
     pressureSelect.onchange = function () {
         filters.pressure = pressureSelect.value;
         filterPumpList(filters);
@@ -122,19 +123,19 @@ function createFilterBlock(container) {
 
     let checkboxFiltersContainer = createElement(itemsContainer, "div", "id=checkboxFiltersContainer");
 
-    let lowStatic = createCheckboxContainer(checkboxFiltersContainer, "id=lowStatic", "id=lowStaticLabel", prokachaikaStr);
+    let lowStatic = createCheckboxContainer(checkboxFiltersContainer, "id=lowStatic", "id=lowStaticLabel", prokachaikaStringList);
     lowStatic.onchange = function () {
         filters.lowStatic = lowStatic.checked;
         filterPumpList(filters);
     }
 
-    let hideExcessPump = createCheckboxContainer(checkboxFiltersContainer, "id=hideExcessPump", "id=hideExcessPumpLabel", prokachaikaStr);
+    let hideExcessPump = createCheckboxContainer(checkboxFiltersContainer, "id=hideExcessPump", "id=hideExcessPumpLabel", prokachaikaStringList);
     hideExcessPump.onchange = function () {
         filters.hideExcessPump = hideExcessPump.checked;
         filterPumpList(filters);
     }
 
-    let filtersResetButton = createElement(itemsContainer, "button", "id=filtersResetButton", prokachaikaStr);
+    let filtersResetButton = createElement(itemsContainer, "button", "id=filtersResetButton", prokachaikaStringList);
     filtersResetButton.onclick = function () {
         Object.assign(filters, resetFilters);
         findPump.value = filters.name;
@@ -180,21 +181,21 @@ function filterPumpList(filters) {
             if (filters.wellFlowRate * 1.05 > pumpList.models[i].maxPerfLPH) {
                 hidePump = true;
             } else if (pumpList.models[i].pumpControl !== "Частотное") {
-                for (let j = 0; j < minPerfFactor.length; j++) {
-                    if (pumpList.models[i].maxPerfLPH > minPerfFactor[j][1] && pumpList.models[i].maxPerfLPH <= minPerfFactor[j][2]) {
-                        pumpList.models[i].pumpPoints.factor = minPerfFactor[j][0];
+                for (let j = 0; j < pumpList.minPerfFactor.length; j++) {
+                    if (pumpList.models[i].maxPerfLPH > pumpList.minPerfFactor[j][1] && pumpList.models[i].maxPerfLPH <= pumpList.minPerfFactor[j][2]) {
+                        pumpList.models[i].pumpPoints.factor = pumpList.minPerfFactor[j][0];
                         pumpList.models[i].pumpPoints.minPerfLPH = Math.round(pumpList.models[i].maxPerfLPH * pumpList.models[i].pumpPoints.factor / 100) * 100;
 
                         if (filters.wellFlowRate < pumpList.models[i].pumpPoints.minPerfLPH) {
                             if(!filters.hideExcessPump){
                                 pumpList.models[i].pumpPoints.perfPoints = "ИЗБ";
-                                pumpList.models[i].pumpPoints.pointsColor = appTheme.getColor("excessPump");
+                                pumpList.models[i].pumpPoints.pointsColor = appTheme_getColor("excessPump");
                             } else{
                                 hidePump = true;
                             }
                         } else {
                             pumpList.models[i].pumpPoints.perfPoints = Math.round(filters.wellFlowRate / pumpList.models[i].maxPerfLPH * 100);
-                            pumpList.models[i].pumpPoints.pointsColor = "color-mix(in srgb-linear, " + appTheme.getColor("excessPump") + ", " + appTheme.getColor("greatPump") + " " + pumpList.models[i].pumpPoints.perfPoints + "%);";
+                            pumpList.models[i].pumpPoints.pointsColor = "color-mix(in srgb-linear, " + appTheme_getColor("excessPump") + ", " + appTheme_getColor("greatPump") + " " + pumpList.models[i].pumpPoints.perfPoints + "%);";
                         }
                     }
 
@@ -211,14 +212,14 @@ function filterPumpList(filters) {
         }
         pumpList.models[i].container.children[1].innerHTML = pumpList.models[i].pumpPoints.perfPoints;
 
-        hidePump ? pumpList.models[i].container.className = "defaultContainer pumpContainerHide" : pumpList.models[i].container.className = "defaultContainer pumpContainer";
+        hidePump ? pumpList.models[i].container.className = "pumpContainerHide" : pumpList.models[i].container.className = "pumpContainer";
     }
 }
 
 function createAdditionalPanel(container) {
     let additionalPanelContainer = createElement(container, "div", "id=additionalPanelContainer");
 
-    let compareButton = createElement(additionalPanelContainer, "button", "id=compareButton", prokachaikaStr);
+    let compareButton = createElement(additionalPanelContainer, "button", "id=compareButton", prokachaikaStringList);
     compareButton.onclick = function () {
         if (compareList.list.length > 0) {
             openCompareList();
@@ -232,7 +233,7 @@ function openCompareList() {
     scrollController.disableBodyScrolling();
     let compareListContainer = createElement(document.body, "div", "id=compareListContainer / class=unPadContainer popUp");
 
-    createElement(compareListContainer, "div", "id=cL_header / class=defaultContainer", prokachaikaStr["compareButton"]);
+    createElement(compareListContainer, "div", "id=cL_header / class=defaultContainer", prokachaikaStringList["compareButton"]);
 
     let compareTable = createElement(compareListContainer, "table", "id=compareTable");
     let thead = compareTable.createTHead();
@@ -243,7 +244,7 @@ function openCompareList() {
     for (let param in compareList.list[i].params) {
         let row = tbody.insertRow();
         let cell = row.insertCell();
-        cell.innerHTML = prokachaikaStr[param + "Label"];
+        cell.innerHTML = prokachaikaStringList[param + "Span"];
         i++;
     }
 
@@ -253,7 +254,7 @@ function openCompareList() {
         let pumpNameCell = thead.rows[0].insertCell();
         pumpNameCell.innerHTML = compareList.list[i].modelName;
         let deleteCell = controlRow.insertCell();
-        let cL_deleteButton = createElement(deleteCell, "button", "id=cL_deleteButton / value=" + compareList.list[i].modelName, prokachaikaStr);
+        let cL_deleteButton = createElement(deleteCell, "button", "id=cL_deleteButton / value=" + compareList.list[i].modelName, prokachaikaStringList);
         cL_deleteButton.onclick = function () {
             let x = compareList.deletePump(this.value);
             if (compareList.list.length < 1) {
@@ -276,14 +277,14 @@ function openCompareList() {
 
     let cL_buttonsContainer = createElement(compareListContainer, "div", "id=cL_buttonsContainer");
 
-    let cL_clearButton = createElement(cL_buttonsContainer, "button", "id=cL_clearButton", prokachaikaStr);
+    let cL_clearButton = createElement(cL_buttonsContainer, "button", "id=cL_clearButton", prokachaikaStringList);
     cL_clearButton.onclick = function () {
         compareList.list = [];
         closeCompareList();
         appToast("Таблица сравнения очищена", 3000).then();
     }
 
-    let cL_closeButton = createElement(cL_buttonsContainer, "button", "id=cL_closeButton", prokachaikaStr);
+    let cL_closeButton = createElement(cL_buttonsContainer, "button", "id=cL_closeButton", prokachaikaStringList);
     cL_closeButton.onclick = function () {
         closeCompareList();
     }
@@ -294,21 +295,37 @@ function openCompareList() {
     }
 }
 
-function createPumpList(container, URLPumpModel) {
+function checkPumpListVersion(newPumps){
+    if (localStorage.getItem("pumpListVer") === null || localStorage.getItem("pumpListVer") !== pumpList.version) {
+        let newPumpsString = "";
+        for(let i = 0; i < newPumps.length; i++) {
+            i !== newPumps.length - 1 ? newPumpsString += newPumps[i].name + ", " : newPumpsString += newPumps[i].name + ".";
+        }
+        localStorage.setItem("pumpListVer", pumpList.version);
+        appAlert("Список насосов", prokachaikaStringList["whatsNew"][0] + pumpList.version + prokachaikaStringList["whatsNew"][1] + newPumpsString + "</p>");
+    }
+}
+
+async function createPumpList(container, URLPumpModel) {
     let noModelError = false;
+
+    const newPumps = await getJSONData("./objects/newPumps.json");
+    checkPumpListVersion(newPumps);
+
+    pumpList.models = [...await getJSONData("./objects/pumpList.json"), ...newPumps];
 
     shuffleArray(pumpList.models);
 
     let pumpListContainer = createElement(container, "div", "id=pumpListContainer");
 
     for (let i = 0; i < pumpList.models.length; i++) {
-        pumpList.models[i].container = createElement(pumpListContainer, "div", "class=defaultContainer pumpContainer");
+        pumpList.models[i].container = createElement(pumpListContainer, "div", "class=pumpContainer");
         pumpList.models[i].container.onclick = function () {
             openPumpInfo(pumpList.models[i]);
         }
 
-        createElement(pumpList.models[i].container, "label", "class=pumpName", pumpList.models[i].name);
-        createElement(pumpList.models[i].container, "label", "class=pumpPoints");
+        createElement(pumpList.models[i].container, "span", "class=pumpName", pumpList.models[i].name);
+        createElement(pumpList.models[i].container, "span", "class=pumpPoints");
 
         getMaxPerf(pumpList.models[i]);
         pumpList.models[i].maxPressure = Number((pumpList.models[i].liftingHeight * 0.098064).toFixed(1));
@@ -379,21 +396,21 @@ function openPumpInfo(model) {
     let paramsTableBody = createElement(itemsContainer, "div", "id=paramsTableBody / class=unPadContainer");
 
     for (let param in pumpInfo.params) {
-        createElement(paramsTableBody, "div", "id=" + param + "Label / class=paramContainer", prokachaikaStr);
+        createElement(paramsTableBody, "div", "id=" + param + "Span / class=paramContainer", prokachaikaStringList);
         createElement(paramsTableBody, "div", "id=" + param + "Value / class=valueContainer", pumpInfo.params[param].toString());
     }
 
     let pumpInfoButtons = createElement(itemsContainer, "div", "id=pumpInfoButtons");
 
     if (pumpInfo.params.pumpControl !== "Нет" && pumpInfo.params.accumulator !== "Нет" && pumpInfo.params.pumpControl !== "Частотное") {
-        let relayHAButton = createElement(pumpInfoButtons, "button", "id=relayHAButton", prokachaikaStr);
+        let relayHAButton = createElement(pumpInfoButtons, "button", "id=relayHAButton", prokachaikaStringList);
         relayHAButton.onclick = function () {
             scrollController.disableElementScrolling(pumpInfoContainer);
             openRelayHASettings(pumpInfo.params.maxPressure);
         }
     }
 
-    createElement(pumpInfoButtons, "label", "id=searchPumpLabel", prokachaikaStr);
+    createElement(pumpInfoButtons, "span", "id=searchPumpSpan", prokachaikaStringList);
 
     let getPumpContainer = createElement(pumpInfoButtons, "div", "class=getContainer");
 
@@ -425,13 +442,13 @@ function openPumpInfo(model) {
 
     let pumpInfoControls = createElement(itemsContainer, "div", "id=pumpInfoControls");
 
-    let shareButton = createElement(pumpInfoControls, "button", "id=shareButton", prokachaikaStr);
+    let shareButton = createElement(pumpInfoControls, "button", "id=shareButton", prokachaikaStringList);
     shareButton.onclick = function () {
         scrollController.disableElementScrolling(pumpInfoContainer);
         share("Поделиться насосом", [["module", "prokachaika"], ["pumpModel", pumpInfo.modelName.trim()]], pumpInfo.params.pumpVersion + " " + pumpInfo.modelName);
     }
 
-    let goComparePumpButton = createElement(pumpInfoControls, "button", "id=goComparePumpButton", prokachaikaStr);
+    let goComparePumpButton = createElement(pumpInfoControls, "button", "id=goComparePumpButton", prokachaikaStringList);
     goComparePumpButton.onclick = function () {
         if (compareList.findPump(pumpInfo.modelName) === false) {
             compareList.list.push(pumpInfo);
@@ -441,7 +458,7 @@ function openPumpInfo(model) {
         }
     }
 
-    let pI_closeButton = createElement(pumpInfoControls, "button", "id=pI_closeButton", prokachaikaStr);
+    let pI_closeButton = createElement(pumpInfoControls, "button", "id=pI_closeButton", prokachaikaStringList);
     pI_closeButton.onclick = function () {
         scrollController.enableBodyScrolling();
         pumpInfoContainer.remove();
@@ -451,14 +468,14 @@ function openPumpInfo(model) {
 function openRelayHASettings(maxPressure) {
     let relayHAContainer = createElement(document.body, "div", "id=relayHAContainer / class=unPadContainer popUp");
 
-    createElement(relayHAContainer, "div", "id=rHA_header / class=defaultContainer", prokachaikaStr);
+    createElement(relayHAContainer, "div", "id=rHA_header / class=defaultContainer", prokachaikaStringList);
 
     let itemsContainer = createElement(relayHAContainer, "div", "class=itemsContainer");
 
     let pressureOnContainer = createElement(itemsContainer, "div", "id=pressureOnContainer / class=inpContainer");
-    createElement(pressureOnContainer, "label", "id=pressureOnLabel", prokachaikaStr);
+    createElement(pressureOnContainer, "span", "id=pressureOnSpan", prokachaikaStringList);
     let pressureOnInput = createElement(pressureOnContainer, "input", "id=pressureOnInput / type=tel");
-    pressureOnInput.value = prokachaikaStr["pressureOnInput"];
+    pressureOnInput.value = prokachaikaStringList["pressureOnInput"];
     let pressureHA = tryFormatToNumber(pressureOnInput.value);
     pressureOnInput.oninput = function () {
         pressureHA = tryFormatToNumber(pressureOnInput.value);
@@ -468,18 +485,18 @@ function openRelayHASettings(maxPressure) {
     }
 
     let pressureHAContainer = createElement(itemsContainer, "div", "id=pressureHAContainer / class=inpContainer");
-    createElement(pressureHAContainer, "label", "id=pressureHALabel", prokachaikaStr);
+    createElement(pressureHAContainer, "span", "id=pressureHASpan", prokachaikaStringList);
     let pressureHAInput = createElement(pressureHAContainer, "input", "id=pressureHAInput / type=tel / disabled");
 
     pressureOnInput.oninput();
 
     let pressureOffContainer = createElement(itemsContainer, "div", "id=pressureOffContainer / class=inpContainer");
-    createElement(pressureOffContainer, "label", "id=pressureOffLabel", prokachaikaStr);
+    createElement(pressureOffContainer, "span", "id=pressureOffSpan", prokachaikaStringList);
     let pressureOffInput = createElement(pressureOffContainer, "input", "id=pressureOffInput / type=tel / disabled");
 
     pressureOffInput.value = (maxPressure * 0.82).toFixed(1);
 
-    let rHA_closeButton = createElement(itemsContainer, "button", "id=rHA_closeButton", prokachaikaStr);
+    let rHA_closeButton = createElement(itemsContainer, "button", "id=rHA_closeButton", prokachaikaStringList);
     rHA_closeButton.onclick = function () {
         scrollController.enableElementScrolling();
         relayHAContainer.remove();

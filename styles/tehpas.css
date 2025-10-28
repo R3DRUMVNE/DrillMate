@@ -50,7 +50,7 @@
     gap: 0;
 }
 
-label.lb{
+span.lb{
     margin-left: 5px;
     grid-area: lb;
     height: min-content;
@@ -80,9 +80,9 @@ input.cb{
     gap: 10px;
 }
 
-#depthLabel{
+#depthSpan{
     text-align: center;
-    grid-area: depthLabel;
+    grid-area: depthSpan;
 }
 
 .layer{
@@ -91,7 +91,7 @@ input.cb{
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
-        "depthLabel depthLabel"
+        "depthSpan depthSpan"
         "startDepthContainer endDepthContainer"
         "layerNameContainer layerColorContainer"
         "wellConstructionContainer wellConstructionContainer"

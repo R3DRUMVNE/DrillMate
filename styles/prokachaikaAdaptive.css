@@ -19,25 +19,25 @@
         grid-template-columns: 1fr;
         grid-auto-rows: max-content;
         grid-template-areas:
-        "pumpTypeLabel"
+        "pumpTypeSpan"
         "pumpTypeValue"
-        "pumpVersionLabel"
+        "pumpVersionSpan"
         "pumpVersionValue"
-        "pumpControlLabel"
+        "pumpControlSpan"
         "pumpControlValue"
-        "bodyMaterialLabel"
+        "bodyMaterialSpan"
         "bodyMaterialValue"
-        "capacityLabel"
+        "capacitySpan"
         "capacityValue"
-        "maxPerfLabel"
+        "maxPerfSpan"
         "maxPerfValue"
-        "liftingHeightLabel"
+        "liftingHeightSpan"
         "liftingHeightValue"
-        "maxPressureLabel"
+        "maxPressureSpan"
         "maxPressureValue"
-        "forLowStaticLevelLabel"
+        "forLowStaticLevelSpan"
         "forLowStaticLevelValue"
-        "accumulatorLabel"
+        "accumulatorSpan"
         "accumulatorValue";
         gap: 0;
 
@@ -101,16 +101,16 @@
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: max-content;
         grid-template-areas:
-        "pumpTypeLabel pumpTypeValue"
-        "pumpVersionLabel pumpVersionValue"
-        "pumpControlLabel pumpControlValue"
-        "bodyMaterialLabel bodyMaterialValue"
-        "capacityLabel capacityValue"
-        "maxPerfLabel maxPerfValue"
-        "liftingHeightLabel liftingHeightValue"
-        "maxPressureLabel maxPressureValue"
-        "forLowStaticLevelLabel forLowStaticLevelValue"
-        "accumulatorLabel accumulatorValue";
+        "pumpTypeSpan pumpTypeValue"
+        "pumpVersionSpan pumpVersionValue"
+        "pumpControlSpan pumpControlValue"
+        "bodyMaterialSpan bodyMaterialValue"
+        "capacitySpan capacityValue"
+        "maxPerfSpan maxPerfValue"
+        "liftingHeightSpan liftingHeightValue"
+        "maxPressureSpan maxPressureValue"
+        "forLowStaticLevelSpan forLowStaticLevelValue"
+        "accumulatorSpan accumulatorValue";
         gap: 0;
 
         border-radius: 10px;
@@ -179,16 +179,16 @@
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: max-content;
         grid-template-areas:
-        "pumpTypeLabel pumpTypeValue"
-        "pumpVersionLabel pumpVersionValue"
-        "pumpControlLabel pumpControlValue"
-        "bodyMaterialLabel bodyMaterialValue"
-        "capacityLabel capacityValue"
-        "maxPerfLabel maxPerfValue"
-        "liftingHeightLabel liftingHeightValue"
-        "maxPressureLabel maxPressureValue"
-        "forLowStaticLevelLabel forLowStaticLevelValue"
-        "accumulatorLabel accumulatorValue";
+        "pumpTypeSpan pumpTypeValue"
+        "pumpVersionSpan pumpVersionValue"
+        "pumpControlSpan pumpControlValue"
+        "bodyMaterialSpan bodyMaterialValue"
+        "capacitySpan capacityValue"
+        "maxPerfSpan maxPerfValue"
+        "liftingHeightSpan liftingHeightValue"
+        "maxPressureSpan maxPressureValue"
+        "forLowStaticLevelSpan forLowStaticLevelValue"
+        "accumulatorSpan accumulatorValue";
         gap: 0;
 
         border-radius: 10px;

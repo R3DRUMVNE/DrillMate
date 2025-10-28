@@ -1,0 +1,12 @@
+{
+  "realtimeText": "Расчёт в реальном времени",
+  "volumeText": "Заполняемый объём, литр:",
+  "userTimeText": "Время заполнения, час:мин:сек:",
+  "startButton": "Старт!",
+  "currentTimeText": "Время",
+  "currentTimeOutput": "-",
+  "flowRateText": "Дебит",
+  "flowRateLMOutput": "-",
+  "flowRateLHOutput": "-",
+  "volumeInputHint": "0"
+}

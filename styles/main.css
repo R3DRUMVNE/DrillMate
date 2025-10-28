@@ -92,7 +92,7 @@ select {
     gap: 0;
 }
 
-.inpContainer > label {
+.inpContainer > span {
     margin-left: 5px;
 }
 

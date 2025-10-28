@@ -76,13 +76,13 @@
     margin-bottom: 20px;
 }
 
-label {
+span {
     text-shadow: inherit;
     font-family: inherit;
     color: inherit;
 }
 
-#passportHeaderLabel {
+#passportHeaderSpan {
     font-size: 20pt;
     text-align: center;
     page-break-before: avoid;
@@ -90,7 +90,7 @@ label {
     page-break-inside: avoid;
 }
 
-#passportUnderHeaderLabel {
+#passportUnderHeaderSpan {
     font-size: 16pt;
     text-align: center;
 }
