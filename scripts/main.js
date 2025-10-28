@@ -86,7 +86,7 @@ function createMenuButtons() {
     for (let key in menuMap) {
         let menuOptionContainer = createElement(menuDiv, "div", "id=" + key + " / class=menuOption");
 
-        createElement(menuOptionContainer, "img", "class=image / src=./assets/" + key + ".svg");
+        createElement(menuOptionContainer, "img", "class=image / src=./assets/" + key + ".svg / alt=" + menuMap[key].name);
 
         createElement(menuOptionContainer, "div", "class=header", menuMap[key].name);
 
