@@ -1,5 +1,7 @@
 .inputBlockRC,
-.inputBlockSC{
+.inputBlockRC_noButton,
+.inputBlockSC,
+.inputBlockSC_noButton{
     grid-area: inputBlock;
     display: grid;
     gap: 10px;
@@ -11,10 +13,30 @@
     grid-template-areas:
         "realtimeCheckbox realtimeText"
         "volumeInputContainer volumeInputContainer"
+        "startButton startButton"
+        "selectPumpButton selectPumpButton";
+}
+
+.inputBlockRC_noButton{
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: min-content min-content auto;
+    grid-template-areas:
+        "realtimeCheckbox realtimeText"
+        "volumeInputContainer volumeInputContainer"
         "startButton startButton";
 }
 
 .inputBlockSC{
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: min-content min-content auto;
+    grid-template-areas:
+        "realtimeCheckbox realtimeText"
+        "volumeInputContainer volumeInputContainer"
+        "timeInputContainer timeInputContainer"
+        "selectPumpButton selectPumpButton";
+}
+
+.inputBlockSC_noButton{
     grid-template-columns: min-content 1fr;
     grid-template-rows: min-content min-content auto;
     grid-template-areas:
@@ -53,6 +75,21 @@
     color: var(--primaryText);
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
     transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.selectPumpButton_display,
+.selectPumpButton_hide{
+    grid-area: selectPumpButton;
+}
+
+.selectPumpButton_display{
+    display: block;
+    width: max-content;
+    justify-self: center;
+}
+
+.selectPumpButton_hide{
+    display: none;
 }
 
 #currentTimeContainer{

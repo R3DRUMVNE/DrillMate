@@ -42,13 +42,13 @@ let compareList = {
 export async function startProkachaikaModule(container, moduleName, moduleID, addons) {
     let prokachaikaDiv = createElement(container, 'div', 'id=prokachaikaDiv');
     prokachaikaStringList = await getJSONData("./objects/prokachaikaStringList.json");
-    createModuleHeader(moduleName, moduleID, prokachaikaDiv).then();
-    createFilterBlock(prokachaikaDiv);
+    await createPumpList(prokachaikaDiv, addons.URLPumpModel);
     createAdditionalPanel(prokachaikaDiv);
-    createPumpList(prokachaikaDiv, addons.URLPumpModel).then();
+    createFilterBlock(prokachaikaDiv, addons.flowRateLPH);
+    createModuleHeader(moduleName, moduleID, prokachaikaDiv).then();
 }
 
-function createFilterBlock(container) {
+function createFilterBlock(container, flowRateLPH) {
     let filters = {
         name: "",
         pumpType: "Любой",
@@ -147,6 +147,13 @@ function createFilterBlock(container) {
         lowStatic.checked = filters.lowStatic;
         hideExcessPump.checked = filters.hideExcessPump;
         filterPumpList(filters);
+    }
+
+    if (flowRateLPH !== null && flowRateLPH !== undefined) {
+        wellFlowRate.value = flowRateLPH;
+        wellFlowRate.oninput();
+        hideExcessPump.checked = true;
+        hideExcessPump.onchange();
     }
 }
 
@@ -330,7 +337,7 @@ async function createPumpList(container, URLPumpModel) {
         getMaxPerf(pumpList.models[i]);
         pumpList.models[i].maxPressure = Number((pumpList.models[i].liftingHeight * 0.098064).toFixed(1));
 
-        if (URLPumpModel !== null) {
+        if (URLPumpModel !== null && URLPumpModel !== undefined) {
             if (URLPumpModel.toLowerCase() === pumpList.models[i].name.toLowerCase()) {
                 noModelError = true;
                 openPumpInfo(pumpList.models[i]);

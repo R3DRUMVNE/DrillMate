@@ -1,14 +1,21 @@
 #prokachaikaDiv{
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 10px;
+    grid-template-columns: 1fr;
+    grid-auto-rows: max-content;
+    grid-template-areas:
+        "moduleHeader"
+        "filterBlock"
+        "additionalPanelContainer"
+        "pumpListContainer";
 }
 
 #filterBlock{
     display: flex;
     flex-direction: column;
     gap: 10px;
+    grid-area: filterBlock;
 }
 
 #filterBlockHeader{
@@ -21,6 +28,10 @@
     display: flex;
     flex-direction: row;
     gap: 0;
+}
+
+#pumpListContainer{
+    grid-area: pumpListContainer;
 }
 
 .pumpContainer{
@@ -54,6 +65,7 @@
     flex-direction: row;
     gap: 10px;
     align-items: end;
+    grid-area: additionalPanelContainer;
 }
 
 #compareButton{

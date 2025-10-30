@@ -6,6 +6,7 @@ import {
     filterValueByNumber, appTheme_getColor, getJSONData
 } from "./moduleScripts/otherModules.js";
 import {destroyTimer, setTimer} from "./moduleScripts/bufferModule.js";
+import {loadModule} from "./main.js";
 
 let schetovodStringList = null;
 
@@ -30,11 +31,21 @@ function createInputBlock(blockDiv) {
     createElement(volumeInputContainer, "span", "id=volumeText", schetovodStringList);
     let volumeInput = createElement(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStringList.volumeInputHint);
 
+    let selectPumpButton = createElement(inputBlock,"button", "id=selectPumpButton / class=selectPumpButton_hide", schetovodStringList);
+    selectPumpButton.onclick = function () {
+        loadModule("prokachaika", {flowRateLPH: flowRate.litresPerHour});
+    }
+
+    function selectPumpButton_display(selectPumpButton, flag) {
+        flag === "true" ? selectPumpButton.className = "selectPumpButton_display" : selectPumpButton.className = "selectPumpButton_hide";
+    }
+
     let realtimeCheckbox = createElement(inputBlock, "input", "id=realtimeCheckbox / type=checkbox / checked");
     let startButton, timeInputContainer;
     realtimeCheckbox.onchange = function () {
         if (realtimeCheckbox.checked) {
-            inputBlock.className = "defaultContainer inputBlockRC";
+            inputBlock.className = "defaultContainer inputBlockRC_noButton";
+            selectPumpButton.className = "selectPumpButton_hide";
             volumeInput.oninput = function () {
                 filterValueByNumber(this);
             }
@@ -48,12 +59,21 @@ function createInputBlock(blockDiv) {
                     volumeInput.disabled = !volumeInput.disabled;
                     realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
                     realtimeCalculate(this);
+                    if(this.name === "true") {
+                        inputBlock.className = "defaultContainer inputBlockRC";
+                        selectPumpButton_display(selectPumpButton, this.name);
+                    } else{
+                        inputBlock.className = "defaultContainer inputBlockRC_noButton";
+                        selectPumpButton_display(selectPumpButton, this.name);
+                    }
                 } else{
                     appToast("Ошибка: укажите заполняемый объём числом!", 1500).then();
                 }
             }
         } else {
-            inputBlock.className = "defaultContainer inputBlockSC";
+            let selectPumpButtonVisible = "false";
+            inputBlock.className = "defaultContainer inputBlockSC_noButton";
+            selectPumpButton.className = "selectPumpButton_hide";
             if (startButton !== undefined) startButton.remove();
 
             timeInputContainer = createElement(inputBlock, "div", "id=timeInputContainer / class=inpContainer");
@@ -61,10 +81,20 @@ function createInputBlock(blockDiv) {
             let userTimeInput = createElement(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
             userTimeInput.oninput = function () {
                 standardCalculate();
+                selectPumpButton_check();
             }
             volumeInput.oninput = function () {
                 filterValueByNumber(this);
                 standardCalculate();
+                selectPumpButton_check();
+            }
+
+            function selectPumpButton_check(){
+                if(selectPumpButtonVisible !== "true"){
+                    selectPumpButtonVisible = "true";
+                    inputBlock.className = "defaultContainer inputBlockSC";
+                    selectPumpButton_display(selectPumpButton, selectPumpButtonVisible);
+                }
             }
         }
     }

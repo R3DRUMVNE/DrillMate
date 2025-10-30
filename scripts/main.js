@@ -16,7 +16,7 @@ let menuButton = document.querySelector("#menuButton");
 let settingsInfoButton = document.querySelector("#settingsInfoButton");
 let fragmentDiv = document.querySelector("#fragmentDiv");
 
-const version = "1.1.2";
+export const version = "1.1.2";
 let mainStringList = null;
 let menuMap = null;
 
@@ -98,7 +98,7 @@ function createMenuButtons() {
     }
 }
 
-function loadModule(id, addons){
+export function loadModule(id, addons){
     fragmentDiv.innerHTML = "";
     title.innerHTML = "DrillMate - " + menuMap[id].name;
     linkNewStylesheet(id + "Adaptive");

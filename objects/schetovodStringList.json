@@ -8,5 +8,6 @@
   "flowRateText": "Дебит",
   "flowRateLMOutput": "-",
   "flowRateLHOutput": "-",
-  "volumeInputHint": "0"
+  "volumeInputHint": "0",
+  "selectPumpButton": "Подобрать насос"
 }
