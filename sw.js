@@ -1,4 +1,4 @@
-const staticCacheName = "drillmate_cache_v1.1.2";
+const staticCacheName = "drillmate_cache_" + new Date().toISOString();
 
 const static_assets = [
     ".",
