@@ -16,7 +16,7 @@ let menuButton = document.querySelector("#menuButton");
 let settingsInfoButton = document.querySelector("#settingsInfoButton");
 let fragmentDiv = document.querySelector("#fragmentDiv");
 
-export const version = "1.1.2";
+const version = "1.1.2";
 let mainStringList = null;
 let menuMap = null;
 

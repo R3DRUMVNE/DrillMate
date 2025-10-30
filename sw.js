@@ -1,6 +1,4 @@
-import {version} from "./scripts/main.js";
-
-const staticCacheName = "drillmate_cache_v" + version;
+const staticCacheName = "drillmate_cache_v1.1.2";
 
 const static_assets = [
     ".",
