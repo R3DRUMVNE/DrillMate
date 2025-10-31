@@ -1,4 +1,4 @@
-const staticCacheName = "drillmate_cache_" + new Date().toISOString();
+const CACHE_NAME = "drillmate_cache";
 
 const static_assets = [
     ".",
@@ -66,26 +66,35 @@ const static_assets = [
     "./styles/tehpasPrint.css",
 ];
 
-self.addEventListener('install', async () => {
-    const cache = await caches.open(staticCacheName);
+self.addEventListener("install", async () => {
+    const cache = await caches.open(CACHE_NAME);
     await cache.addAll(static_assets);
-    console.log('Service worker has been installed');
+    console.log("SW - Cache has been created: " + CACHE_NAME);
+    await self.skipWaiting();
 });
 
-self.addEventListener('activate', async () => {
-    const cachesKeys = await caches.keys();
-    const checkKeys = cachesKeys.map(async key => {
-        if (staticCacheName !== key) {
-            await caches.delete(key);
-        }
-    });
-    await Promise.all(checkKeys);
-    console.log('Service worker has been activated');
+self.addEventListener("activate",  (event) => {
+    event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('fetch', event => {
-    console.log(`Trying to fetch ${event.request.url}`);
-    event.respondWith(caches.match(event.request).then(cachedResponse => {
-        return cachedResponse || fetch(event.request);
-    }));
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        (async () => {
+            try {
+                const response = await fetch(event.request);
+                console.log("SW - Resource loaded from web: " + event.request.url);
+
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(event.request, response.clone());
+
+                return response;
+            } catch (error) {
+                const cachedResponse = await caches.match(event.request);
+                if (cachedResponse) {
+                    console.log("SW - Resource loaded from cache: " + cachedResponse.url);
+                    return cachedResponse;
+                }
+            }
+        })()
+    );
 });
