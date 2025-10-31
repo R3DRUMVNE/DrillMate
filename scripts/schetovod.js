@@ -3,11 +3,12 @@ import {
     tryFormatToNumber,
     createElement,
     appToast,
-    filterValueByNumber
-} from "./modules/otherModules.js";
-import {schetovodStr} from "./objects/strings.js";
-import {destroyTimer, setTimer} from "./modules/bufferModule.js";
-import {appTheme} from "./objects/colors.js";
+    filterValueByNumber, appTheme_getColor, getJSONData
+} from "./moduleScripts/otherModules.js";
+import {destroyTimer, setTimer} from "./moduleScripts/bufferModule.js";
+import {loadModule} from "./main.js";
+
+let schetovodStringList = null;
 
 let flowRate = {
     volume: 0,
@@ -15,9 +16,10 @@ let flowRate = {
     litresPerHour: 0,
 }
 
-export function startSchetoVodModule(container, moduleName, moduleID) {
+export async function startSchetoVodModule(container, moduleName, moduleID) {
     let schetovodDiv = createElement(container, 'div', 'id=schetovodDiv');
-    createModuleHeader(moduleName, moduleID, schetovodDiv);
+    schetovodStringList = await getJSONData("./objects/schetovodStringList.json");
+    createModuleHeader(moduleName, moduleID, schetovodDiv).then();
     createInputBlock(schetovodDiv);
     createOutputBlock(schetovodDiv);
 }
@@ -26,20 +28,30 @@ function createInputBlock(blockDiv) {
     let inputBlock = createElement(blockDiv, "div", "id=inputBlock / class=defaultContainer inputBlockRC");
 
     let volumeInputContainer = createElement(inputBlock, "div", "id=volumeInputContainer / class=inpContainer");
-    createElement(volumeInputContainer, "label", "id=volumeText", schetovodStr);
-    let volumeInput = createElement(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStr.volumeInputHint);
+    createElement(volumeInputContainer, "span", "id=volumeText", schetovodStringList);
+    let volumeInput = createElement(volumeInputContainer, "input", "id=volumeInput / type=tel / placeholder=" + schetovodStringList.volumeInputHint);
+
+    let selectPumpButton = createElement(inputBlock,"button", "id=selectPumpButton / class=selectPumpButton_hide", schetovodStringList);
+    selectPumpButton.onclick = function () {
+        loadModule("prokachaika", {flowRateLPH: flowRate.litresPerHour});
+    }
+
+    function selectPumpButton_display(selectPumpButton, flag) {
+        flag === "true" ? selectPumpButton.className = "selectPumpButton_display" : selectPumpButton.className = "selectPumpButton_hide";
+    }
 
     let realtimeCheckbox = createElement(inputBlock, "input", "id=realtimeCheckbox / type=checkbox / checked");
     let startButton, timeInputContainer;
     realtimeCheckbox.onchange = function () {
         if (realtimeCheckbox.checked) {
-            inputBlock.className = "defaultContainer inputBlockRC";
+            inputBlock.className = "defaultContainer inputBlockRC_noButton";
+            selectPumpButton.className = "selectPumpButton_hide";
             volumeInput.oninput = function () {
                 filterValueByNumber(this);
             }
             if (timeInputContainer !== undefined) timeInputContainer.remove();
 
-            startButton = createElement(inputBlock, "button", "id=startButton", schetovodStr);
+            startButton = createElement(inputBlock, "button", "id=startButton", schetovodStringList);
             startButton.name = "true";
             startButton.onclick = function () {
                 flowRate.volume = tryFormatToNumber(volumeInput.value);
@@ -47,41 +59,60 @@ function createInputBlock(blockDiv) {
                     volumeInput.disabled = !volumeInput.disabled;
                     realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
                     realtimeCalculate(this);
+                    if(this.name === "true") {
+                        inputBlock.className = "defaultContainer inputBlockRC";
+                        selectPumpButton_display(selectPumpButton, this.name);
+                    } else{
+                        inputBlock.className = "defaultContainer inputBlockRC_noButton";
+                        selectPumpButton_display(selectPumpButton, this.name);
+                    }
                 } else{
                     appToast("Ошибка: укажите заполняемый объём числом!", 1500).then();
                 }
             }
         } else {
-            inputBlock.className = "defaultContainer inputBlockSC";
+            let selectPumpButtonVisible = "false";
+            inputBlock.className = "defaultContainer inputBlockSC_noButton";
+            selectPumpButton.className = "selectPumpButton_hide";
             if (startButton !== undefined) startButton.remove();
 
             timeInputContainer = createElement(inputBlock, "div", "id=timeInputContainer / class=inpContainer");
-            createElement(timeInputContainer, "label", "id=userTimeText", schetovodStr);
+            createElement(timeInputContainer, "span", "id=userTimeText", schetovodStringList);
             let userTimeInput = createElement(timeInputContainer, "input", "id=userTimeInput / type=time / value=00:00:30 / step=1");
             userTimeInput.oninput = function () {
                 standardCalculate();
+                selectPumpButton_check();
             }
             volumeInput.oninput = function () {
                 filterValueByNumber(this);
                 standardCalculate();
+                selectPumpButton_check();
+            }
+
+            function selectPumpButton_check(){
+                if(selectPumpButtonVisible !== "true"){
+                    selectPumpButtonVisible = "true";
+                    inputBlock.className = "defaultContainer inputBlockSC";
+                    selectPumpButton_display(selectPumpButton, selectPumpButtonVisible);
+                }
             }
         }
     }
     realtimeCheckbox.dispatchEvent(new Event('change'));
-    createElement(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStr);
+    createElement(inputBlock, "label", "id=realtimeText / for=realtimeCheckbox", schetovodStringList);
 }
 
 function createOutputBlock(frg) {
     let currentTimeContainer = createElement(frg, "div", "id=currentTimeContainer / class=unPadContainer");
 
-    createElement(currentTimeContainer, "div", "id=currentTimeText / class=defaultContainer", schetovodStr);
-    createElement(currentTimeContainer, "label", "id=currentTimeOutput", schetovodStr);
+    createElement(currentTimeContainer, "div", "id=currentTimeText / class=defaultContainer", schetovodStringList);
+    createElement(currentTimeContainer, "span", "id=currentTimeOutput", schetovodStringList);
 
     let fRContainer = createElement(frg, "div", "id=fRContainer / class=unPadContainer");
 
-    createElement(fRContainer, "div", "id=flowRateText / class=defaultContainer", schetovodStr);
-    createElement(fRContainer, "label", "id=flowRateLMOutput", schetovodStr);
-    createElement(fRContainer, "label", "id=flowRateLHOutput", schetovodStr);
+    createElement(fRContainer, "div", "id=flowRateText / class=defaultContainer", schetovodStringList);
+    createElement(fRContainer, "span", "id=flowRateLMOutput", schetovodStringList);
+    createElement(fRContainer, "span", "id=flowRateLHOutput", schetovodStringList);
     return frg;
 }
 
@@ -93,12 +124,12 @@ function realtimeCalculate(button) {
         startTime = getTimeInSeconds();
         setTimer("flowRateTimer", setInterval(calculateRealTimeDifference, 20, startTime));
         button.innerHTML = "Стоп!";
-        button.style.backgroundColor = appTheme.getColor("stop");
+        button.style.backgroundColor = appTheme_getColor("stop");
         button.name = false;
     } else {
         destroyTimer("flowRateTimer");
         button.innerHTML = "Старт!";
-        button.style.backgroundColor = appTheme.getColor("button");
+        button.style.backgroundColor = appTheme_getColor("button");
         button.name = true;
     }
 }

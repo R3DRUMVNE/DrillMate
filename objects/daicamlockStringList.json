@@ -1,0 +1,16 @@
+{
+  "answerContainer": "Ваш камлок: ",
+  "fatherLabel": "Папа",
+  "motherLabel": "Мама",
+  "hoseFittingLabel": "Штуцер под шланг",
+  "internalThreadLabel": "Внутренняя резьба",
+  "externalThreadLabel": "Внешняя резьба",
+  "stubLabel": "Заглушка",
+  "DNSelectSpan": "DN, мм | дюйм:",
+  "DNSelect": ["10мм | 3/8\"", "15мм | 1/2\"", "20мм | 3/4\"", "25мм | 1\"", "32мм | 1-1/4\"", "40мм | 1-1/2\"", "50мм | 2\"", "65мм | 2-1/2\"", "80мм | 3\"", "100мм | 4\"", "125мм | 5\""],
+  "sizesBlockHeader": "Размеры на эскизе",
+  "sizeSpan1": "-",
+  "sizeSpan2": "-",
+  "sizeSpan3": "-",
+  "getCamlockHeader": "Найти в продаже"
+}

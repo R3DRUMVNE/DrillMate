@@ -1,0 +1,50 @@
+{
+  "default": {
+    "primaryColor": "#4141D1",
+    "secondaryColor": "#4A0094",
+    "button": "#0077EC",
+    "stop": "#b42c38",
+    "ready": "#009950",
+    "shadow": "rgba(0, 0, 0, 0.5)",
+    "noShadow": "rgba(0, 0, 0, 0)",
+    "primaryText": "#F4F4F4",
+    "excessPump": "#ffae00",
+    "greatPump": "#37ff00"
+  },
+  "dark":{
+    "primaryColor": "#373737",
+    "secondaryColor": "#111111",
+    "button": "#5D5D5D",
+    "stop": "#b42c38",
+    "ready": "#009950",
+    "shadow": "rgba(0, 0, 0, 0.5)",
+    "noShadow": "rgba(0, 0, 0, 0)",
+    "primaryText": "#F4F4F4",
+    "excessPump": "#ffae00",
+    "greatPump": "#37ff00"
+  },
+  "gray":{
+    "primaryColor": "#5E6367",
+    "secondaryColor": "#323639",
+    "button": "#919499",
+    "stop": "#b42c38",
+    "ready": "#009950",
+    "shadow": "rgba(0, 0, 0, 0.5)",
+    "noShadow": "rgba(0, 0, 0, 0)",
+    "primaryText": "#F4F4F4",
+    "excessPump": "#ffae00",
+    "greatPump": "#37ff00"
+  },
+  "classic": {
+    "primaryColor": "#0060b9",
+    "secondaryColor": "#303F9F",
+    "button": "#007cc1",
+    "stop": "#b42c38",
+    "ready": "#009950",
+    "shadow": "rgba(0, 0, 0, 0.5)",
+    "noShadow": "rgba(0, 0, 0, 0)",
+    "primaryText": "#F4F4F4",
+    "excessPump": "#ffae00",
+    "greatPump": "#37ff00"
+  }
+}

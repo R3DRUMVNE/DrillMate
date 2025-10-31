@@ -1,0 +1,31 @@
+{
+  "text": "Камлок",
+  "id": "camlock",
+  "reversible": true,
+  "type": {
+    "A": {
+      "connection": "Father_InternalThread"
+    },
+    "B": {
+      "connection": "Mother_ExternalThread"
+    },
+    "C": {
+      "connection": "Mother_HoseFitting"
+    },
+    "D": {
+      "connection": "Mother_InternalThread"
+    },
+    "E": {
+      "connection": "Father_HoseFitting"
+    },
+    "F": {
+      "connection": "Father_ExternalThread"
+    },
+    "DP": {
+      "connection": "Father_Stub"
+    },
+    "DC": {
+      "connection": "Mother_Stub"
+    }
+  }
+}

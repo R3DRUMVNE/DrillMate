@@ -1,6 +1,6 @@
-import {blockInfoStrings} from "../objects/strings.js";
+let moduleHintStringList = null;
 
-export function createModuleHeader(moduleName, moduleID, parentDiv) {
+export async function createModuleHeader(moduleName, moduleID, parentDiv) {
     let container = createElement(parentDiv, "div", "id=moduleHeader / class=defaultContainer");
     createElement(container, "div", "id=moduleHeaderName", moduleName);
 
@@ -11,10 +11,11 @@ export function createModuleHeader(moduleName, moduleID, parentDiv) {
         share("Поделиться разделом", [["module", moduleID]], "DrillMate - " + moduleName);
     }
 
+    moduleHintStringList = await getJSONData("./objects/moduleHintStringList.json");
     let blockInfoButton = createElement(container, "button", "id=blockInfoButton");
     createElement(blockInfoButton, "img", "id=blockInfoButtonImg / src=./assets/moduleHint.svg");
     blockInfoButton.onclick = function () {
-        if (typeof blockInfoStrings[moduleID] !== "undefined") appAlert("Подсказка раздела", blockInfoStrings[moduleID]);
+        moduleHintStringList[moduleID] !== undefined ? appAlert("Подсказка раздела", moduleHintStringList[moduleID]) : null;
     }
 }
 
@@ -115,7 +116,7 @@ export let scrollController = {
             this.workElement.style.filter = "none";
             this.workElement.style.pointerEvents = "auto";
             this.workElement = null;
-        } else{
+        } else {
             this.enableBodyScrolling();
         }
     },
@@ -232,4 +233,54 @@ export function createCheckboxContainer(parentContainer, checkboxAttributes, lab
     let cb = createElement(container, "input", "type=checkbox / " + checkboxAttributes);
     createElement(container, "label", labelAttributes + " / for=" + cb.id, stringObj);
     return cb;
+}
+
+export function getJSONData(path) {
+    return fetch(path)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Ошибка в fetch: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(jsonData => {
+            return jsonData
+        })
+        .catch(error => console.error("Ошибка при исполнении запроса: " + error));
+}
+
+const appTheme = {
+    currentTheme: "",
+    themesList: {},
+    meta_themeColor: createElement(document.head, "meta", "name=theme-color"),
+}
+
+export function appTheme_getColor(colorName) {
+    return appTheme.themesList[appTheme.currentTheme][colorName];
+}
+
+export async function appTheme_getThemes(path) {
+    appTheme.themesList = await getJSONData(path);
+}
+
+export function appTheme_change(selectedTheme) {
+    if (selectedTheme === null) {
+        appTheme.currentTheme = "default";
+        selectedTheme = appTheme.currentTheme;
+    } else if (selectedTheme === "likeSystem") {
+        appTheme.currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "default";
+    } else {
+        appTheme.currentTheme = selectedTheme;
+    }
+    localStorage.setItem('appTheme', selectedTheme);
+
+    for(let theme in appTheme.themesList) {
+        if(theme === appTheme.currentTheme) {
+            for(let color in appTheme.themesList[theme]) {
+                document.documentElement.style.setProperty("--" + color, appTheme.themesList[theme][color]);
+            }
+        }
+    }
+
+    appTheme.meta_themeColor.setAttribute("content", appTheme_getColor("primaryColor"));
 }

@@ -4,21 +4,23 @@ import {
     tryFormatToNumber,
     appAlert,
     scrollController,
-    linkNewStylesheet, setCookie, getCookie, createCheckboxContainer
-} from "./modules/otherModules.js";
-import {tehpasStr} from "./objects/strings.js";
-import {passportBlock} from "./objects/passport.js";
-import {appTheme} from "./objects/colors.js";
-import {addTempElement} from "./modules/bufferModule.js";
+    linkNewStylesheet, setCookie, getCookie, createCheckboxContainer, getJSONData, appTheme_getColor
+} from "./moduleScripts/otherModules.js";
+import {addTempElement} from "./moduleScripts/bufferModule.js";
 
+let tehpasStringList = null;
 let passportHeaderImage;
 let currentFile;
+let passportMap = [];
 
-export function startTehPasModule(container, moduleName, moduleID) {
+export async function startTehPasModule(container, moduleName, moduleID) {
     currentFile = "";
     let tehPasDiv = createElement(container, 'div', 'id=tehPasDiv');
+    tehpasStringList = await getJSONData("./objects/tehpasStringList.json");
+    passportMap = await getJSONData("./objects/passportMap.json");
+
     passportHeaderImage = undefined;
-    createModuleHeader(moduleName, moduleID, tehPasDiv);
+    createModuleHeader(moduleName, moduleID, tehPasDiv).then();
     createControls(tehPasDiv);
     createInputBlocks(tehPasDiv);
     createGeoSectionBlock(tehPasDiv);
@@ -32,48 +34,48 @@ export function startTehPasModule(container, moduleName, moduleID) {
 }
 
 function createInputBlocks(container) {
-    for (let i = 0; i < passportBlock.length; i++) {
-        let block = createElement(container, "div", "id=" + passportBlock[i].header + "Block" + " / class=unPadContainer");
+    for (let i = 0; i < passportMap.length; i++) {
+        let block = createElement(container, "div", "id=" + passportMap[i].header + "Block" + " / class=unPadContainer");
 
-        createElement(block, "div", "id=" + passportBlock[i].header + "Header / class=defaultContainer blockHeader", tehpasStr);
+        createElement(block, "div", "id=" + passportMap[i].header + "Header / class=defaultContainer blockHeader", tehpasStringList);
 
-        if(passportBlock[i].displayBlockCheckbox || passportBlock[i].toNextPageCheckbox){
+        if(passportMap[i].displayBlockCheckbox || passportMap[i].toNextPageCheckbox){
             let blockCheckboxContainer = createElement(block, "div", "id="+ block.id +"CheckboxContainer / class=blockCheckboxContainer");
-            if(passportBlock[i].displayBlockCheckbox){
-                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "Checkbox / file=cb", "id=" + block.id + "CheckboxLabel", tehpasStr);
+            if(passportMap[i].displayBlockCheckbox){
+                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "Checkbox / file=cb", "id=" + block.id + "CheckboxLabel", tehpasStringList);
             }
-            if(passportBlock[i].toNextPageCheckbox){
-                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "ToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
+            if(passportMap[i].toNextPageCheckbox){
+                createCheckboxContainer(blockCheckboxContainer, "id=" + block.id + "ToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStringList);
             }
         }
 
         let itemsContainer = createElement(block, "div", "id=" + block.id + "Items");
 
         let inputContainer;
-        for (let j = 0; j < passportBlock[i].input.length; j++) {
-            if (passportBlock[i].input[j].checkbox) {
+        for (let j = 0; j < passportMap[i].input.length; j++) {
+            if (passportMap[i].input[j].checkbox) {
                 inputContainer = createElement(itemsContainer, "div", "class=inputContainer");
 
-                createElement(inputContainer, "input", "id=" + passportBlock[i].input[j].name + "Checkbox / class=cb / type=checkbox / file=cb / checked");
+                createElement(inputContainer, "input", "id=" + passportMap[i].input[j].name + "Checkbox / class=cb / type=checkbox / file=cb / checked");
             } else {
                 inputContainer = createElement(itemsContainer, "div", "class=inputContainerNoCheckbox");
             }
 
-            if (tehpasStr[passportBlock[i].input[j].name + "Label"] !== undefined) {
-                createElement(inputContainer, "label", "id=" + passportBlock[i].input[j].name + "Label / class=lb", tehpasStr);
+            if (tehpasStringList[passportMap[i].input[j].name + "Span"] !== undefined) {
+                createElement(inputContainer, "span", "id=" + passportMap[i].input[j].name + "Span / class=lb", tehpasStringList);
             }
 
-            if (passportBlock[i].input[j].kind === "input" || passportBlock[i].input[j].kind === "textarea") {
-                let input = createElement(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp");
-                if (passportBlock[i].input[j].type !== null) {
-                    input.setAttribute("type", passportBlock[i].input[j].type);
+            if (passportMap[i].input[j].kind === "input" || passportMap[i].input[j].kind === "textarea") {
+                let input = createElement(inputContainer, passportMap[i].input[j].kind, "id=" + passportMap[i].input[j].name + " / class=inp / file=inp");
+                if (passportMap[i].input[j].type !== null) {
+                    input.setAttribute("type", passportMap[i].input[j].type);
                 }
                 if (input.type !== "datetime-local") {
-                    input.placeholder = tehpasStr[passportBlock[i].input[j].name + "Hint"];
+                    input.placeholder = tehpasStringList[passportMap[i].input[j].name + "Hint"];
                 }
                 inputContainer.id = input.id + "Container";
-            } else if (passportBlock[i].input[j].kind === "select") {
-                let select = createElement(inputContainer, passportBlock[i].input[j].kind, "id=" + passportBlock[i].input[j].name + " / class=inp / file=inp", tehpasStr);
+            } else if (passportMap[i].input[j].kind === "select") {
+                let select = createElement(inputContainer, passportMap[i].input[j].kind, "id=" + passportMap[i].input[j].name + " / class=inp / file=inp", tehpasStringList);
                 inputContainer.id = select.id + "Container";
             }
         }
@@ -101,7 +103,7 @@ function createFormPassportButton(container) {
 
     let printCheckboxContainer = createElement(printControlContainer, "div", "id=printCheckboxContainer / class=blockCheckboxContainer");
 
-    let dsPrintCheckbox = createCheckboxContainer(printCheckboxContainer, "id=dsPrintCheckbox / file=cb","id=dsPrintLabel", tehpasStr);
+    let dsPrintCheckbox = createCheckboxContainer(printCheckboxContainer, "id=dsPrintCheckbox / file=cb","id=dsPrintLabel", tehpasStringList);
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
@@ -116,9 +118,9 @@ function createFormPassportButton(container) {
         }
     }
     dsPrintCheckbox.dispatchEvent(new Event('change'));
-    createCheckboxContainer(printCheckboxContainer,"id=signaturesPrintCheckbox / file=cb / checked", "id=signaturesPrintLabel", tehpasStr);
+    createCheckboxContainer(printCheckboxContainer,"id=signaturesPrintCheckbox / file=cb / checked", "id=signaturesPrintLabel", tehpasStringList);
 
-    let formPassButton = createElement(printControlContainer, "button", "id=formPassButton", tehpasStr);
+    let formPassButton = createElement(printControlContainer, "button", "id=formPassButton", tehpasStringList);
     formPassButton.onclick = function () {
 
         let error = createPassport();
@@ -148,21 +150,21 @@ function createPassport() {
 
     let passportHeaderContainer = createElement(passportContainer, "div", "id=passportHeaderContainer");
 
-    let passportHeaderLabel = createElement(passportHeaderContainer, "label", "id=passportHeaderLabel", tehpasStr);
+    let passportHeaderSpan = createElement(passportHeaderContainer, "span", "id=passportHeaderSpan", tehpasStringList);
 
-    createElement(passportHeaderContainer, "label", "id=passportUnderHeaderLabel", tehpasStr);
+    createElement(passportHeaderContainer, "span", "id=passportUnderHeaderSpan", tehpasStringList);
 
-    for (let i = 0; i < passportBlock.length; i++) {
+    for (let i = 0; i < passportMap.length; i++) {
         let hideBlock = false;
-        if (passportBlock[i].displayBlockCheckbox) {
-            if (!document.querySelector("#" + passportBlock[i].header + "BlockCheckbox").checked) {
+        if (passportMap[i].displayBlockCheckbox) {
+            if (!document.querySelector("#" + passportMap[i].header + "BlockCheckbox").checked) {
                 hideBlock = true;
             }
         }
         if (!hideBlock) {
             let tableBlock = createElement(passportContainer, "table", "class=tableBlock");
-            if(passportBlock[i].toNextPageCheckbox){
-                if(document.querySelector("#" + passportBlock[i].header + "BlockToNextPageCheckbox").checked){
+            if(passportMap[i].toNextPageCheckbox){
+                if(document.querySelector("#" + passportMap[i].header + "BlockToNextPageCheckbox").checked){
                     tableBlock.className = "tableBlock breakBefore";
                 }
             }
@@ -170,45 +172,45 @@ function createPassport() {
             createElement(tableBlock, "col");
             createElement(tableBlock, "col");
 
-            createElement(tableBlock, "caption", "class=tableCaption", tehpasStr[passportBlock[i].header + "Header"]);
+            createElement(tableBlock, "caption", "class=tableCaption", tehpasStringList[passportMap[i].header + "Header"]);
 
-            for (let j = 0; j < passportBlock[i].input.length; j++) {
-                if (passportBlock[i].input[j].name === "passNumber") {
-                    if (document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
-                        if (document.querySelector("#" + passportBlock[i].input[j].name).value === "") {
-                            passportHeaderLabel.innerHTML += " №_____";
+            for (let j = 0; j < passportMap[i].input.length; j++) {
+                if (passportMap[i].input[j].name === "passNumber") {
+                    if (document.querySelector("#" + passportMap[i].input[j].name + "Checkbox").checked) {
+                        if (document.querySelector("#" + passportMap[i].input[j].name).value === "") {
+                            passportHeaderSpan.innerHTML += " №_____";
                         } else {
-                            passportHeaderLabel.innerHTML += " №" + document.querySelector("#" + passportBlock[i].input[j].name).value;
+                            passportHeaderSpan.innerHTML += " №" + document.querySelector("#" + passportMap[i].input[j].name).value;
                         }
                     }
-                } else if (passportBlock[i].input[j].checkbox) {
-                    if (!document.querySelector("#" + passportBlock[i].input[j].name + "Checkbox").checked) {
-                        passportBlock[i].input[j].passportDisplay = false;
-                        if (passportBlock[i].header === "wb") {
+                } else if (passportMap[i].input[j].checkbox) {
+                    if (!document.querySelector("#" + passportMap[i].input[j].name + "Checkbox").checked) {
+                        passportMap[i].input[j].passportDisplay = false;
+                        if (passportMap[i].header === "wb") {
                             tableBlock.remove();
                         }
                     } else {
-                        passportBlock[i].input[j].passportDisplay = true;
+                        passportMap[i].input[j].passportDisplay = true;
                     }
                 }
 
-                if (passportBlock[i].input[j].passportDisplay) {
-                    if (passportBlock[i].input[j].inTableVision.includes("default")) {
+                if (passportMap[i].input[j].passportDisplay) {
+                    if (passportMap[i].input[j].inTableVision.includes("default")) {
                         let row = tableBlock.insertRow();
                         let cell = row.insertCell();
-                        cell.innerHTML = tehpasStr[passportBlock[i].input[j].name + "Label"];
+                        cell.innerHTML = tehpasStringList[passportMap[i].input[j].name + "Span"];
                         cell = row.insertCell();
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
-                    } else if (passportBlock[i].input[j].inTableVision.includes("noLabel")) {
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
+                    } else if (passportMap[i].input[j].inTableVision.includes("noSpan")) {
                         let row = tableBlock.insertRow();
                         let cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
-                    } else if (passportBlock[i].input[j].inTableVision.includes("upperLabel")) {
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
+                    } else if (passportMap[i].input[j].inTableVision.includes("upperSpan")) {
                         let row = tableBlock.insertRow();
                         let cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = "<b>" + tehpasStr[passportBlock[i].input[j].name + "Label"] + "</b><br>" + getValueFromElement(document.querySelector("#" + passportBlock[i].input[j].name));
+                        cell.innerHTML = "<b>" + tehpasStringList[passportMap[i].input[j].name + "Span"] + "</b><br>" + getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
                     }
                 }
             }
@@ -252,14 +254,14 @@ function createPassport() {
 function createSignaturesTable(container) {
     let signTable = createElement(container, "table", "id=signTable");
 
-    createElement(signTable, "caption", "", tehpasStr["signaturesTableHeader"]);
+    createElement(signTable, "caption", "", tehpasStringList["signaturesTableHeader"]);
 
     let tableScheme = [
         ["jobDone / leftText", null, null],
-        ["drillMasterLabel / noBreak leftText", "signatureField / noBreak", "drillMaster / noBreak"],
+        ["drillMasterSpan / noBreak leftText", "signatureField / noBreak", "drillMaster / noBreak"],
         [null, null, "dateField"],
         ["acceptJob / noBreakAfter leftText", null, null],
-        ["customerLabel / noBreak leftText", "signatureField / noBreak", "customer / noBreak"],
+        ["customerSpan / noBreak leftText", "signatureField / noBreak", "customer / noBreak"],
         [null, null, "dateField"],
     ];
 
@@ -273,28 +275,28 @@ function createSignaturesTable(container) {
             let signTableCell = signTableRow.insertCell();
             if (tableScheme[i][j] !== null) {
                 if (tableScheme[i][j].includes(" / ")) {
-                    let labelName = tableScheme[i][j].split(" / ")[0];
-                    let labelClass = tableScheme[i][j].split(" / ")[1];
-                    if (labelName === "drillMaster" || labelName === "customer") {
-                        if (document.querySelector("#" + labelName).value.trim() !== "") {
-                            signTableCell.innerHTML = document.querySelector("#" + labelName).value.trim();
+                    let spanName = tableScheme[i][j].split(" / ")[0];
+                    let spanClass = tableScheme[i][j].split(" / ")[1];
+                    if (spanName === "drillMaster" || spanName === "customer") {
+                        if (document.querySelector("#" + spanName).value.trim() !== "") {
+                            signTableCell.innerHTML = document.querySelector("#" + spanName).value.trim();
                         } else {
-                            signTableCell.innerHTML = tehpasStr["transcriptField"];
+                            signTableCell.innerHTML = tehpasStringList["transcriptField"];
                         }
-                        signTableCell.className = labelClass;
+                        signTableCell.className = spanClass;
                     } else {
-                        signTableCell.innerHTML = tehpasStr[labelName];
-                        signTableCell.className = labelClass;
+                        signTableCell.innerHTML = tehpasStringList[spanName];
+                        signTableCell.className = spanClass;
                     }
                 } else {
                     if (tableScheme[i][j] === "drillMaster" || tableScheme[i][j] === "customer") {
                         if (document.querySelector("#" + tableScheme[i][j]).value.trim() !== "") {
                             signTableCell.innerHTML = document.querySelector("#" + tableScheme[i][j]).value.trim();
                         } else {
-                            signTableCell.innerHTML = tehpasStr["transcriptField"];
+                            signTableCell.innerHTML = tehpasStringList["transcriptField"];
                         }
                     } else {
-                        signTableCell.innerHTML = tehpasStr[tableScheme[i][j]];
+                        signTableCell.innerHTML = tehpasStringList[tableScheme[i][j]];
                     }
 
                 }
@@ -316,13 +318,13 @@ function createGeoSectionTable(container) {
         col.width = colWidth[i] + "%";
     }
 
-    createElement(gsTable, "caption", "", tehpasStr["geoSectionHeader"]);
+    createElement(gsTable, "caption", "", tehpasStringList["geoSectionHeader"]);
     let headerRow = gsTable.insertRow();
     headerRow.className = "headerRow";
     let headerCell;
-    for (let i = 0; i < tehpasStr["gsTableHeader"].length; i++) {
+    for (let i = 0; i < tehpasStringList["gsTableHeader"].length; i++) {
         headerCell = headerRow.insertCell();
-        headerCell.innerHTML = tehpasStr["gsTableHeader"][i];
+        headerCell.innerHTML = tehpasStringList["gsTableHeader"][i];
     }
     headerCell.colSpan = 8;
 
@@ -560,7 +562,7 @@ function createControls(container) {
                     } else {
                         img.id = "passportHeaderImage";
                         passportHeaderImage = img;
-                        headerUploadLabel.style.backgroundColor = appTheme.getColor("ready");
+                        headerUploadLabel.style.backgroundColor = appTheme_getColor("ready");
                         headerUploadButton.value = "";
                         URL.revokeObjectURL(img.src);
                     }
@@ -570,9 +572,9 @@ function createControls(container) {
             }
         }
     }
-    let headerUploadLabel = createElement(controlsDiv, "label", "id=headerUploadLabel / for=headerUploadButton / class=of", tehpasStr);
+    let headerUploadLabel = createElement(controlsDiv, "label", "id=headerUploadLabel / for=headerUploadButton / class=of", tehpasStringList);
     headerUploadLabel.onclick = function () {
-        this.style.backgroundColor = appTheme.getColor("button");
+        this.style.backgroundColor = appTheme_getColor("button");
     }
 
     let openFileButton = createElement(controlsDiv, "input", "id=openFileButton / type=file / accept=.tehpas");
@@ -582,7 +584,7 @@ function createControls(container) {
             if (inputFile.name.split(".").pop() === "tehpas") {
                 let fr = new FileReader();
                 fr.onloadend = function () {
-                    openFileLabel.style.backgroundColor = appTheme.getColor("ready");
+                    openFileLabel.style.backgroundColor = appTheme_getColor("ready");
                     currentFile = inputFile.name.replace(".tehpas", "");
                     let fileText = this.result;
                     setReadedData(fileText);
@@ -597,13 +599,13 @@ function createControls(container) {
             }
         }
     }
-    let openFileLabel = createElement(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStr);
+    let openFileLabel = createElement(controlsDiv, "label", "id=openFileLabel / for=openFileButton / class=of", tehpasStringList);
     openFileLabel.onclick = function () {
-        this.style.backgroundColor = appTheme.getColor("button");
+        this.style.backgroundColor = appTheme_getColor("button");
         currentFile = "";
     }
 
-    let saveButton = createElement(controlsDiv, "button", "id=saveFileButton", tehpasStr);
+    let saveButton = createElement(controlsDiv, "button", "id=saveFileButton", tehpasStringList);
     saveButton.onclick = function () {
         showFileSaveDialog();
     }
@@ -646,20 +648,20 @@ function showFileSaveDialog() {
     scrollController.disableBodyScrolling();
     let fileSaveContainer = createElement(document.body, "div", "id=fileSaveContainer / class=unPadContainer popUp");
 
-    createElement(fileSaveContainer, "div", "id=fileSaveHeader / class=defaultContainer", tehpasStr);
+    createElement(fileSaveContainer, "div", "id=fileSaveHeader / class=defaultContainer", tehpasStringList);
 
     let itemsContainer = createElement(fileSaveContainer, "div", "class=itemsContainer");
 
     let inpContainer = createElement(itemsContainer, "div", "class=inpContainer");
 
-    createElement(inpContainer, "label", "id=fileNameLabel", tehpasStr);
+    createElement(inpContainer, "span", "id=fileNameSpan", tehpasStringList);
     let fileName = createElement(inpContainer, "input", "id=fileName / type=text");
     fileName.value = currentFile;
-    fileName.placeholder = tehpasStr[fileName.id + "Hint"];
+    fileName.placeholder = tehpasStringList[fileName.id + "Hint"];
 
     let buttonsContainer = createElement(itemsContainer, "div", "id=buttonsContainer");
 
-    let saveFileButton = createElement(buttonsContainer, "button", "id=saveFileButton", tehpasStr);
+    let saveFileButton = createElement(buttonsContainer, "button", "id=saveFileButton", tehpasStringList);
     saveFileButton.onclick = function () {
         if (fileName.value.trim() !== "") {
             saveFile(fileName.value, getDataToSave());
@@ -716,12 +718,12 @@ function saveFile(fileName, data) {
 function createGeoSectionBlock(container) {
     let geoSectionContainer = createElement(container, "div", "id=geoSectionContainer / class=unPadContainer");
 
-    createElement(geoSectionContainer, "div", "id=geoSectionHeader / class=defaultContainer blockHeader", tehpasStr);
+    createElement(geoSectionContainer, "div", "id=geoSectionHeader / class=defaultContainer blockHeader", tehpasStringList);
 
     let gsCheckboxContainer = createElement(geoSectionContainer, "div", "id=gsCheckboxContainer / class=blockCheckboxContainer");
-    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockShowCheckbox / file=cb", "id=gsBlockShowLabel", tehpasStr);
-    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStr);
-    createCheckboxContainer(gsCheckboxContainer, "id=gsDrawSLCheckbox / file=cb", "id=gsDrawSLLabel", tehpasStr);
+    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockShowCheckbox / file=cb", "id=gsBlockShowLabel", tehpasStringList);
+    createCheckboxContainer(gsCheckboxContainer, "id=gsBlockToNextPageCheckbox / file=cb", "id=toNextPageCheckboxLabel", tehpasStringList);
+    createCheckboxContainer(gsCheckboxContainer, "id=gsDrawSLCheckbox / file=cb", "id=gsDrawSLLabel", tehpasStringList);
 
     let itemsContainer = createElement(geoSectionContainer, "div", "id=layersContainer / class=itemsContainer");
 
@@ -737,13 +739,13 @@ function addLayer(prevLayer, container) {
     }
 
 
-    createElement(layer, "label", "id=depthLabel", tehpasStr);
+    createElement(layer, "span", "id=depthSpan", tehpasStringList);
 
     let startDepthContainer = createElement(layer, "div", "id=startDepthContainer / class=inpContainer");
 
-    createElement(startDepthContainer, "label", "id=startDepthLabel", tehpasStr);
+    createElement(startDepthContainer, "span", "id=startDepthSpan", tehpasStringList);
     let startDepth = createElement(startDepthContainer, "input", "id=startDepth / type=tel / file");
-    startDepth.placeholder = tehpasStr[startDepth.id + "Hint"];
+    startDepth.placeholder = tehpasStringList[startDepth.id + "Hint"];
     if (layer.previousElementSibling !== null) {
         startDepth.value = layer.previousElementSibling.children[2].children[1].value;
     }
@@ -755,9 +757,9 @@ function addLayer(prevLayer, container) {
 
     let endDepthContainer = createElement(layer, "div", "id=endDepthContainer / class=inpContainer");
 
-    createElement(endDepthContainer, "label", "id=endDepthLabel", tehpasStr);
+    createElement(endDepthContainer, "span", "id=endDepthSpan", tehpasStringList);
     let endDepth = createElement(endDepthContainer, "input", "id=endDepth / type=tel / file");
-    endDepth.placeholder = tehpasStr[endDepth.id + "Hint"];
+    endDepth.placeholder = tehpasStringList[endDepth.id + "Hint"];
     endDepth.oninput = function () {
         if (layer.nextElementSibling !== null) {
             layer.nextElementSibling.children[1].children[1].value = this.value;
@@ -766,13 +768,13 @@ function addLayer(prevLayer, container) {
 
     let layerNameContainer = createElement(layer, "div", "id=layerNameContainer / class=inpContainer");
 
-    createElement(layerNameContainer, "label", "id=layerNameLabel", tehpasStr);
-    createElement(layerNameContainer, "select", "id=layerName / file", tehpasStr);
+    createElement(layerNameContainer, "span", "id=layerNamespan", tehpasStringList);
+    createElement(layerNameContainer, "select", "id=layerName / file", tehpasStringList);
 
     let layerColorContainer = createElement(layer, "div", "id=layerColorContainer / class=inpContainer");
 
-    createElement(layerColorContainer, "label", "id=layerColorLabel", tehpasStr);
-    let layerColor = createElement(layerColorContainer, "select", "id=layerColor / file", tehpasStr);
+    createElement(layerColorContainer, "span", "id=layerColorSpan", tehpasStringList);
+    let layerColor = createElement(layerColorContainer, "select", "id=layerColor / file", tehpasStringList);
     layerColor.style.backgroundColor = layerColor.value;
     layerColor.onchange = function () {
         if (layerColor.value === "Khaki" || layerColor.value === "AliceBlue") {
@@ -785,16 +787,16 @@ function addLayer(prevLayer, container) {
 
     let wellConstructionContainer = createElement(layer, "div", "id=wellConstructionContainer / class=inpContainer");
 
-    createElement(wellConstructionContainer, "label", "id=wellConstructionLabel", tehpasStr);
-    createElement(wellConstructionContainer, "select", "id=wellConstruction / file", tehpasStr);
+    createElement(wellConstructionContainer, "span", "id=wellConstructionSpan", tehpasStringList);
+    createElement(wellConstructionContainer, "select", "id=wellConstruction / file", tehpasStringList);
     changeWellConstructionOptions(false);
 
-    let addLayerButton = createElement(layer, "button", "id=addLayerButton", tehpasStr);
+    let addLayerButton = createElement(layer, "button", "id=addLayerButton", tehpasStringList);
     addLayerButton.onclick = function () {
         addLayer(layer);
     }
 
-    let removeLayerButton = createElement(layer, "button", "id=removeLayerButton", tehpasStr);
+    let removeLayerButton = createElement(layer, "button", "id=removeLayerButton", tehpasStringList);
     removeLayerButton.onclick = function () {
         let itemsContainer = layer.parentElement;
         layer.remove();

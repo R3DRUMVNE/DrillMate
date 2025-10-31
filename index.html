@@ -1,14 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head id="head">
-    <script type="module" src="./scripts/main.js"></script>
     <meta charset="UTF-8" name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no">
 
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="DrillMate">
+    <meta name="apple-mobile-web-app-title" content="DrillMate">
+    <meta name="msapplication-navbutton-color" content="#4141D1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content=".">
+    <meta name="description" content="DrillMate - вспомогательное веб-приложение для бурильщиков. Расчёт дебита, создание техпаспорта, подбор поверхностного насоса и другое">
+
     <title id="programTitle">DrillMate - маленький помощник бурильщика</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="./assets/favicon.svg" type="image/svg+xml" sizes="any">
     <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="./styles/mainAdaptive.css">
+    <link rel="manifest" href="./manifest.json">
 </head>
 <body>
 <div class="background"></div>
@@ -16,7 +26,7 @@
     <div id="mainDiv">
         <div id="programHeader">
             <img src="./assets/favicon.svg" alt="menu" id="logo">
-            <label id="programName">DrillMate</label>
+            <span id="programName">DrillMate</span>
             <button id="settingsInfoButton" class="programHeaderButton"><img src="./assets/settingsInfo.svg" alt="settingsInfo"
                                                                              class="imgButton"></button>
             <button id="menuButton" class="programHeaderButton"><img src="./assets/menuButton.svg" alt="menu"
@@ -27,5 +37,7 @@
         </div>
     </div>
 </div>
+<script type="module" src="./scripts/app.js"></script>
+<script type="module" src="./scripts/main.js"></script>
 </body>
 </html>

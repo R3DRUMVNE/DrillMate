@@ -1,18 +1,24 @@
-import {menuOption} from "./objects/menuOption.js";
-import {linkNewStylesheet, createElement, appToast, scrollController} from "./modules/otherModules.js";
+import {
+    linkNewStylesheet,
+    createElement,
+    appToast,
+    scrollController,
+    getJSONData, appTheme_change, appTheme_getThemes
+} from "./moduleScripts/otherModules.js";
 import {startSchetoVodModule} from "./schetovod.js";
 import {startDaiCamlockModule} from "./daicamlock.js";
 import {startTehPasModule} from "./tehpas.js";
-import {mainStr} from "./objects/strings.js";
-import {destroyAllTempElements, destroyTimer} from "./modules/bufferModule.js";
-import {appTheme} from "./objects/colors.js";
+import {destroyAllTempElements, destroyTimer} from "./moduleScripts/bufferModule.js";
 import {startProkachaikaModule} from "./prokachaika.js";
 
 let title = document.querySelector("#programTitle");
 let menuButton = document.querySelector("#menuButton");
 let settingsInfoButton = document.querySelector("#settingsInfoButton");
-
 let fragmentDiv = document.querySelector("#fragmentDiv");
+
+const version = "1.1.2";
+let mainStringList = null;
+let menuMap = null;
 
 let addons = {
     clear: function() {
@@ -40,8 +46,11 @@ settingsInfoButton.onclick = function () {
     showSettingsInfo();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    appTheme.change(localStorage.getItem('appTheme'));
+document.addEventListener('DOMContentLoaded', async () => {
+    await appTheme_getThemes("./objects/themesList.json");
+    appTheme_change(localStorage.getItem('appTheme'));
+    mainStringList = await getJSONData("./objects/mainStringList.json");
+    menuMap = await getJSONData("./objects/menuMap.json");
     checkURLParams();
 });
 
@@ -50,16 +59,15 @@ window.onbeforeunload = function () {
 };
 
 function checkURLParams(){
-
     const URLParams = new URLSearchParams(window.location.search);
     if(URLParams.get("module") !== null){
         let moduleFound = false;
-        for(let i = 0; i < menuOption.length; i++){
-            if(menuOption[i].id === URLParams.get('module')){
+        for(let key in menuMap){
+            if(key === URLParams.get("module")){
                 moduleFound = true;
                 addons.list.URLCamlock = URLParams.get("camlock");
                 addons.list.URLPumpModel = URLParams.get("pumpModel");
-                loadProg(menuOption[i].id, menuOption[i].name, addons.list);
+                loadModule(key, addons.list);
             }
         }
         if(!moduleFound){
@@ -75,40 +83,39 @@ function createMenuButtons() {
     fragmentDiv.innerHTML = "";
     let menuDiv = createElement(fragmentDiv, "div", "id=menuDiv");
 
-    let menuOptionDiv = [];
-    for (let i = 0; i < menuOption.length; i++) {
-        menuOptionDiv[i] = createElement(menuDiv, "div", "id=" + menuOption[i].id + " / module-name=" + menuOption[i].name + " / class=menuOption");
+    for (let key in menuMap) {
+        let menuOptionContainer = createElement(menuDiv, "div", "id=" + key + " / class=menuOption");
 
-        createElement(menuOptionDiv[i], "img", "class=image / src=./assets/" + menuOptionDiv[i].id + ".svg");
+        createElement(menuOptionContainer, "img", "class=image / src=./assets/" + key + ".svg / alt=" + menuMap[key].name);
 
-        createElement(menuOptionDiv[i], "div", "class=header", menuOptionDiv[i].getAttribute("module-name"));
+        createElement(menuOptionContainer, "div", "class=header", menuMap[key].name);
 
-        createElement(menuOptionDiv[i], "div", "class=description", menuOption[i].description);
+        createElement(menuOptionContainer, "div", "class=description", menuMap[key].description);
 
-        menuOptionDiv[i].onclick = function () {
-            loadProg(this.id, this.getAttribute("module-name"), addons.list);
+        menuOptionContainer.onclick = function () {
+            loadModule(this.id, addons.list);
         }
     }
 }
 
-function loadProg(menuButtonId, moduleName, addons) {
+export function loadModule(id, addons){
     fragmentDiv.innerHTML = "";
-    title.innerHTML = "DrillMate - " + moduleName;
-    linkNewStylesheet(menuButtonId + "Adaptive");
-    linkNewStylesheet(menuButtonId);
-    switch (menuButtonId) {
+    title.innerHTML = "DrillMate - " + menuMap[id].name;
+    linkNewStylesheet(id + "Adaptive");
+    linkNewStylesheet(id);
+    switch (id) {
         case "schetovod":
-            startSchetoVodModule(fragmentDiv, moduleName, menuButtonId);
+            startSchetoVodModule(fragmentDiv, menuMap[id].name, id).then();
             break;
         case "daicamlock":
-            startDaiCamlockModule(fragmentDiv, moduleName, menuButtonId, addons);
+            startDaiCamlockModule(fragmentDiv, menuMap[id].name, id, addons).then();
             break;
         case "tehpas":
-            linkNewStylesheet(menuButtonId+"Print");
-            startTehPasModule(fragmentDiv, moduleName, menuButtonId);
+            linkNewStylesheet(id+"Print");
+            startTehPasModule(fragmentDiv, menuMap[id].name, id).then();
             break;
         case "prokachaika":
-            startProkachaikaModule(fragmentDiv, moduleName, menuButtonId, addons);
+            startProkachaikaModule(fragmentDiv, menuMap[id].name, id, addons).then();
             break;
     }
     window.scrollTo(0, 0);
@@ -118,34 +125,34 @@ function showSettingsInfo() {
     scrollController.disableBodyScrolling();
     let settingsInfoContainer = createElement(document.body, "div", "id=settingsInfoContainer / class=unPadContainer popUp");
 
-    createElement(settingsInfoContainer, "div", "id=settingsInfoHeader / class=defaultContainer", mainStr);
+    createElement(settingsInfoContainer, "div", "id=settingsInfoHeader / class=defaultContainer", mainStringList);
 
     let itemsContainer = createElement(settingsInfoContainer, "div", "class=itemsContainer");
 
-    createElement(itemsContainer, "div", "id=infoText", mainStr);
+    createElement(itemsContainer, "div", "id=infoText", mainStringList["infoText"][0] + version + mainStringList["infoText"][1]);
 
     let themeSelectContainer = createElement(itemsContainer, "div", "id=themeSelectContainer / class=inpContainer");
-    createElement(themeSelectContainer, "label", "id=themeSelectLabel", mainStr);
-    let themeSelect = createElement(themeSelectContainer, "select", "id=themeSelect", mainStr);
+    createElement(themeSelectContainer, "label", "id=themeSelectLabel", mainStringList);
+    let themeSelect = createElement(themeSelectContainer, "select", "id=themeSelect", mainStringList);
     themeSelect.value = localStorage.getItem("appTheme");
     themeSelect.onchange = function () {
-        appTheme.change(themeSelect.value);
+        appTheme_change(themeSelect.value);
     }
 
-    let bugButton = createElement(itemsContainer, "div", "id=bugButton / class=iconButton", mainStr);
+    let bugButton = createElement(itemsContainer, "div", "id=bugButton / class=iconButton", mainStringList);
     createElement(bugButton, "img", "id=bugButtonImg / src=./assets/bugReport.svg");
     bugButton.onclick = function () {
         settingsInfoContainer.remove();
         showBugReport();
     }
 
-    let downloadButton = createElement(itemsContainer, "div", "id=downloadButton / class=iconButton", mainStr);
+    let downloadButton = createElement(itemsContainer, "div", "id=downloadButton / class=iconButton", mainStringList);
     createElement(downloadButton, "img", "id=downloadButtonImg / src=./assets/download.svg");
     downloadButton.onclick = function () {
-        window.open('https://github.com/R3DRUMVNE/DrillMate/releases/', '_blank');
+        window.open("https://github.com/R3DRUMVNE/DrillMate/wiki/%F0%9F%93%B2-%D0%97%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%B8%D1%82%D1%8C-%D0%BD%D0%B0-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE-%7C-%D0%9E%D1%84%D0%BB%D0%B0%D0%B9%D0%BD-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC", '_blank');
     }
 
-    let closeButton = createElement(itemsContainer, "button", "id=closeButton", mainStr);
+    let closeButton = createElement(itemsContainer, "button", "id=closeButton", mainStringList);
     closeButton.onclick = function () {
         scrollController.enableBodyScrolling();
         settingsInfoContainer.remove();
@@ -155,16 +162,16 @@ function showSettingsInfo() {
 function showBugReport() {
     let bugReportContainer = createElement(document.body, "div", "id=bugReportContainer / class=unPadContainer popUp");
 
-    createElement(bugReportContainer, "div", "id=bugReportHeader / class=defaultContainer ", mainStr);
+    createElement(bugReportContainer, "div", "id=bugReportHeader / class=defaultContainer ", mainStringList);
 
     let itemsContainer = createElement(bugReportContainer, "div", "class=itemsContainer");
 
-    createElement(itemsContainer, "label", "id=bugReportInfo", mainStr);
+    createElement(itemsContainer, "span", "id=bugReportInfo", mainStringList);
 
     let clientInfo = "ОС: "+getOS()+"<br>Браузер: "+getBrowser().name+" ver "+getBrowser().version+"<br>Viewport: "+window.innerWidth+"x"+window.innerHeight+"<br>Режим: "+getStatus();
     let clientInfoContainer = createElement(itemsContainer, "div", "id=clientInfoContainer / class=defaultContainer", clientInfo);
 
-    let copyButton = createElement(itemsContainer, "button", "id=copyButton", mainStr);
+    let copyButton = createElement(itemsContainer, "button", "id=copyButton", mainStringList);
     copyButton.onclick = function () {
         navigator.clipboard.writeText(clientInfoContainer.innerHTML.replaceAll("<br>", "\n")).then(async function () {
             appToast("Текст успешно скопирован в буфер обмена!", 3000).then(() => {
@@ -176,7 +183,7 @@ function showBugReport() {
         });
     }
 
-    let closeButton = createElement(itemsContainer, "button", "id=closeButton", mainStr);
+    let closeButton = createElement(itemsContainer, "button", "id=closeButton", mainStringList);
     closeButton.onclick = function () {
         scrollController.enableBodyScrolling();
         bugReportContainer.remove();
@@ -184,10 +191,7 @@ function showBugReport() {
 }
 
 function getStatus(){
-    if(window.location.href==="https://r3drumvne.github.io/DrillMate/" || window.location.href==="https://r3drumvne.github.io/DrillMate/index.html"){
-        return "Онлайн";
-    }
-    return "Офлайн";
+    return navigator.onLine ?  "Онлайн" : "Офлайн";
 }
 
 function getOS() {

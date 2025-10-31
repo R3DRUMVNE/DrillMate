@@ -5,6 +5,7 @@
 
     #mainDiv {
         width: 100%;
+        background-color: var(--secondaryColor);
     }
 
     #menuDiv{
@@ -24,6 +25,7 @@
 
     #mainDiv {
         width: 100%;
+        background-color: var(--secondaryColor);
     }
 
     #menuDiv{
@@ -43,8 +45,8 @@
     }
 
     div.background {
-        background: linear-gradient(180deg, var(--secondaryColor), var(--primaryColor), var(--button));
-        background-size: 400% 400%;
+        background: radial-gradient(var(--secondaryColor), var(--primaryColor));
+        background-size: 600% 600%;
         animation: gradient 10s ease infinite;
         background-attachment: fixed;
         position: fixed;
@@ -60,7 +62,7 @@
         top: 0;
         left: 50%;
         transform: translate(-50%);
-        border: 1px solid var(--primaryColor);
+        background-color: transparent;
     }
 
     #menuDiv{
