@@ -24,5 +24,27 @@
       "sizes": "512x512",
       "type": "image/svg+xml"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "СчетоВод",
+      "url": "/?module=schetovod",
+      "description": "Рассчитай дебит скважины в реальном времени"
+    },
+    {
+      "name": "ДайКамлок",
+      "url": "/?module=daicamlock",
+      "description": "Подбери себе камлок без заужений"
+    },
+    {
+      "name": "ТехПас",
+      "url": "/?module=tehpas",
+      "description": "Сформируй техпаспорт своей скважины"
+    },
+    {
+      "name": "Прокачайка",
+      "url": "/?module=prokachaika",
+      "description": "Подбери поверхностный самовсасывающий насос для своей абиссинской скважины"
+    }
   ]
 }
