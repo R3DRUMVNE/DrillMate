@@ -254,6 +254,7 @@ select {
     top: 0;
     left: 0;
     z-index: 1001;
+    text-align: center;
 }
 
 #copyButton {
