@@ -16,7 +16,7 @@ let menuButton = document.querySelector("#menuButton");
 let settingsInfoButton = document.querySelector("#settingsInfoButton");
 let fragmentDiv = document.querySelector("#fragmentDiv");
 
-const version = "1.1.2";
+let version;
 let mainStringList = null;
 let menuMap = null;
 
@@ -47,6 +47,8 @@ settingsInfoButton.onclick = function () {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const manifestData = await getJSONData("./manifest.json");
+    version = manifestData.version;
     await appTheme_getThemes("./objects/themesList.json");
     appTheme_change(localStorage.getItem('appTheme'));
     mainStringList = await getJSONData("./objects/mainStringList.json");
