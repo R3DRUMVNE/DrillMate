@@ -85,7 +85,9 @@ self.addEventListener("fetch", event => {
                 console.log("SW - Resource loaded from web: " + event.request.url);
 
                 const cache = await caches.open(CACHE_NAME);
-                await cache.put(event.request, response.clone());
+                cache.put(event.request, response.clone()).then(() => {
+                    console.log("SW - Resource has been cached: " + event.request.url);
+                });
 
                 return response;
             } catch (error) {
