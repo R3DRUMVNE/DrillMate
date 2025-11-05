@@ -35,7 +35,7 @@ let addons = {
 menuButton.onclick = function () {
     destroyAllTempElements();
     destroyTimer("flowRateTimer");
-    history.pushState(null, null, "/DrillMate/");
+    history.replaceState(null, null, "/DrillMate/");
     addons.clear();
     createMenuButtons();
     title.innerHTML = "DrillMate - маленький помощник бурильщика";
