@@ -252,7 +252,7 @@ export function getJSONData(path) {
 const appTheme = {
     currentTheme: "",
     themesList: {},
-    meta_themeColor: createElement(document.head, "meta", "name=theme-color"),
+    meta_themeColor: document.head.querySelector("#theme-color"),
 }
 
 export function appTheme_getColor(colorName) {
