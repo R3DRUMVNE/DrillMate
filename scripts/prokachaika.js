@@ -13,7 +13,7 @@ import {
 let prokachaikaStringList = null;
 
 const pumpList = {
-    version: "1.1",
+    version: "1.2",
     models: [],
     minPerfFactor: [[0, 0, 2000], [0.17, 2000, 3000], [0.2, 3000, 3600], [0.23, 3600, 3800], [0.26, 3800, 4200], [0.29, 4200, 10000]],
 }
