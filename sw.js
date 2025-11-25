@@ -66,11 +66,19 @@ const static_assets = [
     "./styles/tehpasPrint.css",
 ];
 
-self.addEventListener("install", async () => {
-    const cache = await caches.open(CACHE_NAME);
+self.addEventListener("install",  (event) => {
+    event.waitUntil(caches.open(CACHE_NAME).then(cache => {
+        cache.addAll(static_assets).then(() => {
+            console.log("SW - Cache has been created: " + CACHE_NAME);
+        });
+        })
+    );
+
+
+    /*const cache = await caches.open(CACHE_NAME);
     await cache.addAll(static_assets);
     console.log("SW - Cache has been created: " + CACHE_NAME);
-    await self.skipWaiting();
+    await self.skipWaiting();*/
 });
 
 self.addEventListener("activate",  (event) => {
@@ -78,7 +86,12 @@ self.addEventListener("activate",  (event) => {
 });
 
 self.addEventListener("fetch", event => {
-    event.respondWith(
+    event.respondWith(fromCache(event.request));
+
+    event.waitUntil(update(event.request));
+
+
+    /*event.respondWith(
         (async () => {
             try {
                 const response = await fetch(event.request);
@@ -98,5 +111,22 @@ self.addEventListener("fetch", event => {
                 }
             }
         })()
-    );
+    );*/
 });
+
+function fromCache(request) {
+    return caches.open(CACHE_NAME).then((cache) =>
+        cache.match(request).then((matching) =>
+            matching || Promise.reject("no-match")
+        ));
+}
+
+function update(request) {
+    return caches.open(CACHE_NAME).then((cache) =>
+        fetch(request).then((response) => {
+                cache.put(request, response).then(() => {
+                    console.log("SW - Resource cache updated: " + request.url);
+                });
+        })
+    );
+}
