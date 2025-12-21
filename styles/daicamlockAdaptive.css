@@ -1,5 +1,5 @@
 @media screen and (min-width: 320px) and (max-width: 479px) {
-    #daicamlockDiv{
+    #daicamlockArticle{
         max-height: max-content;
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -15,11 +15,8 @@
     }
 
     #camlockImage{
-        grid-area: camlockImage;
         width: 100%;
         height: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{
@@ -66,7 +63,7 @@
 }
 
 @media screen and (min-width: 480px) and (max-width: 767px) {
-    #daicamlockDiv{
+    #daicamlockArticle{
         width: min(580px, 100%);
         justify-self: center;
         max-height: max-content;
@@ -83,11 +80,8 @@
     }
 
     #camlockImage{
-        grid-area: camlockImage;
         width: 100%;
         height: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{
@@ -139,7 +133,7 @@
 }
 
 @media screen and (min-width: 768px){
-    #daicamlockDiv{
+    #daicamlockArticle{
         width: 100%;
         justify-self: center;
         max-height: max-content;
@@ -156,12 +150,9 @@
     }
 
     #camlockImage{
-        grid-area: camlockImage;
         width: 80%;
         height: auto;
-        border-radius: 10px;
         justify-self: center;
-        box-shadow: 0 4px 4px 0 var(--shadow);
     }
 
     #camlockInputBlock{

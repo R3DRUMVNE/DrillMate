@@ -1,5 +1,5 @@
 @media screen and (min-width: 320px) and (max-width: 479px) {
-    #schetovodDiv{
+    #schetovodArticle{
         width: min(370px, 100%);
         justify-self: center;
         max-height: max-content;
@@ -10,22 +10,71 @@
         grid-template-areas:
         "moduleHeader moduleHeader"
         "inputBlock inputBlock"
-        "currentTimeContainer fRContainer";
+        "currentTimeContainer fRContainer"
+        "assistantContainer assistantContainer";
+    }
+
+    #assistantImage {
+        width: 25%;
+        height: max-content;
+    }
+
+    #assistantContainer{
+        gap: 20px;
+    }
+
+    #assistantContainer:before{
+        width: 31%;
     }
 }
 
 @media screen and (min-width: 480px){
-    #schetovodDiv{
+    #schetovodArticle{
         width: min(550px, 100%);
         justify-self: center;
         max-height: max-content;
         display: grid;
         grid-template-columns: minmax(150px, 200px) minmax(300px, 1fr);
-        grid-template-rows: auto 1fr 1fr;
+        grid-template-rows: auto auto auto;
         gap: 10px;
         grid-template-areas:
         "moduleHeader moduleHeader"
         "currentTimeContainer inputBlock"
-        "fRContainer inputBlock";
+        "fRContainer inputBlock"
+        "assistantContainer assistantContainer";
+    }
+
+    #currentTimeOutput{
+        min-height: 44px;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    #assistantImage {
+        width: 19%;
+        height: max-content;
+    }
+
+    #assistantContainer{
+        gap: 25px;
+    }
+
+    #assistantContainer:before{
+        width: 24%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    #assistantImage {
+        width: 16%;
+        height: max-content;
+    }
+
+    #assistantContainer{
+        gap: 30px;
+    }
+
+    #assistantContainer:before{
+        width: 21%;
     }
 }

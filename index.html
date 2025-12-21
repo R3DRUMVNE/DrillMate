@@ -15,8 +15,9 @@
     <meta name="theme-color" id="theme-color">
 
     <title id="programTitle">DrillMate - маленький помощник бурильщика</title>
-    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" sizes="any">
-    <link rel="apple-touch-icon" href="./assets/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="icon" href="assets/favicons/favicon_48-48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="assets/favicons/favicon_96-96.png" type="image/png" sizes="96x96">
+    <link rel="apple-touch-icon" href="assets/favicons/favicon_192-192.png" type="image/png" sizes="any">
     <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="./styles/mainAdaptive.css">
     <link rel="manifest" href="./manifest.json">
@@ -24,21 +25,21 @@
 <body>
 <div class="background"></div>
 <div class="body" id="fakeBody">
-    <div id="mainDiv">
-        <div id="programHeader">
-            <img src="./assets/favicon.svg" alt="menu" id="logo">
+    <div id="mainWindow">
+        <header id="programHeader" class="programHeader">
+            <img src="assets/favicons/favicon_72-72.png" alt="menu" id="logo">
             <span id="programName">DrillMate</span>
             <button id="settingsInfoButton" class="programHeaderButton"><img src="./assets/settingsInfo.svg" alt="settingsInfo"
                                                                              class="imgButton"></button>
             <button id="menuButton" class="programHeaderButton"><img src="./assets/menuButton.svg" alt="menu"
                                                                      class="imgButton"></button>
-        </div>
-        <div id="fragmentDiv">
+        </header>
+        <main>
 
-        </div>
+        </main>
     </div>
 </div>
-<script type="module" src="./scripts/app.js"></script>
 <script type="module" src="./scripts/main.js"></script>
+<script type="module" src="./scripts/app.js"></script>
 </body>
 </html>

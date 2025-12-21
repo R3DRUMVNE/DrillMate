@@ -1,14 +1,14 @@
 import {
+    createElement,
+    animateElement,
     appAlert, appTheme_getColor,
     appToast,
-    createCheckboxContainer,
-    createElement,
     createModuleHeader,
     filterValueByNumber, getJSONData,
     scrollController,
     share,
-    tryFormatToNumber
-} from "./moduleScripts/otherModules.js";
+    tryFormatToNumber, createSwitchContainer
+} from "./moduleScripts/jointScripts.js";
 
 let prokachaikaStringList = null;
 
@@ -40,12 +40,12 @@ let compareList = {
 };
 
 export async function startProkachaikaModule(container, moduleName, moduleID, addons) {
-    let prokachaikaDiv = createElement(container, 'div', 'id=prokachaikaDiv');
+    let prokachaikaArticle = createElement(container, "article", {id: "prokachaikaArticle"});
     prokachaikaStringList = await getJSONData("./objects/prokachaikaStringList.json");
-    await createPumpList(prokachaikaDiv, addons.URLPumpModel);
-    createAdditionalPanel(prokachaikaDiv);
-    createFilterBlock(prokachaikaDiv, addons.flowRateLPH);
-    createModuleHeader(moduleName, moduleID, prokachaikaDiv).then();
+    await createPumpList(prokachaikaArticle, addons.URLPumpModel);
+    createAdditionalPanel(prokachaikaArticle);
+    createFilterBlock(prokachaikaArticle, addons.flowRateLPH);
+    createModuleHeader(moduleName, moduleID, prokachaikaArticle).then();
 }
 
 function createFilterBlock(container, flowRateLPH) {
@@ -62,50 +62,50 @@ function createFilterBlock(container, flowRateLPH) {
     const resetFilters = {};
     Object.assign(resetFilters, filters);
 
-    let filterBlock = createElement(container, "div", "id=filterBlock / class=unPadContainer");
+    let filterBlock = createElement(container, "section", {id: "filterBlock", class: "unPadContainer"});
 
-    createElement(filterBlock, "div", "id=filterBlockHeader / class=defaultContainer", prokachaikaStringList);
+    createElement(filterBlock, "div", {id: "filterBlockHeader", class: "defaultContainer"}, prokachaikaStringList);
 
-    let itemsContainer = createElement(filterBlock, "div", "class=itemsContainer");
+    let itemsContainer = createElement(filterBlock, "div", {class: "itemsContainer"});
 
-    let filterFieldsContainer = createElement(itemsContainer, "div", "id=filterFieldsContainer");
+    let filterFieldsContainer = createElement(itemsContainer, "div", {id: "filterFieldsContainer"});
 
-    let findPumpContainer = createElement(filterFieldsContainer, "div", "id=findPumpContainer / class=inpContainer");
-    createElement(findPumpContainer, "span", "id=findPumpSpan", prokachaikaStringList);
-    let findPump = createElement(findPumpContainer, "input", "id=findPump / type=text");
+    let findPumpContainer = createElement(filterFieldsContainer, "div", {id: "findPumpContainer", class: "inpContainer"});
+    createElement(findPumpContainer, "span", {id: "findPumpSpan"}, prokachaikaStringList);
+    let findPump = createElement(findPumpContainer, "input", {id: "findPump", type: "text"});
     findPump.placeholder = prokachaikaStringList["findPumpHint"];
     findPump.oninput = function () {
         filters.name = findPump.value.trim();
         filterPumpList(filters);
     }
 
-    let pumpTypeContainer = createElement(filterFieldsContainer, "div", "id=pumpTypeContainer / class=inpContainer");
-    createElement(pumpTypeContainer, "span", "id=pumpTypeSpan", prokachaikaStringList);
-    let pumpTypeSelect = createElement(pumpTypeContainer, "select", "id=pumpTypeSelect", prokachaikaStringList);
+    let pumpTypeContainer = createElement(filterFieldsContainer, "div", {id: "pumpTypeContainer", class: "inpContainer"});
+    createElement(pumpTypeContainer, "span", {id: "pumpTypeSpan"}, prokachaikaStringList);
+    let pumpTypeSelect = createElement(pumpTypeContainer, "select", {id: "pumpTypeSelect"}, prokachaikaStringList);
     pumpTypeSelect.onchange = function () {
         filters.pumpType = pumpTypeSelect.options[pumpTypeSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
-    let pumpControlContainer = createElement(filterFieldsContainer, "div", "id=pumpControlContainer / class=inpContainer");
-    createElement(pumpControlContainer, "span", "id=pumpControlSpan", prokachaikaStringList);
-    let pumpControlSelect = createElement(pumpControlContainer, "select", "id=pumpControlSelect", prokachaikaStringList);
+    let pumpControlContainer = createElement(filterFieldsContainer, "div", {id: "pumpControlContainer", class: "inpContainer"});
+    createElement(pumpControlContainer, "span", {id: "pumpControlSpan"}, prokachaikaStringList);
+    let pumpControlSelect = createElement(pumpControlContainer, "select", {id: "pumpControlSelect"}, prokachaikaStringList);
     pumpControlSelect.onchange = function () {
         filters.pumpControl = pumpControlSelect.options[pumpControlSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
-    let bodyMaterialContainer = createElement(filterFieldsContainer, "div", "id=bodyMaterialContainer / class=inpContainer");
-    createElement(bodyMaterialContainer, "span", "id=bodyMaterialSpan", prokachaikaStringList);
-    let bodyMaterialSelect = createElement(bodyMaterialContainer, "select", "id=bodyMaterialSelect", prokachaikaStringList);
+    let bodyMaterialContainer = createElement(filterFieldsContainer, "div", {id: "bodyMaterialContainer", class: "inpContainer"});
+    createElement(bodyMaterialContainer, "span", {id: "bodyMaterialSpan"}, prokachaikaStringList);
+    let bodyMaterialSelect = createElement(bodyMaterialContainer, "select", {id: "bodyMaterialSelect"}, prokachaikaStringList);
     bodyMaterialSelect.onchange = function () {
         filters.bodyMaterial = bodyMaterialSelect.options[bodyMaterialSelect.selectedIndex].value;
         filterPumpList(filters);
     }
 
-    let wellFlowRateContainer = createElement(filterFieldsContainer, "div", "id=wellFlowRateContainer / class=inpContainer");
-    createElement(wellFlowRateContainer, "span", "id=wellFlowRateSpan", prokachaikaStringList);
-    let wellFlowRate = createElement(wellFlowRateContainer, "input", "id=wellFlowRate / type=tel");
+    let wellFlowRateContainer = createElement(filterFieldsContainer, "div", {id: "wellFlowRateContainer", class: "inpContainer"});
+    createElement(wellFlowRateContainer, "span", {id: "wellFlowRateSpan"}, prokachaikaStringList);
+    let wellFlowRate = createElement(wellFlowRateContainer, "input", {id: "wellFlowRate", type: "tel"});
     wellFlowRate.placeholder = prokachaikaStringList["wellFlowRateHint"];
     wellFlowRate.oninput = function () {
         filterValueByNumber(wellFlowRate);
@@ -113,29 +113,29 @@ function createFilterBlock(container, flowRateLPH) {
         filterPumpList(filters);
     }
 
-    let pressureContainer = createElement(filterFieldsContainer, "div", "id=pressureContainer / class=inpContainer");
-    createElement(pressureContainer, "span", "id=pressureSpan", prokachaikaStringList);
-    let pressureSelect = createElement(pressureContainer, "select", "id=pressure", prokachaikaStringList);
+    let pressureContainer = createElement(filterFieldsContainer, "div", {id: "pressureContainer", class: "inpContainer"});
+    createElement(pressureContainer, "span", {id: "pressureSpan"}, prokachaikaStringList);
+    let pressureSelect = createElement(pressureContainer, "select", {id: "pressure"}, prokachaikaStringList);
     pressureSelect.onchange = function () {
         filters.pressure = pressureSelect.value;
         filterPumpList(filters);
     }
 
-    let checkboxFiltersContainer = createElement(itemsContainer, "div", "id=checkboxFiltersContainer");
+    let checkboxFiltersContainer = createElement(itemsContainer, "div", {id: "checkboxFiltersContainer"});
 
-    let lowStatic = createCheckboxContainer(checkboxFiltersContainer, "id=lowStatic", "id=lowStaticLabel", prokachaikaStringList);
+    let lowStatic = createSwitchContainer(checkboxFiltersContainer, {}, {id: "lowStatic"}, {id: "lowStaticLabel"}, prokachaikaStringList);
     lowStatic.onchange = function () {
         filters.lowStatic = lowStatic.checked;
         filterPumpList(filters);
     }
 
-    let hideExcessPump = createCheckboxContainer(checkboxFiltersContainer, "id=hideExcessPump", "id=hideExcessPumpLabel", prokachaikaStringList);
+    let hideExcessPump = createSwitchContainer(checkboxFiltersContainer, {}, {id: "hideExcessPump"}, {id: "hideExcessPumpLabel"}, prokachaikaStringList);
     hideExcessPump.onchange = function () {
         filters.hideExcessPump = hideExcessPump.checked;
         filterPumpList(filters);
     }
 
-    let filtersResetButton = createElement(itemsContainer, "button", "id=filtersResetButton", prokachaikaStringList);
+    let filtersResetButton = createElement(itemsContainer, "button", {id: "filtersResetButton"}, prokachaikaStringList);
     filtersResetButton.onclick = function () {
         Object.assign(filters, resetFilters);
         findPump.value = filters.name;
@@ -202,12 +202,15 @@ function filterPumpList(filters) {
                             }
                         } else {
                             pumpList.models[i].pumpPoints.perfPoints = Math.round(filters.wellFlowRate / pumpList.models[i].maxPerfLPH * 100);
-                            pumpList.models[i].pumpPoints.pointsColor = "color-mix(in srgb-linear, " + appTheme_getColor("excessPump") + ", " + appTheme_getColor("greatPump") + " " + pumpList.models[i].pumpPoints.perfPoints + "%);";
                         }
                     }
 
                 }
-                pumpList.models[i].container.children[1].style = "color: " + pumpList.models[i].pumpPoints.pointsColor;
+                if(pumpList.models[i].pumpPoints.perfPoints === "ИЗБ"){
+                    pumpList.models[i].container.children[0].style = "width: 100%; background-color: var(--secondaryColor)"
+                } else if(pumpList.models[i].pumpPoints.perfPoints > 10){
+                    pumpList.models[i].container.children[0].style = "width: " + pumpList.models[i].pumpPoints.perfPoints + "%; background-color: var(--primaryColor)";
+                }
             } else {
                 if (pumpList.models[i].pumpPoints.minPerfLPH !== undefined && filters.wellFlowRate < pumpList.models[i].pumpPoints.minPerfLPH) {
                     hidePump = true;
@@ -217,32 +220,32 @@ function filterPumpList(filters) {
         } else {
             pumpList.models[i].pumpPoints.perfPoints = "";
         }
-        pumpList.models[i].container.children[1].innerHTML = pumpList.models[i].pumpPoints.perfPoints;
+        pumpList.models[i].container.children[1].children[1].innerHTML = pumpList.models[i].pumpPoints.perfPoints;
 
         hidePump ? pumpList.models[i].container.className = "pumpContainerHide" : pumpList.models[i].container.className = "pumpContainer";
     }
 }
 
 function createAdditionalPanel(container) {
-    let additionalPanelContainer = createElement(container, "div", "id=additionalPanelContainer");
+    let additionalPanelContainer = createElement(container, "section", {id: "additionalPanelContainer"});
 
-    let compareButton = createElement(additionalPanelContainer, "button", "id=compareButton", prokachaikaStringList);
+    let compareButton = createElement(additionalPanelContainer, "button", {id: "compareButton"}, prokachaikaStringList);
     compareButton.onclick = function () {
         if (compareList.list.length > 0) {
             openCompareList();
         } else {
-            appToast("Таблица сравнения пуста", 3000).then();
+            appToast("Таблица сравнения пуста", 2000).then();
         }
     }
 }
 
 function openCompareList() {
     scrollController.disableBodyScrolling();
-    let compareListContainer = createElement(document.body, "div", "id=compareListContainer / class=unPadContainer popUp");
+    let compareListContainer = createElement(document.body, "div", {id: "compareListContainer", class: "unPadContainer popUp"});
 
-    createElement(compareListContainer, "div", "id=cL_header / class=defaultContainer", prokachaikaStringList["compareButton"]);
+    createElement(compareListContainer, "div", {id: "cL_header", class: "defaultContainer"}, prokachaikaStringList["compareButton"]);
 
-    let compareTable = createElement(compareListContainer, "table", "id=compareTable");
+    let compareTable = createElement(compareListContainer, "table", {id: "compareTable"});
     let thead = compareTable.createTHead();
     thead.insertRow().insertCell();
     let tbody = compareTable.createTBody();
@@ -261,7 +264,7 @@ function openCompareList() {
         let pumpNameCell = thead.rows[0].insertCell();
         pumpNameCell.innerHTML = compareList.list[i].modelName;
         let deleteCell = controlRow.insertCell();
-        let cL_deleteButton = createElement(deleteCell, "button", "id=cL_deleteButton / value=" + compareList.list[i].modelName, prokachaikaStringList);
+        let cL_deleteButton = createElement(deleteCell, "button", {id: "cL_deleteButton", value: compareList.list[i].modelName}, prokachaikaStringList);
         cL_deleteButton.onclick = function () {
             let x = compareList.deletePump(this.value);
             if (compareList.list.length < 1) {
@@ -282,33 +285,36 @@ function openCompareList() {
         }
     }
 
-    let cL_buttonsContainer = createElement(compareListContainer, "div", "id=cL_buttonsContainer");
+    let cL_buttonsContainer = createElement(compareListContainer, "div", {id: "cL_buttonsContainer"});
 
-    let cL_clearButton = createElement(cL_buttonsContainer, "button", "id=cL_clearButton", prokachaikaStringList);
+    let cL_clearButton = createElement(cL_buttonsContainer, "button", {id: "cL_clearButton"}, prokachaikaStringList);
     cL_clearButton.onclick = function () {
         compareList.list = [];
         closeCompareList();
-        appToast("Таблица сравнения очищена", 3000).then();
+        appToast("Таблица сравнения очищена", 2000).then();
     }
 
-    let cL_closeButton = createElement(cL_buttonsContainer, "button", "id=cL_closeButton", prokachaikaStringList);
+    let cL_closeButton = createElement(cL_buttonsContainer, "button", {id: "cL_closeButton"}, prokachaikaStringList);
     cL_closeButton.onclick = function () {
         closeCompareList();
     }
 
     function closeCompareList() {
-        scrollController.enableBodyScrolling();
-        compareListContainer.remove();
+        animateElement(compareListContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
+            scrollController.enableBodyScrolling();
+            compareListContainer.remove();
+        });
     }
+    animateElement(compareListContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
 }
 
 function checkPumpListVersion(newPumps){
-    if (localStorage.getItem("pumpListVer") === null || localStorage.getItem("pumpListVer") !== pumpList.version) {
+    if (localStorage.getItem("prokachaika.pumpListVersion") === null || localStorage.getItem("prokachaika.pumpListVersion") !== pumpList.version) {
         let newPumpsString = "";
         for(let i = 0; i < newPumps.length; i++) {
             i !== newPumps.length - 1 ? newPumpsString += newPumps[i].name + ", " : newPumpsString += newPumps[i].name + ".";
         }
-        localStorage.setItem("pumpListVer", pumpList.version);
+        localStorage.setItem("prokachaika.pumpListVersion", pumpList.version);
         appAlert("Список насосов", prokachaikaStringList["whatsNew"][0] + pumpList.version + prokachaikaStringList["whatsNew"][1] + newPumpsString + "</p>");
     }
 }
@@ -323,16 +329,18 @@ async function createPumpList(container, URLPumpModel) {
 
     shuffleArray(pumpList.models);
 
-    let pumpListContainer = createElement(container, "div", "id=pumpListContainer");
+    let pumpListContainer = createElement(container, "section", {id: "pumpListContainer"});
 
     for (let i = 0; i < pumpList.models.length; i++) {
-        pumpList.models[i].container = createElement(pumpListContainer, "div", "class=pumpContainer");
+        pumpList.models[i].container = createElement(pumpListContainer, "div", {class: "pumpContainer"});
+        createElement(pumpList.models[i].container, "div", {class: "persentContainer"});
+        let pumpDescription = createElement(pumpList.models[i].container, "div", {class: "pumpDescription"});
+        createElement(pumpDescription, "span", {class: "pumpName"}, pumpList.models[i].name);
+        createElement(pumpDescription, "span", {class: "pumpPoints"});
+
         pumpList.models[i].container.onclick = function () {
             openPumpInfo(pumpList.models[i]);
         }
-
-        createElement(pumpList.models[i].container, "span", "class=pumpName", pumpList.models[i].name);
-        createElement(pumpList.models[i].container, "span", "class=pumpPoints");
 
         getMaxPerf(pumpList.models[i]);
         pumpList.models[i].maxPressure = Number((pumpList.models[i].liftingHeight * 0.098064).toFixed(1));
@@ -347,7 +355,7 @@ async function createPumpList(container, URLPumpModel) {
         }
     }
     if (!noModelError) {
-        appToast("Ошибка: указанная модель насоса не найдена", 3000).then();
+        appToast("Ошибка: указанная модель насоса не найдена", 2000).then();
     }
 
     function getMaxPerf(pump) {
@@ -394,94 +402,97 @@ function openPumpInfo(model) {
     };
 
     scrollController.disableBodyScrolling();
-    let pumpInfoContainer = createElement(document.body, "div", "id=pumpInfoContainer / class=unPadContainer popUp");
+    let pumpInfoContainer = createElement(document.body, "div", {id: "pumpInfoContainer", class: "unPadContainer popUp"});
 
-    createElement(pumpInfoContainer, "div", "id=pumpNameContainer / class=defaultContainer", pumpInfo.modelName);
+    createElement(pumpInfoContainer, "div", {id: "pumpNameContainer", class: "defaultContainer"}, pumpInfo.modelName);
 
-    let itemsContainer = createElement(pumpInfoContainer, "div", "id=pumpInfoItems / class=itemsContainer");
+    let itemsContainer = createElement(pumpInfoContainer, "div", {id: "pumpInfoItems", class: "itemsContainer"});
 
-    let paramsTableBody = createElement(itemsContainer, "div", "id=paramsTableBody / class=unPadContainer");
+    let paramsTableBody = createElement(itemsContainer, "div", {id: "paramsTableBody", class: "unPadContainer"});
 
     for (let param in pumpInfo.params) {
-        createElement(paramsTableBody, "div", "id=" + param + "Span / class=paramContainer", prokachaikaStringList);
-        createElement(paramsTableBody, "div", "id=" + param + "Value / class=valueContainer", pumpInfo.params[param].toString());
+        createElement(paramsTableBody, "div", {id: param + "Span", class: "paramContainer"}, prokachaikaStringList);
+        createElement(paramsTableBody, "div", {id: param + "Value", class: "valueContainer"}, pumpInfo.params[param].toString());
     }
 
-    let pumpInfoButtons = createElement(itemsContainer, "div", "id=pumpInfoButtons");
+    let pumpInfoButtons = createElement(itemsContainer, "div", {id: "pumpInfoButtons"});
 
     if (pumpInfo.params.pumpControl !== "Нет" && pumpInfo.params.accumulator !== "Нет" && pumpInfo.params.pumpControl !== "Частотное") {
-        let relayHAButton = createElement(pumpInfoButtons, "button", "id=relayHAButton", prokachaikaStringList);
+        let relayHAButton = createElement(pumpInfoButtons, "button", {id: "relayHAButton"}, prokachaikaStringList);
         relayHAButton.onclick = function () {
             scrollController.disableElementScrolling(pumpInfoContainer);
             openRelayHASettings(pumpInfo.params.maxPressure);
         }
     }
 
-    createElement(pumpInfoButtons, "span", "id=searchPumpSpan", prokachaikaStringList);
+    createElement(pumpInfoButtons, "span", {id: "searchPumpSpan"}, prokachaikaStringList);
 
-    let getPumpContainer = createElement(pumpInfoButtons, "div", "class=getContainer");
+    let getPumpContainer = createElement(pumpInfoButtons, "div", {class: "getContainer"});
 
-    let ozonButton = createElement(getPumpContainer, "img", "class=getItemButton / src=./assets/shops/ozon.png");
+    let ozonButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/ozon.png"});
     ozonButton.onclick = function () {
         let str = pumpInfo.modelName.replaceAll(" ", "+");
         window.open("https://www.ozon.ru/search/?text=" + str + "&from_global=true", "_blank");
     }
-    let wbButton = createElement(getPumpContainer, "img", "class=getItemButton / src=./assets/shops/wb.png");
+    let wbButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/wb.png"});
     wbButton.onclick = function () {
         let str = pumpInfo.modelName.replaceAll(" ", "%20");
         window.open("https://www.wildberries.ru/catalog/0/search.aspx?search=" + str, "_blank");
     }
-    let viButton = createElement(getPumpContainer, "img", "class=getItemButton / src=./assets/shops/vi.png");
+    let viButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/vi.png"});
     viButton.onclick = function () {
         let str = pumpInfo.modelName.replaceAll(" ", "%20");
         window.open("https://www.vseinstrumenti.ru/search/?what=" + str, "_blank");
     }
-    let ymButton = createElement(getPumpContainer, "img", "class=getItemButton / src=./assets/shops/ym.png");
+    let ymButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/ym.png"});
     ymButton.onclick = function () {
         let str = pumpInfo.modelName.replaceAll(" ", "%20");
         window.open("https://market.yandex.ru/search?text=" + str, "_blank");
     }
-    let lpButton = createElement(getPumpContainer, "img", "class=getItemButton / src=./assets/shops/lp.png");
+    let lpButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/lp.png"});
     lpButton.onclick = function () {
         let str = pumpInfo.modelName.replaceAll(" ", "+");
         window.open("https://lemanapro.ru/search/?q=" + str, "_blank");
     }
 
-    let pumpInfoControls = createElement(itemsContainer, "div", "id=pumpInfoControls");
+    let pumpInfoControls = createElement(itemsContainer, "div", {id: "pumpInfoControls"});
 
-    let shareButton = createElement(pumpInfoControls, "button", "id=shareButton", prokachaikaStringList);
+    let shareButton = createElement(pumpInfoControls, "button", {id: "shareButton"}, prokachaikaStringList);
     shareButton.onclick = function () {
         scrollController.disableElementScrolling(pumpInfoContainer);
-        share("Поделиться насосом", [["module", "prokachaika"], ["pumpModel", pumpInfo.modelName.trim()]], pumpInfo.params.pumpVersion + " " + pumpInfo.modelName);
+        share("Поделиться насосом", {module: "prokachaika", pumpModel: pumpInfo.modelName.trim()}, pumpInfo.params.pumpVersion + " " + pumpInfo.modelName);
     }
 
-    let goComparePumpButton = createElement(pumpInfoControls, "button", "id=goComparePumpButton", prokachaikaStringList);
+    let goComparePumpButton = createElement(pumpInfoControls, "button", {id: "goComparePumpButton"}, prokachaikaStringList);
     goComparePumpButton.onclick = function () {
         if (compareList.findPump(pumpInfo.modelName) === false) {
             compareList.list.push(pumpInfo);
-            appToast("Насос добавлен в таблицу сравнения", 3000).then();
+            appToast("Насос добавлен в таблицу сравнения", 2000).then();
         } else {
-            appToast("Данный насос уже в таблице сравнения", 3000).then();
+            appToast("Данный насос уже в таблице сравнения", 2000).then();
         }
     }
 
-    let pI_closeButton = createElement(pumpInfoControls, "button", "id=pI_closeButton", prokachaikaStringList);
+    let pI_closeButton = createElement(pumpInfoControls, "button", {id: "pI_closeButton"}, prokachaikaStringList);
     pI_closeButton.onclick = function () {
-        scrollController.enableBodyScrolling();
-        pumpInfoContainer.remove();
+        animateElement(pumpInfoContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
+            scrollController.enableBodyScrolling();
+            pumpInfoContainer.remove();
+        });
     }
+    animateElement(pumpInfoContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
 }
 
 function openRelayHASettings(maxPressure) {
-    let relayHAContainer = createElement(document.body, "div", "id=relayHAContainer / class=unPadContainer popUp");
+    let relayHAContainer = createElement(document.body, "div", {id: "relayHAContainer", class: "unPadContainer popUp"});
 
-    createElement(relayHAContainer, "div", "id=rHA_header / class=defaultContainer", prokachaikaStringList);
+    createElement(relayHAContainer, "div", {id: "rHA_header", class: "defaultContainer"}, prokachaikaStringList);
 
-    let itemsContainer = createElement(relayHAContainer, "div", "class=itemsContainer");
+    let itemsContainer = createElement(relayHAContainer, "div", {class: "itemsContainer"});
 
-    let pressureOnContainer = createElement(itemsContainer, "div", "id=pressureOnContainer / class=inpContainer");
-    createElement(pressureOnContainer, "span", "id=pressureOnSpan", prokachaikaStringList);
-    let pressureOnInput = createElement(pressureOnContainer, "input", "id=pressureOnInput / type=tel");
+    let pressureOnContainer = createElement(itemsContainer, "div", {id: "pressureOnContainer", class: "inpContainer"});
+    createElement(pressureOnContainer, "span", {id: "pressureOnSpan"}, prokachaikaStringList);
+    let pressureOnInput = createElement(pressureOnContainer, "input", {id: "pressureOnInput", type: "tel"});
     pressureOnInput.value = prokachaikaStringList["pressureOnInput"];
     let pressureHA = tryFormatToNumber(pressureOnInput.value);
     pressureOnInput.oninput = function () {
@@ -491,21 +502,24 @@ function openRelayHASettings(maxPressure) {
         }
     }
 
-    let pressureHAContainer = createElement(itemsContainer, "div", "id=pressureHAContainer / class=inpContainer");
-    createElement(pressureHAContainer, "span", "id=pressureHASpan", prokachaikaStringList);
-    let pressureHAInput = createElement(pressureHAContainer, "input", "id=pressureHAInput / type=tel / disabled");
+    let pressureHAContainer = createElement(itemsContainer, "div", {id: "pressureHAContainer", class: "inpContainer"});
+    createElement(pressureHAContainer, "span", {id: "pressureHASpan"}, prokachaikaStringList);
+    let pressureHAInput = createElement(pressureHAContainer, "input", {id: "pressureHAInput", type: "tel", disabled: ""});
 
     pressureOnInput.oninput();
 
-    let pressureOffContainer = createElement(itemsContainer, "div", "id=pressureOffContainer / class=inpContainer");
-    createElement(pressureOffContainer, "span", "id=pressureOffSpan", prokachaikaStringList);
-    let pressureOffInput = createElement(pressureOffContainer, "input", "id=pressureOffInput / type=tel / disabled");
+    let pressureOffContainer = createElement(itemsContainer, "div", {id: "pressureOffContainer", class: "inpContainer"});
+    createElement(pressureOffContainer, "span", {id: "pressureOffSpan"}, prokachaikaStringList);
+    let pressureOffInput = createElement(pressureOffContainer, "input", {id: "pressureOffInput", type: "tel", disabled: ""});
 
     pressureOffInput.value = (maxPressure * 0.82).toFixed(1);
 
-    let rHA_closeButton = createElement(itemsContainer, "button", "id=rHA_closeButton", prokachaikaStringList);
+    let rHA_closeButton = createElement(itemsContainer, "button", {id: "rHA_closeButton"}, prokachaikaStringList);
     rHA_closeButton.onclick = function () {
-        scrollController.enableElementScrolling();
-        relayHAContainer.remove();
+        animateElement(relayHAContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
+            scrollController.enableElementScrolling();
+            relayHAContainer.remove();
+        });
     }
+    animateElement(relayHAContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
 }

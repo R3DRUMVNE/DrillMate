@@ -96,12 +96,62 @@ input.cb{
         "layerNameContainer layerColorContainer"
         "wellConstructionContainer wellConstructionContainer"
         "removeLayerButton addLayerButton";
-
-    padding: 10px;
     background-color: var(--secondaryColor);
     border-radius: 10px;
     box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.5);
+
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    pointer-events: none;
 }
+
+.layerShow_start{
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    pointer-events: none;
+    animation: layer 0.5s linear;
+}
+.layerShow_end{
+    opacity: 1;
+    max-height: 270px;
+    padding: 10px;
+    pointer-events: auto;
+}
+
+.layerHide_start{
+    opacity: 1;
+    max-height: 270px;
+    padding: 10px;
+    pointer-events: none;
+    animation: layer 0.5s linear reverse;
+}
+.layerHide_end{
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    pointer-events: none;
+}
+
+@keyframes layer {
+    from {
+        opacity: 0;
+        max-height: 0;
+        padding: 0;
+    }
+    50%{
+        opacity: 0;
+        max-height: 135px;
+        padding: 5px;
+    }
+    to{
+        opacity: 1;
+        max-height: 270px;
+        padding: 10px;
+    }
+}
+
 #startDepthContainer{
     grid-area: startDepthContainer;
 }
@@ -163,14 +213,6 @@ input.cb{
 }
 #printControlContainer{
     grid-area: printControlContainer;
-}
-#dsPrintLabel{
-    grid-area: dsPrintLabel;
-    width: max-content;
-}
-#signaturesPrintLabel{
-    grid-area: signaturesPrintLabel;
-    width: max-content;
 }
 #formPassButton{
     grid-area: formPassButton;

@@ -1,13 +1,15 @@
 {
-  "realtimeText": "Расчёт в реальном времени",
-  "volumeText": "Заполняемый объём, литр:",
-  "userTimeText": "Время заполнения, час:мин:сек:",
-  "startButton": "Старт!",
+  "realtimeText": "Расчёт с секундомером",
+  "volumeText": "Заполняемый объём, л:",
+  "userTimeText": "Время, ч:мин:сек:",
+  "startButtonSpan": "Старт!",
+  "startButtonSpan_stop": "Стоп!",
   "currentTimeText": "Время",
   "currentTimeOutput": "-",
   "flowRateText": "Дебит",
   "flowRateLMOutput": "-",
   "flowRateLHOutput": "-",
-  "volumeInputHint": "0",
-  "selectPumpButton": "Подобрать насос"
+  "volumeInputHint": "15",
+  "selectPumpButton": "Подобрать насос",
+  "assistantText": "Привет! Добро пожаловать в СчетоВод!"
 }

@@ -1,5 +1,7 @@
 let timerList = {
     "flowRateTimer": null,
+    "letterInterval": null,
+    "sayPhrases": null,
 };
 
 export function setTimer(timerName, timer) {
@@ -9,6 +11,21 @@ export function setTimer(timerName, timer) {
 export function destroyTimer(timerName) {
     if (timerList[timerName] !== null) {
         clearInterval(timerList[timerName]);
+        timerList[timerName] = null;
+    }
+}
+
+export function destroyAllTimers(exception) {
+    for(let timer in timerList) {
+        if(exception){
+            exception.forEach((exc) => {
+                if(exc === timer){
+                    destroyTimer(timer);
+                }
+            });
+        } else{
+            destroyTimer(timer);
+        }
     }
 }
 

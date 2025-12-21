@@ -1,3 +1,36 @@
+#camlockImage{
+    grid-area: camlockImage;
+    border-radius: 10px;
+    box-shadow: 0 4px 4px 0 var(--shadow);
+}
+
+.camlockImageOut_start{
+    opacity: 1;
+    animation: camlockImage_init 0.2s ease-in-out reverse;
+}
+
+.camlockImageOut_end{
+    opacity: 0;
+}
+
+.camlockImageIn_start{
+    opacity: 0;
+    animation: camlockImage_init 0.2s ease-in-out;
+}
+
+.camlockImageIn_end{
+    opacity: 1;
+}
+
+@keyframes camlockImage_init {
+    from {
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
 #DNSelect {
     flex-grow: 1;
 }
@@ -82,6 +115,9 @@
 }
 
 #getCamlockItemsContainer{
-    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
 }
+
+
 

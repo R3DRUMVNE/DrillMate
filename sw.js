@@ -1,9 +1,8 @@
-const CACHE_NAME = "drillmate_cache";
+const CACHE_NAME = "drillmate_cache(sw-1.2.0)";
 
 const static_assets = [
     ".",
     "./index.html",
-    "./assets/favicon.svg",
     "./assets/daicamlock/camlockFather_ExternalThread.png",
     "./assets/daicamlock/camlockFather_HoseFitting.png",
     "./assets/daicamlock/camlockFather_InternalThread.png",
@@ -43,8 +42,8 @@ const static_assets = [
     "./objects/schetovodStringList.json",
     "./objects/tehpasStringList.json",
     "./objects/themesList.json",
-    "./scripts/moduleScripts/bufferModule.js",
-    "./scripts/moduleScripts/otherModules.js",
+    "./scripts/moduleScripts/buffer.js",
+    "./scripts/moduleScripts/jointScripts.js",
     "./scripts/app.js",
     "./scripts/daicamlock.js",
     "./scripts/main.js",
@@ -64,69 +63,39 @@ const static_assets = [
     "./styles/tehpas.css",
     "./styles/tehpasAdaptive.css",
     "./styles/tehpasPrint.css",
+
+    //==============ассеты в новой версии
+    "./assets/favicons/favicon_48-48.png",
+    "./assets/favicons/favicon_72-72.png",
+    "./assets/favicons/favicon_96-96.png",
+    "./assets/favicons/favicon_144-144.png",
+    "./assets/favicons/favicon_192-192.png",
+    "./assets/favicons/favicon_512-512.png",
+    "./assets/schetovod/assistant_default.png",
+    "./assets/schetovod/assistant_happy.png",
+    "./assets/schetovod/assistant_surprised.png",
+    "./objects/assistantPhrases.json",
 ];
 
-self.addEventListener("install",  (event) => {
-    event.waitUntil(caches.open(CACHE_NAME).then(cache => {
-        cache.addAll(static_assets).then(() => {
-            console.log("SW - Cache has been created: " + CACHE_NAME);
-        });
-        })
-    );
-
-
-    /*const cache = await caches.open(CACHE_NAME);
+self.addEventListener("install", async () => {
+    const cache = await caches.open(CACHE_NAME);
     await cache.addAll(static_assets);
-    console.log("SW - Cache has been created: " + CACHE_NAME);
-    await self.skipWaiting();*/
 });
 
-self.addEventListener("activate",  (event) => {
-    event.waitUntil(self.clients.claim());
+self.addEventListener("activate", async () => {
+    const cachesKeys = await caches.keys();
+    const checkKeys = cachesKeys.map(async key => {
+        if (CACHE_NAME !== key) {
+            await caches.delete(key);
+            console.log("SW - cache deleted: " + key);
+        }
+    });
+    await Promise.all(checkKeys);
+    console.log("SW activated: " + CACHE_NAME);
 });
 
 self.addEventListener("fetch", event => {
-    event.respondWith(fromCache(event.request));
-
-    event.waitUntil(update(event.request));
-
-
-    /*event.respondWith(
-        (async () => {
-            try {
-                const response = await fetch(event.request);
-                console.log("SW - Resource loaded from web: " + event.request.url);
-
-                const cache = await caches.open(CACHE_NAME);
-                cache.put(event.request, response.clone()).then(() => {
-                    console.log("SW - Resource has been cached: " + event.request.url);
-                });
-
-                return response;
-            } catch (error) {
-                const cachedResponse = await caches.match(event.request);
-                if (cachedResponse) {
-                    console.log("SW - Resource loaded from cache: " + cachedResponse.url);
-                    return cachedResponse;
-                }
-            }
-        })()
-    );*/
+    event.respondWith(caches.match(event.request).then(cachedResponse => {
+        return cachedResponse || fetch(event.request);
+    }));
 });
-
-function fromCache(request) {
-    return caches.open(CACHE_NAME).then((cache) =>
-        cache.match(request).then((matching) =>
-            matching || Promise.reject("no-match")
-        ));
-}
-
-function update(request) {
-    return caches.open(CACHE_NAME).then((cache) =>
-        fetch(request).then((response) => {
-                cache.put(request, response).then(() => {
-                    console.log("SW - Resource cache updated: " + request.url);
-                });
-        })
-    );
-}

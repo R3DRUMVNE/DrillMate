@@ -9,8 +9,11 @@ html, body {
     font-weight: normal;
     font-size: 16px;
     color: var(--primaryText);
-    text-shadow: 0 2px 2px var(--shadow);
+    text-shadow: 0 2px 2px var(--textShadow);
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    scrollbar-gutter: stable;
 }
 
 #fakeBody {
@@ -21,6 +24,34 @@ html, body {
     position: relative;
     z-index: 2;
     padding: 0;
+}
+.blur_start{
+    filter: blur(0);
+    pointer-events: none;
+    animation: blur 0.3s linear;
+}
+.blur_end{
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.unblur_start{
+    filter: blur(2px);
+    pointer-events: none;
+    animation: blur 0.3s linear reverse;
+}
+.unblur_end{
+    filter: blur(0);
+    pointer-events: auto;
+}
+
+@keyframes blur {
+    from{
+        filter: blur(0);
+    }
+    to{
+        filter: blur(2px);
+    }
 }
 
 .defaultContainer,
@@ -46,7 +77,7 @@ select {
 .unPadContainer,
 .defaultContainer {
     background-color: var(--primaryColor);
-    border-radius: 10px;
+    border-radius: 17px;
     font-size: inherit;
     box-sizing: border-box;
     padding: 7px;
@@ -61,7 +92,7 @@ select {
     font-family: inherit;
     color: inherit;
     box-sizing: border-box;
-    border: 1px solid white;
+    border: 1px solid var(--primaryText);
     position: fixed;
     top: 50%;
     left: 50%;
@@ -74,6 +105,29 @@ select {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+.popUp_open_start{
+    opacity: 0;
+    animation: popUp 0.2s linear;
+}
+.popUp_open_end{
+    opacity: 1;
+}
+@keyframes popUp{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.popUp_close_start{
+    opacity: 1;
+    animation: popUp 0.2s linear reverse;
+}
+.popUp_close_end{
+    opacity: 0;
 }
 
 .itemsContainer {
@@ -112,7 +166,7 @@ select {
     z-index: 1001;
 }
 
-#mainDiv {
+#mainWindow {
     display: grid;
     box-sizing: border-box;
     grid-template-rows: auto 1fr;
@@ -122,21 +176,47 @@ select {
     min-height: 100vh;
 }
 
-#programHeader {
+.programHeader {
     grid-area: headerDiv;
+    position: relative;
+    top: -120%;
     display: flex;
-    gap: 10px;
+    gap: 7px;
     box-sizing: border-box;
     z-index: 50;
-    position: sticky;
-    top: 0;
     height: max-content;
     margin: 0;
     padding: 7px;
     background-color: var(--primaryColor);
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+}
+
+.programHeader_startAnim{
+    position: relative;
+    top: -120%;
+    animation: programHeader 0.6s ease-in;
+}
+
+.programHeader_endAnim{
+    position: sticky;
+    top: 0;
+}
+
+@keyframes programHeader{
+    from{
+        top: -120%;
+        transform: scaleY(1);
+    }
+    80%{
+        top: 5%;
+        transform: scaleY(1.1);
+    }
+    to{
+        top: 0;
+        transform: scaleY(1);
+    }
 }
 
 #logo {
@@ -150,16 +230,45 @@ select {
     font-size: 24px;
     align-self: center;
     justify-content: flex-start;
-    text-shadow: 0 3px 3px var(--shadow);
+    text-shadow: 0 3px 3px var(--textShadow);
 }
 
 .programHeaderButton {
-    padding: 5px;
+    padding: 4px;
     width: 40px;
     height: 40px;
 }
 
-#fragmentDiv {
+.menuButtonFixed {
+    position: absolute;
+    top: 86dvh;
+    right: 10px;
+    width: 50px;
+    height: max-content;
+    padding: 7px;
+    border-radius: 100%;
+    box-shadow: 0 0 8px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
+    opacity: 0;
+}
+
+.menuButtonFixed_start{
+    opacity: 0;
+    animation: menuButtonFixed 0.6s ease-in;
+}
+.menuButtonFixed_end{
+    opacity: 0.8;
+}
+
+@keyframes menuButtonFixed {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 0.8;
+    }
+}
+
+main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -167,20 +276,51 @@ select {
     grid-area: fragment;
     padding: 10px;
 }
+.main_open_startAnim{
+    opacity: 0;
+    animation: main_open 0.2s linear;
+}
+.main_open_endAnim{
+    opacity: 1;
+}
+@keyframes main_open {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.main_close_startAnim{
+    opacity: 0;
+    animation: main_close 0.2s linear;
+}
+.main_close_endAnim{
+    opacity: 1;
+}
+@keyframes main_close {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
 
 .menuOption {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: max-content max-content;
     grid-template-areas:
         "ico header"
         "description description";
     gap: 10px;
     box-sizing: border-box;
-    padding: 7px;
+    padding: 10px 10px 17px 10px;
     background-color: var(--primaryColor);
     box-shadow: 0 4px 4px 0 var(--shadow), inset 0 0 0 0 var(--noShadow);
-    border-radius: 10px;
+    border-radius: 17px;
     transition: box-shadow 0.3s;
     cursor: pointer;
 }
@@ -199,7 +339,7 @@ select {
     padding: 0;
     margin: 0;
     max-height: max-content;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .menuOption > .description {
@@ -216,37 +356,34 @@ select {
     max-height: max-content;
     display: flex;
     justify-items: end;
-    gap: 5px;
+    gap: 7px;
 
-    padding: 5px 5px 5px 59px;
+    padding: 5px 5px 5px 74px;
 }
 
 #moduleHeaderName {
     flex-grow: 1;
     font-size: 20px;
+    align-self: center;
 }
 
 #moduleHeader > button {
-    width: 27px;
-    height: 27px;
-    padding: 3px;
-    border-radius: 7px;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 12px;
 }
 
 .iconButton {
-    display: flex;
-    gap: 10px;
     flex-direction: row;
-    align-items: center;
-    align-content: center;
-    justify-content: start !Important;
-    padding: 7px !Important;
+    gap: 7px;
 }
 
 .iconButton > img {
     order: -1;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 2px var(--shadow));
 }
 
 #settingsInfoHeader{
@@ -255,6 +392,26 @@ select {
     left: 0;
     z-index: 1001;
     text-align: center;
+}
+
+#settingsContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#settingsHeader{
+    margin-left: 7px;
+}
+
+#settingsItems{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    box-sizing: border-box;
+    padding: 7px;
+    border: 1px solid var(--primaryText);
+    border-radius: 10px;
 }
 
 #copyButton {
@@ -280,16 +437,24 @@ select {
     cursor: help;
 }
 
-.checkboxContainer {
-    display: flex;
-    width: max-content;
-    flex-direction: row;
-    gap: 10px;
+.switchContainer {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    grid-template-rows: max-content;
+    gap: 7px;
     align-items: center;
+    flex-grow: 1;
 }
 
-.checkboxContainer > label {
+.switchContainer > label{
+    order: -1;
+    cursor: pointer;
+    margin-left: 5px;
     width: max-content;
+}
+
+.invertColors{
+    filter: drop-shadow(0 2px 2px var(--shadow)) invert(80%) !important;
 }
 
 /*=====================alert===================*/
@@ -330,41 +495,42 @@ select {
     color: inherit;
     box-sizing: border-box;
 
-    border: 1px solid white;
+    border: 1px solid var(--primaryText);
     border-radius: 10px;
     padding: 7px;
     background-color: var(--secondaryColor);
 }
 
-.show {
+.toastShow_start {
     opacity: 0;
-    animation: show 300ms forwards;
+    animation: show-hide 0.2s linear;
 }
-
-@keyframes show {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-.hide {
+.toastShow_end {
     opacity: 1;
-    animation: hide 300ms forwards;
 }
 
-@keyframes hide {
+.toastHide_start {
+    opacity: 1;
+    animation: show-hide 0.2s linear reverse;
+}
+.toastHide_end {
+    opacity: 0;
+}
+
+@keyframes show-hide {
     0% {
-        opacity: 1;
+        opacity: 0;
     }
     100% {
-        opacity: 0;
+        opacity: 1;
     }
 }
 
 /*=====================SHARE===================*/
+
+#shareHeader {
+    text-align: center;
+}
 
 #shareContainer {
     z-index: 1001;
@@ -380,7 +546,7 @@ select {
         "URLInput URLInput URLInput"
         "vkShareButton tgShareButton copyURLButton"
         "closeButton closeButton closeButton";
-    padding: 7px;
+    padding: 0 7px 0 7px;
 }
 
 #URLInput {
@@ -466,7 +632,6 @@ input[type="file"] {
 }
 
 input[type="file"] + label.of,
-.iconButton,
 button {
     display: flex;
     align-items: center;
@@ -476,12 +641,12 @@ button {
     border: none;
     cursor: pointer;
     font-family: inherit;
-    color: inherit;
+    color: var(--buttonText);
     font-size: inherit;
     text-shadow: inherit;
     box-shadow: 0 4px 4px var(--shadow), inset 0 0 0 0 var(--noShadow);
     transition: box-shadow 0.3s;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 7px 12px 7px 12px;
 }
 
@@ -495,7 +660,7 @@ input[type="file"] + label.of:active,
 button:active,
 .iconButton:active,
 .menuOption:active {
-    box-shadow: inset 0 4px 4px 0 var(--shadow);
+    box-shadow: 0 2px 2px 0 var(--shadow);
 }
 
 select {
@@ -505,7 +670,7 @@ select {
     border: none;
     padding: 5px;
     border-radius: 10px;
-    color: var(--primaryText);
+    color: var(--buttonText);
     font-size: inherit;
     font-family: inherit;
     cursor: pointer;
@@ -521,7 +686,7 @@ textarea {
     text-align: left;
     padding: 5px;
     background-color: var(--button);
-    color: var(--primaryText);
+    color: var(--buttonText);
     border-radius: 10px;
     border: none;
     align-self: center;
@@ -539,14 +704,16 @@ input[type="datetime-local"] {
     text-align: left;
     padding: 5px;
     background-color: var(--button);
-    color: var(--primaryText);
+    color: var(--buttonText);
     border-radius: 10px;
     border: none;
     height: 31px;
     align-self: center;
     font-size: inherit;
+    width: 100%;
 }
 
+.switchContainer > input[type="checkbox"]:focus,
 input[type="tel"]:focus,
 input[type="text"]:focus,
 input[type="time"]:focus,
@@ -558,36 +725,44 @@ button:focus {
 
 input::placeholder,
 textarea::placeholder {
-    color: var(--primaryText);
+    color: var(--buttonText);
     opacity: 0.5;
 }
 
 input[type="checkbox"] {
-    width: 21px;
-    height: 21px;
-
+    all: initial;
+    position: relative;
+    background-color: var(--secondaryColor);
     box-sizing: border-box;
-    appearance: none;
-    background-color: unset;
-    outline: 3px solid var(--button);
-    outline-offset: 2px;
-    border: none;
-    border-radius: 5px;
-    margin: 5px;
-    padding: 0;
-    transition: background-color 0.3s;
-    box-shadow: none;
-    filter: drop-shadow(0 4px 2px var(--shadow));
+    width: 47px;
+    height: 31px;
+    border-radius: 30px;
+    transition: 0.3s background-color ease-in-out;
+    box-shadow: 0 4px 4px var(--shadow);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
-input[type="checkbox"]:checked {
+input[type="checkbox"]:before{
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: 21px;
+    width: 21px;
+    background-color: var(--switchCircle);
+    border-radius: 100%;
+    box-shadow: 0 4px 4px var(--shadow), inset 0 -1px 2px var(--shadow);
+    transition: 0.3s left cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+input[type="checkbox"]:checked:before{
+    top: 5px;
+    left: 21px;
+}
+
+input[type="checkbox"]:checked{
     background-color: var(--button);
-}
-
-input[type="checkbox"]:focus {
-    outline: 3px solid var(--primaryText);
-    outline-offset: 2px;
 }
 
 input[type = "radio"] {
@@ -620,11 +795,14 @@ label.radioLabel {
     --primaryColor: none;
     --secondaryColor: none;
     --button: none;
-    --stop: none;
-    --ready: none;
+    --switchCircle: none;
+    --textShadow: none;
     --shadow: none;
     --noShadow: none;
     --primaryText: none;
-    --badResult: none;
-    --goodResult: none;
+    --buttonText: none;
+    --excessPump: none;
+    --greatPump: none;
+    --waterButtonBefore: none;
+    --waterButtonAfter: none;
 }
