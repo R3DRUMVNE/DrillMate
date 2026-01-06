@@ -98,8 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         appSettings.keys.menuButtonFixed ? animateElement(menuButton, ["menuButtonFixed_start"], ["menuButtonFixed_end"]).then() : null;
     });
 });
-window.onbeforeunload = function (e) {
-    e.preventDefault();
+window.onbeforeunload = function () {
     window.scrollTo(0, 0);
 };
 
