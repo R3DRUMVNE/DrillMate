@@ -109,7 +109,7 @@ menuButton.onclick = function () {
     destroyAllTimers();
     addons.clear();
     menu.createMenuButtons();
-    title.innerHTML = "DrillMate - маленький помощник бурильщика";
+    title.innerHTML = "DrillMate";
     history.replaceState(null, null, "/DrillMate/");
 }
 
