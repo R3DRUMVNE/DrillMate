@@ -1,3 +1,4 @@
+import {clearModuleVariables, destroyAllTempElements, destroyAllTimers} from "./moduleScripts/buffer.js";
 import {
     linkNewStylesheet,
     appToast,
@@ -8,27 +9,26 @@ import {
     animateElement,
     appSettings,
     createElement,
-    createSwitchContainer
+    createSwitchContainer, isExists
 } from "./moduleScripts/jointScripts.js";
 import {startSchetoVodModule} from "./schetovod.js";
 import {startDaiCamlockModule} from "./daicamlock.js";
 import {startTehPasModule} from "./tehpas.js";
-import {destroyAllTempElements, destroyAllTimers} from "./moduleScripts/buffer.js";
 import {startProkachaikaModule} from "./prokachaika.js";
 
-let title = document.querySelector("#programTitle");
-let menuButton = document.querySelector("#menuButton");
-let settingsInfoButton = document.querySelector("#settingsInfoButton");
-let main = document.querySelector("main");
+const title = document.querySelector("#programTitle");
+const menuButton = document.querySelector("#menuButton");
+const settingsInfoButton = document.querySelector("#settingsInfoButton");
+const main = document.querySelector("main");
 
-const version = "1.2.0";
+const version = "1.2.1";
 let mainStringList = null;
 
 const menu = {
     map: null,
     alreadyIn: null,
     createMenuButtons: function () {
-        if (this.alreadyIn === null || this.alreadyIn === undefined) {
+        if (!isExists(this.alreadyIn)) {
             createButtons();
         } else if (!this.alreadyIn) {
             animateElement(main, ["main_close_startAnim"], ["main_close_endAnim"]).then(() => {
@@ -40,10 +40,10 @@ const menu = {
             menu.alreadyIn = true;
             window.scrollTo(0, 0);
             main.innerHTML = "";
-            let menuDiv = createElement(main, "article", {id: "menu"});
+            const menuDiv = createElement(main, "article", {id: "menu"});
 
             for (let key in menu.map) {
-                let menuOptionContainer = createElement(menuDiv, "section", {id: key, class: "menuOption"});
+                const menuOptionContainer = createElement(menuDiv, "section", {id: key, class: "menuOption"});
 
                 createElement(menuOptionContainer, "img", {
                     class: "image",
@@ -65,7 +65,7 @@ const menu = {
     }
 };
 
-let addons = {
+const addons = {
     clear: function () {
         for (let i in this.list) {
             this.list[i] = null;
@@ -100,18 +100,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 window.onbeforeunload = function () {
     window.scrollTo(0, 0);
-    if(isMobile() && appSettings.keys.confirmExit){
-        return true;
-    }
 };
 
 menuButton.onclick = function () {
+    clearModuleVariables();
     destroyAllTempElements();
     destroyAllTimers();
-    history.replaceState(null, null, "/DrillMate/");
     addons.clear();
     menu.createMenuButtons();
     title.innerHTML = "DrillMate - маленький помощник бурильщика";
+    history.replaceState(null, null, "/DrillMate/");
 }
 
 settingsInfoButton.onclick = function () {
@@ -120,7 +118,7 @@ settingsInfoButton.onclick = function () {
 
 function checkURL() {
     const URLParams = new URLSearchParams(window.location.search);
-    if (URLParams.get("module") !== null) {
+    if (isExists(URLParams.get("module"))) {
         let moduleFound = false;
         for (let key in menu.map) {
             if (key === URLParams.get("module")) {
@@ -165,62 +163,63 @@ export async function loadModule(id, addons, skipAnimations) {
 }
 
 function showSettingsInfo() {
-    scrollController.disableBodyScrolling();
-    let settingsInfoContainer = createElement(document.body, "div", {
+    scrollController.disableBodyScrolling().then();
+    const settingsInfoContainer = createElement(document.body, "div", {
         id: "settingsInfoContainer",
         class: "unPadContainer popUp"
     });
 
     createElement(settingsInfoContainer, "div", {id: "settingsInfoHeader", class: "defaultContainer"}, mainStringList);
 
-    let itemsContainer = createElement(settingsInfoContainer, "div", {class: "itemsContainer"});
+    const itemsContainer = createElement(settingsInfoContainer, "div", {class: "itemsContainer"});
 
     createElement(itemsContainer, "div", {id: "infoText"}, mainStringList["infoText"][0] + version + mainStringList["infoText"][1]);
 
-    let settingsContainer = createElement(itemsContainer, "div", {id: "settingsContainer"});
+    const settingsContainer = createElement(itemsContainer, "div", {id: "settingsContainer"});
 
     createElement(settingsContainer, "span", {id: "settingsHeader"}, mainStringList);
-    let settingsItems = createElement(settingsContainer, "div", {id: "settingsItems"});
+    const settingsItems = createElement(settingsContainer, "div", {id: "settingsItems"});
 
-    let themeSelectContainer = createElement(settingsItems, "div", {id: "themeSelectContainer", class: "inpContainer"});
+    const themeSelectContainer = createElement(settingsItems, "div", {id: "themeSelectContainer", class: "inpContainer"});
     createElement(themeSelectContainer, "span", {id: "themeSelectSpan"}, mainStringList);
-    let themeSelect = createElement(themeSelectContainer, "select", {id: "themeSelect"}, mainStringList);
+    const themeSelect = createElement(themeSelectContainer, "select", {id: "themeSelect"}, mainStringList);
     themeSelect.value = appSettings.keys.appTheme;
     themeSelect.onchange = function () {
         appTheme_change(themeSelect.value);
         appSettings.set("appTheme", themeSelect.value);
     }
 
-    let animCheckbox = createSwitchContainer(settingsItems, {}, {id: "animCheckbox"}, {id: "animCheckboxLabel"}, mainStringList);
+    const animCheckbox = createSwitchContainer(settingsItems, {}, {id: "animCheckbox"}, {id: "animCheckboxLabel"}, mainStringList);
     animCheckbox.checked = appSettings.keys.animations;
     animCheckbox.onchange = function () {
         appSettings.set("animations", animCheckbox.checked);
     }
 
-    let assistantCheckbox = createSwitchContainer(settingsItems, {}, {id: "assistantCheckbox"}, {id: "assistantCheckboxLabel"}, mainStringList);
+    const assistantCheckbox = createSwitchContainer(settingsItems, {}, {id: "assistantCheckbox"}, {id: "assistantCheckboxLabel"}, mainStringList);
     assistantCheckbox.checked = appSettings.keys.assistant;
     assistantCheckbox.onchange = function () {
         appSettings.set("assistant", assistantCheckbox.checked);
         appToast("Изменения будут применены при следующем входе в раздел", 3000).then();
     }
 
+    const tehpasSaveHistoryCheckbox = createSwitchContainer(settingsItems, {}, {id: "tehpasSaveHistoryCheckbox"}, {id: "tehpasSaveHistoryCheckboxLabel"}, mainStringList);
+    tehpasSaveHistoryCheckbox.checked = appSettings.keys.tehpasSaveHistory;
+    tehpasSaveHistoryCheckbox.onchange = function () {
+        appSettings.set("tehpasSaveHistory", tehpasSaveHistoryCheckbox.checked);
+    }
+
     if(isMobile()){
-        let menuButtonFixedCheckbox = createSwitchContainer(settingsItems, {}, {id: "menuButtonFixedCheckbox"}, {id: "menuButtonFixedCheckboxLabel"}, mainStringList);
+        const menuButtonFixedCheckbox = createSwitchContainer(settingsItems, {}, {id: "menuButtonFixedCheckbox"}, {id: "menuButtonFixedCheckboxLabel"}, mainStringList);
         menuButtonFixedCheckbox.checked = appSettings.keys.menuButtonFixed;
         menuButtonFixedCheckbox.onchange = function () {
             appSettings.set("menuButtonFixed", menuButtonFixedCheckbox.checked);
-            menuButtonChange(appSettings.keys.menuButtonFixed);
-            animateElement(menuButton, ["menuButtonFixed_start"], ["menuButtonFixed_end"]).then()
-        }
-
-        let confirmExitCheckbox = createSwitchContainer(settingsItems, {}, {id: "confirmExitCheckbox"}, {id: "confirmExitCheckboxLabel"}, mainStringList);
-        confirmExitCheckbox.checked = appSettings.keys.confirmExit;
-        confirmExitCheckbox.onchange = function () {
-            appSettings.set("confirmExit", confirmExitCheckbox.checked);
+            animateElement(menuButton, ["menuButtonFixed_start"], ["menuButtonFixed_end"]).then(() => {
+                menuButtonChange(appSettings.keys.menuButtonFixed);
+            });
         }
     }
 
-    let bugButton = createElement(itemsContainer, "button", {id: "bugButton", class: "iconButton"}, mainStringList);
+    const bugButton = createElement(itemsContainer, "button", {id: "bugButton", class: "iconButton"}, mainStringList);
     createElement(bugButton, "img", {id: "bugButtonImg", src: "./assets/bugReport.svg"});
     bugButton.onclick = function () {
         animateElement(settingsInfoContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
@@ -229,7 +228,7 @@ function showSettingsInfo() {
         });
     }
 
-    let downloadButton = createElement(itemsContainer, "button", {
+    const downloadButton = createElement(itemsContainer, "button", {
         id: "downloadButton",
         class: "iconButton"
     }, mainStringList);
@@ -238,10 +237,10 @@ function showSettingsInfo() {
         window.open("https://github.com/R3DRUMVNE/DrillMate/wiki", '_blank');
     }
 
-    let closeButton = createElement(itemsContainer, "button", {id: "closeButton"}, mainStringList);
+    const closeButton = createElement(itemsContainer, "button", {id: "closeButton"}, mainStringList);
     closeButton.onclick = function () {
         animateElement(settingsInfoContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
-            scrollController.enableBodyScrolling();
+            scrollController.enableBodyScrolling().then();
             settingsInfoContainer.remove();
         });
     }
@@ -249,24 +248,24 @@ function showSettingsInfo() {
 }
 
 function showBugReport() {
-    let bugReportContainer = createElement(document.body, "div", {
+    const bugReportContainer = createElement(document.body, "div", {
         id: "bugReportContainer",
         class: "unPadContainer popUp"
     });
 
     createElement(bugReportContainer, "div", {id: "bugReportHeader", class: "defaultContainer"}, mainStringList);
 
-    let itemsContainer = createElement(bugReportContainer, "div", {class: "itemsContainer"});
+    const itemsContainer = createElement(bugReportContainer, "div", {class: "itemsContainer"});
 
     createElement(itemsContainer, "span", {id: "bugReportInfo"}, mainStringList);
 
-    let clientInfo = "ОС: " + getOS() + "<br>Браузер: " + getBrowser().name + " ver " + getBrowser().version + "<br>Viewport: " + window.innerWidth + "x" + window.innerHeight + "<br>Режим: " + getStatus();
-    let clientInfoContainer = createElement(itemsContainer, "div", {
+    const clientInfo = "ОС: " + getOS() + "<br>Браузер: " + getBrowser().name + " ver " + getBrowser().version + "<br>Viewport: " + window.innerWidth + "x" + window.innerHeight + "<br>Режим: " + getStatus();
+    const clientInfoContainer = createElement(itemsContainer, "div", {
         id: "clientInfoContainer",
         class: "defaultContainer"
     }, clientInfo);
 
-    let copyButton = createElement(itemsContainer, "button", {id: "copyButton"}, mainStringList);
+    const copyButton = createElement(itemsContainer, "button", {id: "copyButton"}, mainStringList);
     copyButton.onclick = function () {
         navigator.clipboard.writeText(clientInfoContainer.innerHTML.replaceAll("<br>", "\n")).then(async function () {
             appToast("Скопировано в буфер обмена", 3000).then(() => {
@@ -278,10 +277,10 @@ function showBugReport() {
         });
     }
 
-    let closeButton = createElement(itemsContainer, "button", {id: "closeButton"}, mainStringList);
+    const closeButton = createElement(itemsContainer, "button", {id: "closeButton"}, mainStringList);
     closeButton.onclick = function () {
         animateElement(bugReportContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
-            scrollController.enableBodyScrolling();
+            scrollController.enableBodyScrolling().then();
             bugReportContainer.remove();
         });
     }
@@ -293,7 +292,7 @@ function getStatus() {
 }
 
 function getOS() {
-    let userDeviceArray = [
+    const userDeviceArray = [
         {device: 'Android', platform: /Android/},
         {device: 'iPhone', platform: /iPhone/},
         {device: 'iPad', platform: /iPad/},
@@ -327,8 +326,8 @@ function getBrowser() {
         browser.version = browserName[2] ? browserName[2] : null;
     }
 
-    if (browser.name === null || browser.version === null) {
-        return 'Unknown Browser';
+    if (!isExists(browser.name) || !isExists(browser.version)) {
+        return "Unknown Browser";
     }
     return browser;
 }

@@ -1,4 +1,5 @@
 {
+  "browserReminder": "Для корректного отображения техпаспорта на печати рекомендуется использовать браузер Google Chrome",
   "headerUploadLabel": "Установить шапку",
   "openFileLabel": "Открыть",
   "saveFileButton": "Сохранить",

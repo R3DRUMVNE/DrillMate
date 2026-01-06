@@ -92,7 +92,7 @@
     }
     div,
     textarea{
-        -ms-overflow-style: none;  /* IE и Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }

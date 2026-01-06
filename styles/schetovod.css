@@ -396,6 +396,7 @@
     justify-content: center;
     text-align: center;
     flex-grow: 1;
+    width: min-content;
     animation: assistantText 4.5s infinite linear reverse;
 }
 

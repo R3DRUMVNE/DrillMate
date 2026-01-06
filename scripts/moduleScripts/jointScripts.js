@@ -1,25 +1,27 @@
-let moduleHintStringList = null;
+import {moduleVar} from "./buffer.js";
 
+export function isExists(variable){
+    return variable != null;
+}
 
 export const appSettings = {
     keys: {
         appTheme: localStorage.getItem("settings.appTheme"),
         animations: JSON.parse(localStorage.getItem("settings.animations")),
         assistant: JSON.parse(localStorage.getItem("settings.assistant")),
+        tehpasSaveHistory: JSON.parse(localStorage.getItem("settings.tehpasSaveHistory")),
         menuButtonFixed: JSON.parse(localStorage.getItem("settings.menuButtonFixed")),
-        confirmExit: JSON.parse(localStorage.getItem("settings.confirmExit")),
-
     },
     check: function () {
         const defaultSettings = {
             appTheme: "default",
             animations: true,
             assistant: true,
+            tehpasSaveHistory: false,
             menuButtonFixed: false,
-            confirmExit: true,
         };
         for (let key in this.keys) {
-            if (this.keys[key] === null || this.keys[key] === undefined) {
+            if (!isExists(this.keys[key])) {
                 this.keys[key] = defaultSettings[key];
                 localStorage.setItem("settings." + key, defaultSettings[key]);
             }
@@ -36,47 +38,50 @@ export function appSettings_get(key) {
 }
 
 export async function createModuleHeader(moduleName, moduleID, parentDiv) {
-    let container = createElement(parentDiv, "header", {id: "moduleHeader", class: "defaultContainer"});
+    const container = createElement(parentDiv, "header", {id: "moduleHeader", class: "defaultContainer"});
     createElement(container, "div", {id: "moduleHeaderName"}, moduleName);
 
-    let shareModuleButton = createElement(container, "button", {id: "shareModuleButton"});
+    const shareModuleButton = createElement(container, "button", {id: "shareModuleButton"});
     createElement(shareModuleButton, "img", {id: "shareModuleButtonImg", src: "./assets/share.svg"});
     shareModuleButton.onclick = function () {
-        scrollController.disableBodyScrolling();
+        scrollController.disableBodyScrolling().then();
         share("Поделиться разделом", {module: moduleID}, "DrillMate - " + moduleName);
     }
 
-    moduleHintStringList = await getJSONData("./objects/moduleHintStringList.json");
-    let blockInfoButton = createElement(container, "button", {id: "blockInfoButton"});
+    moduleVar.moduleHintStringList = await getJSONData("./objects/moduleHintStringList.json");
+    const blockInfoButton = createElement(container, "button", {id: "blockInfoButton"});
     createElement(blockInfoButton, "img", {id: "blockInfoButtonImg", src: "./assets/moduleHint.svg"});
     blockInfoButton.onclick = function () {
-        moduleHintStringList[moduleID] !== undefined ? appAlert("Подсказка раздела", moduleHintStringList[moduleID]) : null;
+        isExists(moduleVar.moduleHintStringList[moduleID]) ? appAlert("Подсказка раздела", moduleVar.moduleHintStringList[moduleID]).then() : null;
     }
 }
 
 export function appAlert(alertHeader, alertText) {
-    let dialogContainer = createElement(document.body, "div", {id: "dialogContainer", class: "unPadContainer popUp"});
+    const alertContainer = createElement(document.body, "div", {class: "unPadContainer popUp alertContainer"});
 
-    createElement(dialogContainer, "div", {id: "dialogHeader", class: "defaultContainer"}, alertHeader);
+    createElement(alertContainer, "div", {class: "defaultContainer alertHeader"}, alertHeader);
 
-    let itemsContainer = createElement(dialogContainer, "div", {class: "itemsContainer"});
+    const itemsContainer = createElement(alertContainer, "div", {class: "itemsContainer"});
 
-    createElement(itemsContainer, "div", {id: "dialogText"}, alertText);
+    createElement(itemsContainer, "div", {class: "alertText"}, alertText);
 
-    let closeButton = createElement(itemsContainer, "button", {id: "closeButton"}, "Закрыть");
+    const closeButton = createElement(itemsContainer, "button", {}, "Закрыть");
 
-    scrollController.disableBodyScrolling();
-    animateElement(dialogContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
-    closeButton.onclick = function () {
-        animateElement(dialogContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
-            scrollController.enableBodyScrolling();
-            dialogContainer.remove();
-        });
-    }
+    scrollController.disableBodyScrolling().then();
+    animateElement(alertContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
+    return new Promise(resolve => {
+        closeButton.onclick = function () {
+            animateElement(alertContainer, ["popUp_close_start"], ["popUp_close_end"]).then(async () => {
+                alertContainer.remove();
+                await scrollController.enableBodyScrolling().then();
+                resolve();
+            });
+        }
+    })
 }
 
 export function appToast(toastText, toastMsDelay) {
-    let toastContainer = createElement(document.body, "div", {
+    const toastContainer = createElement(document.body, "div", {
         id: "toastContainer",
         class: "defaultContainer"
     }, toastText);
@@ -92,28 +97,56 @@ export function appToast(toastText, toastMsDelay) {
     });
 }
 
+export function appDialog(dialogHeader, dialogText, buttonsObject) {
+    const dialogContainer = createElement(document.body, "div", {class: "unPadContainer popUp dialogContainer"});
+
+    createElement(dialogContainer, "div", {class: "defaultContainer dialogHeader"}, dialogHeader);
+
+    const itemsContainer = createElement(dialogContainer, "div", {class: "itemsContainer"});
+
+    createElement(itemsContainer, "div", {class: "dialogText"}, dialogText);
+
+    const buttonsContainer = createElement(itemsContainer, "div", {class: "buttonsContainer"});
+
+    scrollController.disableBodyScrolling().then();
+    animateElement(dialogContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
+
+    return new Promise(resolve => {
+        buttonsObject.forEach(buttonObj => {
+            const dialogButton = createElement(buttonsContainer, "button", {class: "dialogButton", value: buttonObj.value}, buttonObj.text);
+            dialogButton.onclick = function () {
+                animateElement(dialogContainer, ["popUp_close_start"], ["popUp_close_end"]).then(async () => {
+                    dialogContainer.remove();
+                    await scrollController.enableBodyScrolling();
+                    resolve(dialogButton.value);
+                });
+            }
+        });
+    });
+}
+
 export function share(shareHeaderText, URLParams, shareText) {
-    let shareContainer = createElement(document.body, "div", {id: "shareContainer", class: "unPadContainer popUp"});
+    const shareContainer = createElement(document.body, "div", {id: "shareContainer", class: "unPadContainer popUp"});
 
     createElement(shareContainer, "div", {id: "shareHeader", class: "defaultContainer"}, shareHeaderText);
 
-    let shareItemsContainer = createElement(shareContainer, "div", {id: "shareItemsContainer"});
-    let URLInput = createElement(shareItemsContainer, "input", {id: "URLInput", type: "text", readonly: ""});
-    let dmURL = new URL("https://r3drumvne.github.io/DrillMate/");
+    const shareItemsContainer = createElement(shareContainer, "div", {id: "shareItemsContainer"});
+    const URLInput = createElement(shareItemsContainer, "input", {id: "URLInput", type: "text", readonly: ""});
+    const dmURL = new URL("https://r3drumvne.github.io/DrillMate/");
     for (let key in URLParams) {
-        dmURL.searchParams.set(key, URLParams[key].toLowerCase());
+        dmURL.searchParams.set(key, URLParams[key]);
     }
     URLInput.value = dmURL.href;
 
-    let vkShareButton = createElement(shareItemsContainer, "img", {id: "vkShareButton", src: "./assets/share/vk.png"});
+    const vkShareButton = createElement(shareItemsContainer, "img", {id: "vkShareButton", src: "./assets/share/vk.png"});
     vkShareButton.onclick = function () {
         window.open("https://vk.com/share.php?url=" + encodeURIComponent(dmURL.href) + "&title=" + shareText, "_blank");
     }
-    let tgShareButton = createElement(shareItemsContainer, "img", {id: "tgShareButton", src: "./assets/share/tg.png"});
+    const tgShareButton = createElement(shareItemsContainer, "img", {id: "tgShareButton", src: "./assets/share/tg.png"});
     tgShareButton.onclick = function () {
         window.open("https://t.me/share/url/?text=" + shareText + "&url=" + encodeURIComponent(dmURL.href), "_blank");
     }
-    let copyURLButton = createElement(shareItemsContainer, "button", {id: "copyURLButton"}, "Скопировать ссылку");
+    const copyURLButton = createElement(shareItemsContainer, "button", {id: "copyURLButton"}, "Скопировать ссылку");
     copyURLButton.onclick = function () {
         navigator.clipboard.writeText(dmURL.href).then(async function () {
             appToast("Скопировано в буфер обмена", 3000).then();
@@ -121,7 +154,7 @@ export function share(shareHeaderText, URLParams, shareText) {
             appToast("Произошла ошибка при копировании текста", 1500).then();
         });
     }
-    let closeButton = createElement(shareItemsContainer, "button", {id: "closeButton"}, "Закрыть");
+    const closeButton = createElement(shareItemsContainer, "button", {id: "closeButton"}, "Закрыть");
 
     closeButton.onclick = function () {
         animateElement(shareContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
@@ -132,37 +165,45 @@ export function share(shareHeaderText, URLParams, shareText) {
     animateElement(shareContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
 }
 
-export let scrollController = {
+export const scrollController = {
     scrollPos: 0,
     workElement: null,
     fakeBody: document.querySelector("#fakeBody"),
     disableBodyScrolling() {
-        this.scrollPos = window.scrollY;
-        document.body.style.overflowY = "hidden";
-        document.body.style.top = this.scrollPos + "px";
-        animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then();
+        return new Promise(resolve => {
+            this.scrollPos = window.scrollY;
+            document.body.style.overflowY = "hidden";
+            document.body.style.top = this.scrollPos + "px";
+            animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then(() => {
+                resolve();
+            });
+        });
     },
     enableBodyScrolling() {
-        document.body.style.overflowY = "scroll";
-        window.scrollTo(0, this.scrollPos);
-        animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then();
+        return new Promise(resolve => {
+            document.body.style.overflowY = "scroll";
+            window.scrollTo(0, this.scrollPos);
+            animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then(() =>{
+                resolve();
+            });
+        });
     },
     disableElementScrolling(element) {
         this.workElement = element;
         animateElement(this.workElement, ["blur_start"], ["blur_end"]).then();
     },
     enableElementScrolling() {
-        if (this.workElement !== null) {
+        if (isExists(this.workElement)) {
             animateElement(this.workElement, ["unblur_start"], ["unblur_end"]).then();
             this.workElement = null;
         } else {
-            this.enableBodyScrolling();
+            this.enableBodyScrolling().then();
         }
     },
 };
 
 export function linkNewStylesheet(cssName) {
-    document.querySelector("#" + cssName) === null ? createElement(document.head, "link", {
+    !isExists(document.querySelector("#" + cssName)) ? createElement(document.head, "link", {
         id: cssName,
         rel: "stylesheet",
         href: "./styles/" + cssName + ".css"
@@ -184,9 +225,9 @@ export function tryFormatToNumber(value) {
 }
 
 export function createElement(container, elementName, elementAttributes, stringsObj) {
-    let element = document.createElement(elementName);
+    const element = document.createElement(elementName);
 
-    if (container !== null) {
+    if (isExists(container)) {
         container.appendChild(element);
     }
 
@@ -194,8 +235,8 @@ export function createElement(container, elementName, elementAttributes, strings
         element.setAttribute(key, elementAttributes[key]);
     }
 
-    if (stringsObj !== undefined) {
-        if (stringsObj[element.id] !== undefined) {
+    if (isExists(stringsObj)) {
+        if (isExists(stringsObj[element.id])) {
             if (elementName === "select") {
                 addOptionsToSelect(element, stringsObj[element.id]);
             } else {
@@ -265,39 +306,10 @@ export function animateElement(element, startAnimClass, endAnimClass, skipEnd) {
     });
 }
 
-export function getCookie(name) {
-    let matches = document.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\/+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-export function setCookie(name, value, options = {}) {
-    options = {
-        path: '/',
-        ...options
-    };
-
-    if (options.expires instanceof Date) {
-        options.expires = options.expires.toUTCString();
-    }
-
-    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-
-    for (let optionKey in options) {
-        updatedCookie += "; " + optionKey;
-        let optionValue = options[optionKey];
-        if (optionValue !== true) {
-            updatedCookie += "=" + optionValue;
-        }
-    }
-    document.cookie = updatedCookie;
-}
-
 function addOptionsToSelect(select, optionsArray) {
     for (let i = 0; i < optionsArray.length; i++) {
         if (Array.isArray(optionsArray[i])) {
-            let option = createElement(select, "option", {}, optionsArray[i][0]);
+            const option = createElement(select, "option", {}, optionsArray[i][0]);
             option.value = optionsArray[i][1];
         } else {
             createElement(select, "option", {}, optionsArray[i]);
@@ -310,8 +322,8 @@ export function filterValueByNumber(element) {
 }
 
 export function createSwitchContainer(parentContainer, containerAttributes, switchAttributes, labelAttributes, stringObj) {
-    let container = createElement(parentContainer, "div", {class: "switchContainer", ...containerAttributes});
-    let sw = createElement(container, "input", {type: "checkbox", ...switchAttributes});
+    const container = createElement(parentContainer, "div", {class: "switchContainer", ...containerAttributes});
+    const sw = createElement(container, "input", {type: "checkbox", ...switchAttributes});
     createElement(container, "label", {for: sw.id, ...labelAttributes}, stringObj);
     return sw;
 }
@@ -351,7 +363,7 @@ export function appTheme_change(selectedTheme) {
         appTheme.currentTheme = selectedTheme;
     }
 
-    let icons = document.querySelectorAll("section > img");
+    const icons = document.querySelectorAll("section > img");
     if (appTheme.themesList[appTheme.currentTheme].invertIcons) {
         icons.forEach(icon => {
             if(icon.getAttribute("ignorecolorsinvert") !== "true") {
@@ -375,7 +387,16 @@ export function randomInt(min, max, previousInt) {
     let ok = false, randomInt;
     while (!ok) {
         randomInt = Math.floor(min + Math.random() * (max + 1 - min));
-        randomInt !== previousInt || previousInt === undefined ? ok = true : null;
+        randomInt !== previousInt || !isExists(previousInt) ? ok = true : null;
     }
     return randomInt;
+}
+
+export function isJSON(json) {
+    try{
+        JSON.parse(json);
+    } catch{
+        return false;
+    }
+    return true;
 }

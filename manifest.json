@@ -1,7 +1,7 @@
 {
-  "name": "DrillMate - маленький помощник бурильщика",
+  "name": "DrillMate",
   "short_name": "DrillMate",
-  "description": "DrillMate - вспомогательное веб-приложение для бурильщиков. Расчёт дебита, создание техпаспорта, подбор поверхностного насоса и другое",
+  "description": "Вспомогательное веб-приложение для бурильщиков",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",

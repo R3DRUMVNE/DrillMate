@@ -6,7 +6,7 @@
 
 .camlockImageOut_start{
     opacity: 1;
-    animation: camlockImage_init 0.2s ease-in-out reverse;
+    animation: camlockImage 0.3s ease-in-out reverse;
 }
 
 .camlockImageOut_end{
@@ -15,14 +15,14 @@
 
 .camlockImageIn_start{
     opacity: 0;
-    animation: camlockImage_init 0.2s ease-in-out;
+    animation: camlockImage 0.3s ease-in-out;
 }
 
 .camlockImageIn_end{
     opacity: 1;
 }
 
-@keyframes camlockImage_init {
+@keyframes camlockImage {
     from {
         opacity: 0;
     }

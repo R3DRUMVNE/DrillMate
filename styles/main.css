@@ -9,7 +9,6 @@ html, body {
     font-weight: normal;
     font-size: 16px;
     color: var(--primaryText);
-    text-shadow: 0 2px 2px var(--textShadow);
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -230,7 +229,6 @@ select {
     font-size: 24px;
     align-self: center;
     justify-content: flex-start;
-    text-shadow: 0 3px 3px var(--textShadow);
 }
 
 .programHeaderButton {
@@ -459,14 +457,15 @@ main {
 
 /*=====================alert===================*/
 
-#dialogContainer {
+.alertContainer {
     z-index: 9999;
     width: min(100%, 420px);
     overflow-y: scroll;
     filter: none !Important;
 }
 
-#dialogHeader {
+.alertHeader {
+    text-align: center;
     font-size: 18px;
     position: sticky;
     top: 0;
@@ -524,6 +523,35 @@ main {
     100% {
         opacity: 1;
     }
+}
+
+/*=====================Dialog==================*/
+
+.dialogContainer {
+    z-index: 9999;
+    width: min(100%, 430px);
+    overflow-y: scroll;
+    filter: none !Important;
+}
+
+.dialogHeader {
+    text-align: center;
+    font-size: 18px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.dialogContainer > .itemsContainer > .buttonsContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: max-content;
+    gap: 7px;
+}
+
+.dialogContainer > .itemsContainer > .buttonsContainer > button{
+    width: 100%;
 }
 
 /*=====================SHARE===================*/
@@ -796,7 +824,6 @@ label.radioLabel {
     --secondaryColor: none;
     --button: none;
     --switchCircle: none;
-    --textShadow: none;
     --shadow: none;
     --noShadow: none;
     --primaryText: none;

@@ -1,6 +1,5 @@
-[
-  {
-    "name": "Shimge JET-G2 1100",
+{
+  "Shimge JET-G2 1100": {
     "pumpType": "Центробежный",
     "pumpControl": "Нет",
     "bodyMaterial": "Нержавеющая сталь",
@@ -11,8 +10,7 @@
     "forLowStaticLevel": false,
     "accumulator": "Нет"
   },
-  {
-    "name": "SHIMGE JET-G2 1100 +24L",
+  "Shimge JET-G2 1100 +24L": {
     "pumpType": "Центробежный",
     "pumpControl": "Релейное",
     "bodyMaterial": "Нержавеющая сталь",
@@ -23,8 +21,7 @@
     "forLowStaticLevel": false,
     "accumulator": "24"
   },
-  {
-    "name": "Shimge JET-G2 750",
+  "Shimge JET-G2 750": {
     "pumpType": "Центробежный",
     "pumpControl": "Нет",
     "bodyMaterial": "Нержавеющая сталь",
@@ -35,8 +32,7 @@
     "forLowStaticLevel": false,
     "accumulator": "Нет"
   },
-  {
-    "name": "Shimge JET-G2 750 +24L",
+  "Shimge JET-G2 750 +24L": {
     "pumpType": "Центробежный",
     "pumpControl": "Релейное",
     "bodyMaterial": "Нержавеющая сталь",
@@ -47,8 +43,7 @@
     "forLowStaticLevel": false,
     "accumulator": "24"
   },
-  {
-    "name": "Shimge JET-G2 550",
+  "Shimge JET-G2 550": {
     "pumpType": "Центробежный",
     "pumpControl": "Нет",
     "bodyMaterial": "Нержавеющая сталь",
@@ -59,8 +54,7 @@
     "forLowStaticLevel": false,
     "accumulator": "Нет"
   },
-  {
-    "name": "Shimge JET-G2 550 +24L",
+  "Shimge JET-G2 550 +24L": {
     "pumpType": "Центробежный",
     "pumpControl": "Релейное",
     "bodyMaterial": "Нержавеющая сталь",
@@ -71,8 +65,7 @@
     "forLowStaticLevel": false,
     "accumulator": "24"
   },
-  {
-    "name": "Quattro Elementi Giardino 1101 FL",
+  "Quattro Elementi Giardino 1101 FL": {
     "pumpType": "Центробежный",
     "pumpControl": "Нет",
     "bodyMaterial": "Пластик",
@@ -83,4 +76,4 @@
     "forLowStaticLevel": true,
     "accumulator": "Нет"
   }
-]
+}

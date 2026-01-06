@@ -2,48 +2,47 @@ import {
     createModuleHeader,
     tryFormatToNumber,
     appToast,
-    filterValueByNumber, getJSONData, animateElement, appSettings_get, createElement, randomInt, createSwitchContainer
+    filterValueByNumber, getJSONData, animateElement, appSettings_get, createElement, randomInt, createSwitchContainer,
+    isExists
 } from "./moduleScripts/jointScripts.js";
-import {destroyTimer, setTimer} from "./moduleScripts/buffer.js";
+import {destroyTimer, setTimer, moduleVar} from "./moduleScripts/buffer.js";
 import {loadModule} from "./main.js";
 
-let assistant = null, schetovodStringList = null;
-
-let flowRate = {
-    volume: 0,
-    litresPerMinute: 0,
-    litresPerHour: 0,
-}
-
 export async function startSchetoVodModule(container, moduleName, moduleID) {
-    let schetovodArticle = createElement(container, "article", {id: "schetovodArticle"});
-    schetovodStringList = await getJSONData("./objects/schetovodStringList.json");
-    createModuleHeader(moduleName, moduleID, schetovodArticle).then();
-    createInputBlock(schetovodArticle);
-    createOutputBlock(schetovodArticle);
-
-    assistant = {
+    moduleVar.flowRate = {
+        volume: 0,
+        litresPerMinute: 0,
+        litresPerHour: 0,
+    };
+    moduleVar.assistant = {
         image: null,
         message: null,
         say: null,
         stopSaying: null,
     };
+    moduleVar.schetovodStringList = await getJSONData("./objects/schetovodStringList.json");
+
+    const schetovodArticle = createElement(container, "article", {id: "schetovodArticle"});
+    createModuleHeader(moduleName, moduleID, schetovodArticle).then();
+    createInputBlock(schetovodArticle);
+    createOutputBlock(schetovodArticle);
+
     appSettings_get("assistant") ? await createAssistantBlock(schetovodArticle) : null;
 }
 
 function createInputBlock(blockDiv) {
-    let inputBlock = createElement(blockDiv, "section", {id: "inputBlock", class: "defaultContainer inputBlockRC"});
+    const inputBlock = createElement(blockDiv, "section", {id: "inputBlock", class: "defaultContainer inputBlockRC"});
 
-    let volumeInputContainer = createElement(inputBlock, "div", {id: "volumeInputContainer"});
-    createElement(volumeInputContainer, "span", {id: "volumeText"}, schetovodStringList);
-    let volumeInput = createElement(volumeInputContainer, "input", {
+    const volumeInputContainer = createElement(inputBlock, "div", {id: "volumeInputContainer"});
+    createElement(volumeInputContainer, "span", {id: "volumeText"}, moduleVar.schetovodStringList);
+    const volumeInput = createElement(volumeInputContainer, "input", {
         id: "volumeInput",
         type: "tel",
-        placeholder: schetovodStringList.volumeInputHint
+        placeholder: moduleVar.schetovodStringList.volumeInputHint
     });
-    let buttonsContainer = createElement(inputBlock, "div", {class: "buttonsContainer"});
+    const buttonsContainer = createElement(inputBlock, "div", {class: "buttonsContainer"});
 
-    let realtimeCheckbox = createSwitchContainer(inputBlock, {id: "realtimeCheckboxContainer", class: "switchContainer"}, {id: "realtimeCheckbox", type: "checkbox", checked: ""}, {id: "realtimeText"}, schetovodStringList);
+    const realtimeCheckbox = createSwitchContainer(inputBlock, {id: "realtimeCheckboxContainer", class: "switchContainer"}, {id: "realtimeCheckbox", type: "checkbox", checked: ""}, {id: "realtimeText"}, moduleVar.schetovodStringList);
 
     let startButton, selectPumpButton, timeInputContainer;
     realtimeCheckbox.onchange = async function () {
@@ -57,18 +56,18 @@ function createInputBlock(blockDiv) {
             volumeInput.oninput = function () {
                 filterValueByNumber(this);
             }
-            if (timeInputContainer !== undefined) timeInputContainer.remove();
+            if (isExists(timeInputContainer)) timeInputContainer.remove();
 
             startButton = createElement(buttonsContainer, "div", {class: "startButton"});
-            let buttonSpan = createElement(startButton, "span", {id: "startButtonSpan"}, schetovodStringList);
-            let liquid = createElement(startButton, "div", {class: "liquid"});
+            const buttonSpan = createElement(startButton, "span", {id: "startButtonSpan"}, moduleVar.schetovodStringList);
+            const liquid = createElement(startButton, "div", {class: "liquid"});
 
             selectPumpButton = createElement(buttonsContainer, "button", {
                 id: "selectPumpButton",
                 class: "selectPumpButton"
-            }, schetovodStringList);
+            }, moduleVar.schetovodStringList);
             selectPumpButton.onclick = function () {
-                loadModule("prokachaika", {flowRateLPH: flowRate.litresPerHour});
+                loadModule("prokachaika", {flowRateLPH: moduleVar.flowRate.litresPerHour});
             }
             setTimeout(() => {
                 clearTimeout(this);
@@ -92,9 +91,9 @@ function createInputBlock(blockDiv) {
             }
 
             startButton.onclick = function () {
-                flowRate.volume = tryFormatToNumber(volumeInput.value);
-                if (flowRate.volume !== false) {
-                    if (flowRate.volume !== 0) {
+                moduleVar.flowRate.volume = tryFormatToNumber(volumeInput.value);
+                if (moduleVar.flowRate.volume !== false) {
+                    if (moduleVar.flowRate.volume !== 0) {
                         volumeInput.disabled = !volumeInput.disabled;
                         realtimeCheckbox.disabled = !realtimeCheckbox.disabled;
                         realtimeCalculate(buttonSpan);
@@ -116,8 +115,8 @@ function createInputBlock(blockDiv) {
                 id: "timeInputContainer",
                 class: "timeInputContainer"
             });
-            createElement(timeInputContainer, "span", {id: "userTimeText"}, schetovodStringList);
-            let userTimeInput = createElement(timeInputContainer, "input", {
+            createElement(timeInputContainer, "span", {id: "userTimeText"}, moduleVar.schetovodStringList);
+            const userTimeInput = createElement(timeInputContainer, "input", {
                 id: "userTimeInput",
                 type: "time",
                 value: "00:00:30",
@@ -153,53 +152,53 @@ function createInputBlock(blockDiv) {
 }
 
 function createOutputBlock(frg) {
-    let currentTimeContainer = createElement(frg, "section", {id: "currentTimeContainer", class: "unPadContainer"});
+    const currentTimeContainer = createElement(frg, "section", {id: "currentTimeContainer", class: "unPadContainer"});
 
-    createElement(currentTimeContainer, "div", {id: "currentTimeText", class: "defaultContainer"}, schetovodStringList);
-    createElement(currentTimeContainer, "span", {id: "currentTimeOutput"}, schetovodStringList);
+    createElement(currentTimeContainer, "div", {id: "currentTimeText", class: "defaultContainer"}, moduleVar.schetovodStringList);
+    createElement(currentTimeContainer, "span", {id: "currentTimeOutput"}, moduleVar.schetovodStringList);
 
-    let fRContainer = createElement(frg, "section", {id: "fRContainer", class: "unPadContainer"});
+    const fRContainer = createElement(frg, "section", {id: "fRContainer", class: "unPadContainer"});
 
-    createElement(fRContainer, "div", {id: "flowRateText", class: "defaultContainer"}, schetovodStringList);
-    createElement(fRContainer, "span", {id: "flowRateLMOutput"}, schetovodStringList);
-    createElement(fRContainer, "span", {id: "flowRateLHOutput"}, schetovodStringList);
+    createElement(fRContainer, "div", {id: "flowRateText", class: "defaultContainer"}, moduleVar.schetovodStringList);
+    createElement(fRContainer, "span", {id: "flowRateLMOutput"}, moduleVar.schetovodStringList);
+    createElement(fRContainer, "span", {id: "flowRateLHOutput"}, moduleVar.schetovodStringList);
     return frg;
 }
 
 function realtimeCalculate(button) {
     let startTime;
     if (button.getAttribute("started") === "false") {
-        flowRate.litresPerMinute = 0;
-        flowRate.litresPerHour = 0;
+        moduleVar.flowRate.litresPerMinute = 0;
+        moduleVar.flowRate.litresPerHour = 0;
         startTime = getTimeInSeconds();
         setTimer("flowRateTimer", setInterval(calculateRealTimeDifference, 20, startTime));
-        button.innerHTML = schetovodStringList["startButtonSpan_stop"];
+        button.innerHTML = moduleVar.schetovodStringList["startButtonSpan_stop"];
         button.setAttribute("started", "true");
 
-        assistant.sayPhrasesPeriodically ? assistant.sayPhrasesPeriodically(assistant.phrases.waiting, 3000) : null;
+        moduleVar.assistant.sayPhrasesPeriodically ? moduleVar.assistant.sayPhrasesPeriodically(moduleVar.assistant.phrases.waiting, 3000) : null;
     } else {
         destroyTimer("flowRateTimer");
-        button.innerHTML = schetovodStringList["startButtonSpan"];
+        button.innerHTML = moduleVar.schetovodStringList["startButtonSpan"];
         button.setAttribute("started", "false");
 
-        if(assistant.sayResult){
-            assistant.sayResult(60000).then(() => {
-                assistant.sayPhrasesPeriodically(assistant.phrases.facts, 7000);
+        if(moduleVar.assistant.sayResult){
+            moduleVar.assistant.sayResult(60000).then(() => {
+                moduleVar.assistant.sayPhrasesPeriodically(moduleVar.assistant.phrases.facts, 7000);
             });
         }
     }
 }
 
 function standardCalculate() {
-    let volumeInput = document.querySelector("#volumeInput");
-    flowRate.volume = tryFormatToNumber(volumeInput.value);
-    if (flowRate.volume !== false) {
-        let seconds = getInputTimeInSeconds();
+    const volumeInput = document.querySelector("#volumeInput");
+    moduleVar.flowRate.volume = tryFormatToNumber(volumeInput.value);
+    if (moduleVar.flowRate.volume !== false) {
+        const seconds = getInputTimeInSeconds();
         if (seconds > 0) {
             showFlowRate(seconds);
-            if(assistant.sayResult) {
-                assistant.sayResult(60000).then(() => {
-                    assistant.sayPhrasesPeriodically(assistant.phrases.facts, 7000);
+            if(moduleVar.assistant.sayResult) {
+                moduleVar.assistant.sayResult(60000).then(() => {
+                    moduleVar.assistant.sayPhrasesPeriodically(moduleVar.assistant.phrases.facts, 7000);
                 });
             }
         }
@@ -207,51 +206,50 @@ function standardCalculate() {
 }
 
 function calculateRealTimeDifference(startTime) {
-    let endTime = getTimeInSeconds();
-    let seconds = (endTime - startTime).toFixed(2);
+    const endTime = getTimeInSeconds();
+    const seconds = (endTime - startTime).toFixed(2);
     showFlowRate(seconds);
 }
 
 function showFlowRate(currentSeconds) {
-    flowRate.litresPerMinute = (flowRate.volume / currentSeconds * 60).toFixed(1);
-    flowRate.litresPerHour = (flowRate.volume / currentSeconds * 3600).toFixed(0);
+    moduleVar.flowRate.litresPerMinute = (moduleVar.flowRate.volume / currentSeconds * 60).toFixed(1);
+    moduleVar.flowRate.litresPerHour = (moduleVar.flowRate.volume / currentSeconds * 3600).toFixed(0);
     document.querySelector("#currentTimeOutput").innerHTML = currentSeconds + " сек";
-    document.querySelector("#flowRateLMOutput").innerHTML = flowRate.litresPerMinute + " л/мин";
-    document.querySelector("#flowRateLHOutput").innerHTML = flowRate.litresPerHour + " л/час";
+    document.querySelector("#flowRateLMOutput").innerHTML = moduleVar.flowRate.litresPerMinute + " л/мин";
+    document.querySelector("#flowRateLHOutput").innerHTML = moduleVar.flowRate.litresPerHour + " л/час";
 
 }
 
 function getTimeInSeconds() {
-    let newTime = new Date();
+    const newTime = new Date();
     return (newTime.getHours() * 3600) + (newTime.getMinutes() * 60) + newTime.getSeconds() + (newTime.getMilliseconds() / 1000);
 }
 
 function getInputTimeInSeconds() {
-    let timeMass = document.querySelector("#userTimeInput").value.split(":");
+    const timeMass = document.querySelector("#userTimeInput").value.split(":");
     return Number(timeMass[0] * 3600) + Number(timeMass[1] * 60) + Number(timeMass[2]);
 }
 
 async function createAssistantBlock(container) {
-    let assistantContainer = createElement(container, "section", {id: "assistantContainer", class: "defaultContainer"});
+    const assistantContainer = createElement(container, "section", {id: "assistantContainer", class: "defaultContainer"});
 
-    assistant.image = createElement(assistantContainer, "img", {
+    moduleVar.assistant.image = createElement(assistantContainer, "img", {
         id: "assistantImage",
         src: "./assets/schetovod/assistant_default.png",
         ignoreColorsInvert: true
     });
-    assistant.text = createElement(assistantContainer, "div", {id: "assistantText"});
-    assistant.phrases = await getJSONData("./objects/assistantPhrases.json");
-    console.log(assistant.phrases);
-    assistant.stopSaying = function () {
+    moduleVar.assistant.text = createElement(assistantContainer, "div", {id: "assistantText"});
+    moduleVar.assistant.phrases = await getJSONData("./objects/assistantPhrases.json");
+    moduleVar.assistant.stopSaying = function () {
         destroyTimer("letterInterval");
         destroyTimer("sayPhrases");
     }
-    assistant.sayPhrase = function (text, emotion, nextOperationDelay) {
-        assistant.stopSaying();
+    moduleVar.assistant.sayPhrase = function (text, emotion, nextOperationDelay) {
+        moduleVar.assistant.stopSaying();
         return new Promise((resolve) => {
             let i = 0;
             this.text.innerHTML = "";
-            emotion !== undefined ? this.image.src = "./assets/schetovod/assistant_" + emotion + ".png" : this.image.src = "./assets/schetovod/assistant_default.png";
+            isExists(emotion) ? this.image.src = "./assets/schetovod/assistant_" + emotion + ".png" : this.image.src = "./assets/schetovod/assistant_default.png";
             setTimer("letterInterval", setInterval(() => {
                 if (i === text.length) {
                     destroyTimer("letterInterval");
@@ -265,37 +263,37 @@ async function createAssistantBlock(container) {
             }, 30));
         });
     };
-    assistant.sayPhrasesPeriodically = function (phrasesObj, delay, prevPhraseID) {
+    moduleVar.assistant.sayPhrasesPeriodically = function (phrasesObj, delay, prevPhraseID) {
         destroyTimer("sayPhrases");
-        let phraseID = randomInt(0, phrasesObj.length - 1, prevPhraseID);
+        const phraseID = randomInt(0, phrasesObj.length - 1, prevPhraseID);
 
-        assistant.sayPhrase(phrasesObj[phraseID].text, phrasesObj[phraseID].emotion, delay).then(() => {
-            assistant.sayPhrasesPeriodically(phrasesObj, delay, phraseID);
+        moduleVar.assistant.sayPhrase(phrasesObj[phraseID].text, phrasesObj[phraseID].emotion, delay).then(() => {
+            moduleVar.assistant.sayPhrasesPeriodically(phrasesObj, delay, phraseID);
         });
     }
-    assistant.sayResult = function (nextOperationDelay) {
+    moduleVar.assistant.sayResult = function (nextOperationDelay) {
         return new Promise((resolve) => {
-            let phrase = assistant.phrases.error;
-            if (flowRate.litresPerHour > 0 && flowRate.litresPerHour <= 400) { //bad
-                phrase = assistant.phrases.answer.bad[randomInt(0, assistant.phrases.answer.bad.length - 1)];
+            let phrase = moduleVar.assistant.phrases.error;
+            if (moduleVar.flowRate.litresPerHour > 0 && moduleVar.flowRate.litresPerHour <= 400) { //bad
+                phrase = moduleVar.assistant.phrases.answer.bad[randomInt(0, moduleVar.assistant.phrases.answer.bad.length - 1)];
 
-            } else if (flowRate.litresPerHour > 400 && flowRate.litresPerHour <= 1000) { //good
-                phrase = assistant.phrases.answer.good[randomInt(0, assistant.phrases.answer.good.length - 1)];
+            } else if (moduleVar.flowRate.litresPerHour > 400 && moduleVar.flowRate.litresPerHour <= 1000) { //good
+                phrase = moduleVar.assistant.phrases.answer.good[randomInt(0, moduleVar.assistant.phrases.answer.good.length - 1)];
 
-            } else if (flowRate.litresPerHour > 1000 && flowRate.litresPerHour <= 3000) { //great
-                phrase = assistant.phrases.answer.great[randomInt(0, assistant.phrases.answer.great.length - 1)];
+            } else if (moduleVar.flowRate.litresPerHour > 1000 && moduleVar.flowRate.litresPerHour <= 3000) { //great
+                phrase = moduleVar.assistant.phrases.answer.great[randomInt(0, moduleVar.assistant.phrases.answer.great.length - 1)];
 
-            } else if (flowRate.litresPerHour > 3000) { //best
-                phrase = assistant.phrases.answer.best[randomInt(0, assistant.phrases.answer.best.length - 1)];
+            } else if (moduleVar.flowRate.litresPerHour > 3000) { //best
+                phrase = moduleVar.assistant.phrases.answer.best[randomInt(0, moduleVar.assistant.phrases.answer.best.length - 1)];
 
             }
-            assistant.sayPhrase(phrase.text, phrase.emotion, nextOperationDelay).then(() => {
+            moduleVar.assistant.sayPhrase(phrase.text, phrase.emotion, nextOperationDelay).then(() => {
                 resolve(true);
             });
         });
     }
 
-    assistant.sayPhrase(schetovodStringList["assistantText"], "default", 5000).then(() => {
-        assistant.sayPhrasesPeriodically(assistant.phrases.facts, 7000);
+    moduleVar.assistant.sayPhrase(moduleVar.schetovodStringList["assistantText"], "default", 5000).then(() => {
+        moduleVar.assistant.sayPhrasesPeriodically(moduleVar.assistant.phrases.facts, 7000);
     });
 }

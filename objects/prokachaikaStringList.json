@@ -34,7 +34,8 @@
   "relayHAButton": "Настройки реле-гидроаккумулятор",
   "searchPumpSpan": "Найти в продаже:",
   "shareButton": "Поделиться",
-  "goComparePumpButton": "Сравнить",
+  "goComparePumpButton_add": "Сравнить",
+  "goComparePumpButton_remove": "Удалить из сравнения",
   "pI_closeButton": "Закрыть",
 
   "rHA_header": "Рекомендуемые настройки реле-ГА",

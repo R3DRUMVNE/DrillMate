@@ -4,83 +4,165 @@ import {
     appAlert,
     scrollController,
     linkNewStylesheet,
-    setCookie,
-    getCookie,
     getJSONData,
     appTheme_getColor,
     animateElement,
-    createElement, createSwitchContainer
+    createElement, createSwitchContainer, isJSON, appSettings_get, appDialog, isExists
 } from "./moduleScripts/jointScripts.js";
-import {addTempElement} from "./moduleScripts/buffer.js";
-
-let tehpasStringList = null;
-let passportHeaderImage;
-let currentFile;
-let passportMap = [];
+import {addTempElement, moduleVar, setTimer} from "./moduleScripts/buffer.js";
 
 export async function startTehPasModule(container, moduleName, moduleID) {
-    currentFile = "";
-    let tehpasArticle = createElement(container, "article", {id: "tehpasArticle"});
-    tehpasStringList = await getJSONData("./objects/tehpasStringList.json");
-    passportMap = await getJSONData("./objects/passportMap.json");
+    moduleVar.currentFile = "";
+    moduleVar.passportHeaderImage = undefined;
+    moduleVar.tehpasStringList = await getJSONData("./objects/tehpasStringList.json");
+    moduleVar.passportMap = await getJSONData("./objects/passportMap.json");
 
-    passportHeaderImage = undefined;
+    const tehpasArticle = createElement(container, "article", {id: "tehpasArticle"});
     createModuleHeader(moduleName, moduleID, tehpasArticle).then();
     createControls(tehpasArticle);
     createInputBlocks(tehpasArticle);
     createGeoSectionBlock(tehpasArticle);
     createFormPassportButton(tehpasArticle);
-    if (getCookie("tehpas-firstTime") === undefined) {
-        let currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + 14);
-        setCookie("tehpas-firstTime", false, {expires: currentDate});
-        appAlert("Внимание", "Для корректного отображения техпаспорта на печати рекомендуется использовать браузер Google Chrome");
+    checkBrowserReminder().then(() =>{
+        checkSavedHistory().then();
+    });
+}
+
+async function checkSavedHistory() {
+    moduleVar.tehpasHistory = {
+        list: null,
+        emptyList: getDataToSave(),
+        get(){
+            moduleVar.tehpasHistory.list = localStorage.getItem("tehpas.history");
+        },
+        set(JSONString){
+            this.list = JSONString;
+            localStorage.setItem("tehpas.history", this.list);
+        },
+        refreshPeriodically: function (refreshDelay){
+            setTimer("tehpasHistoryRefresh", setInterval(function (){
+                if(appSettings_get("tehpasSaveHistory")){
+                    moduleVar.tehpasHistory.set(getDataToSave());
+                }
+            }, refreshDelay));
+        },
+    };
+
+    if (appSettings_get("tehpasSaveHistory")) {
+        moduleVar.tehpasHistory.get();
+        if(Object.prototype.toString.call(JSON.parse(moduleVar.tehpasHistory.list)) === "[object Object]" && moduleVar.tehpasHistory.list !== moduleVar.tehpasHistory.emptyList){
+            const answer = await appDialog("Восстановление сеанса", "Хотите восстановить данные последнего сеанса?", [{text: "Да", value: "yes"}, {text: "Нет", value: "no"}]);
+            switch (answer) {
+                case "yes":
+                    setReadedData(moduleVar.tehpasHistory.list);
+                    break;
+                case "no":
+                    moduleVar.tehpasHistory.set(null);
+                    break;
+            }
+        }
     }
+    moduleVar.tehpasHistory.refreshPeriodically(30000);
+}
+
+function checkBrowserReminder() {
+    return new Promise(async resolve => {
+        let browserReminderISODate = localStorage.getItem("tehpas.browserReminderISODate");
+        if (!Date.parse(browserReminderISODate)) {
+            await updateAndAlert();
+        } else {
+            const browserReminderDate = new Date(browserReminderISODate);
+            const currentDate = new Date();
+            if (Math.floor((currentDate - browserReminderDate) / (1000 * 60 * 60 * 24)) >= 14) {
+                await updateAndAlert();
+            }
+        }
+        resolve();
+
+        function updateAndAlert() {
+            return new Promise(resolve => {
+                browserReminderISODate = new Date().toISOString();
+                localStorage.setItem("tehpas.browserReminderISODate", browserReminderISODate);
+                appAlert("Внимание", moduleVar.tehpasStringList["browserReminder"]).then(() =>{
+                    resolve();
+                });
+            });
+        }
+    });
 }
 
 function createInputBlocks(container) {
-    for (let i = 0; i < passportMap.length; i++) {
-        let block = createElement(container, "section", {id: passportMap[i].header + "Block", class: "unPadContainer"});
+    for (let i = 0; i < moduleVar.passportMap.length; i++) {
+        const block = createElement(container, "section", {id: moduleVar.passportMap[i].header + "Block", class: "unPadContainer"});
 
-        createElement(block, "div", {id: passportMap[i].header + "Header", class: "defaultContainer blockHeader"}, tehpasStringList);
+        createElement(block, "div", {
+            id: moduleVar.passportMap[i].header + "Header",
+            class: "defaultContainer blockHeader"
+        }, moduleVar.tehpasStringList);
 
-        if(passportMap[i].displayBlockCheckbox || passportMap[i].toNextPageCheckbox){
-            let blockCheckboxContainer = createElement(block, "div", {id: block.id +"CheckboxContainer", class: "blockCheckboxContainer"});
-            if(passportMap[i].displayBlockCheckbox){
-                createSwitchContainer(blockCheckboxContainer, {},{id: block.id + "Checkbox", file: "cb"}, {id: block.id + "CheckboxLabel"}, tehpasStringList);
+        if (moduleVar.passportMap[i].displayBlockCheckbox || moduleVar.passportMap[i].toNextPageCheckbox) {
+            const blockCheckboxContainer = createElement(block, "div", {
+                id: block.id + "CheckboxContainer",
+                class: "blockCheckboxContainer"
+            });
+            if (moduleVar.passportMap[i].displayBlockCheckbox) {
+                createSwitchContainer(blockCheckboxContainer, {}, {
+                    id: block.id + "Checkbox",
+                    file: "cb"
+                }, {id: block.id + "CheckboxLabel"}, moduleVar.tehpasStringList);
             }
-            if(passportMap[i].toNextPageCheckbox){
-                createSwitchContainer(blockCheckboxContainer, {}, {id: block.id + "ToNextPageCheckbox", file: "cb"}, {id: "toNextPageCheckboxLabel"}, tehpasStringList);
+            if (moduleVar.passportMap[i].toNextPageCheckbox) {
+                createSwitchContainer(blockCheckboxContainer, {}, {
+                    id: block.id + "ToNextPageCheckbox",
+                    file: "cb"
+                }, {id: "toNextPageCheckboxLabel"}, moduleVar.tehpasStringList);
             }
         }
 
-        let itemsContainer = createElement(block, "div", {id: block.id + "Items"});
+        const itemsContainer = createElement(block, "div", {id: block.id + "Items"});
 
         let inputContainer;
-        for (let j = 0; j < passportMap[i].input.length; j++) {
-            if (passportMap[i].input[j].checkbox) {
+        for (let j = 0; j < moduleVar.passportMap[i].input.length; j++) {
+            if (moduleVar.passportMap[i].input[j].checkbox) {
                 inputContainer = createElement(itemsContainer, "div", {class: "inputContainer"});
 
-                createElement(inputContainer, "input", {id: passportMap[i].input[j].name + "Checkbox", class: "cb", type: "checkbox", file: "cb", checked: ""});
+                createElement(inputContainer, "input", {
+                    id: moduleVar.passportMap[i].input[j].name + "Checkbox",
+                    class: "cb",
+                    type: "checkbox",
+                    file: "cb",
+                    checked: ""
+                });
             } else {
                 inputContainer = createElement(itemsContainer, "div", {class: "inputContainerNoCheckbox"});
             }
 
-            if (tehpasStringList[passportMap[i].input[j].name + "Span"] !== undefined) {
-                createElement(inputContainer, "span", {id: passportMap[i].input[j].name + "Span", class: "lb"}, tehpasStringList);
+            if (isExists(moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"])) {
+                createElement(inputContainer, "span", {
+                    id: moduleVar.passportMap[i].input[j].name + "Span",
+                    class: "lb"
+                }, moduleVar.tehpasStringList);
             }
 
-            if (passportMap[i].input[j].kind === "input" || passportMap[i].input[j].kind === "textarea") {
-                let input = createElement(inputContainer, passportMap[i].input[j].kind, {id: passportMap[i].input[j].name, class: "inp", file: "inp"});
-                if (passportMap[i].input[j].type !== null) {
-                    input.setAttribute("type", passportMap[i].input[j].type);
+            if (moduleVar.passportMap[i].input[j].kind === "input" || moduleVar.passportMap[i].input[j].kind === "textarea") {
+                const input = createElement(inputContainer, moduleVar.passportMap[i].input[j].kind, {
+                    id: moduleVar.passportMap[i].input[j].name,
+                    class: "inp",
+                    file: "inp"
+                });
+                if (isExists(moduleVar.passportMap[i].input[j].type)) {
+                    input.setAttribute("type", moduleVar.passportMap[i].input[j].type);
                 }
                 if (input.type !== "datetime-local") {
-                    input.placeholder = tehpasStringList[passportMap[i].input[j].name + "Hint"];
+                    input.placeholder = moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Hint"];
                 }
                 inputContainer.id = input.id + "Container";
-            } else if (passportMap[i].input[j].kind === "select") {
-                let select = createElement(inputContainer, passportMap[i].input[j].kind, {id: passportMap[i].input[j].name, class: "inp", file: "inp"}, tehpasStringList);
+            } else if (moduleVar.passportMap[i].input[j].kind === "select") {
+                const select = createElement(inputContainer, moduleVar.passportMap[i].input[j].kind, {
+                    id: moduleVar.passportMap[i].input[j].name,
+                    class: "inp",
+                    file: "inp"
+                }, moduleVar.tehpasStringList);
                 inputContainer.id = select.id + "Container";
             }
         }
@@ -95,7 +177,7 @@ function createInputBlocks(container) {
     document.querySelector("#startWork").oninput = function () {
         if (document.querySelector("#endWork").value === "") {
             const startDate = new Date(document.querySelector("#startWork").value);
-            let endDate = new Date(startDate);
+            const endDate = new Date(startDate);
             endDate.setHours(startDate.getHours() + 6);
             const tzOffset = (new Date()).getTimezoneOffset() * 60000;
             document.querySelector("#endWork").value = (new Date(endDate - tzOffset)).toISOString().slice(0, -1);
@@ -104,72 +186,88 @@ function createInputBlocks(container) {
 }
 
 function createFormPassportButton(container) {
-    let printControlContainer = createElement(container, "section", {id: "printControlContainer", class: "defaultContainer"});
+    const printControlContainer = createElement(container, "section", {
+        id: "printControlContainer",
+        class: "defaultContainer"
+    });
 
-    let printCheckboxContainer = createElement(printControlContainer, "div", {id: "printCheckboxContainer", class: "blockCheckboxContainer"});
+    const printCheckboxContainer = createElement(printControlContainer, "div", {
+        id: "printCheckboxContainer",
+        class: "blockCheckboxContainer"
+    });
 
-    let dsPrintCheckbox = createSwitchContainer(printCheckboxContainer, {}, {id: "dsPrintCheckbox", file: "cb"}, {id: "dsPrintLabel"}, tehpasStringList);
+    const dsPrintCheckbox = createSwitchContainer(printCheckboxContainer, {}, {
+        id: "dsPrintCheckbox",
+        file: "cb"
+    }, {id: "dsPrintLabel"}, moduleVar.tehpasStringList);
     dsPrintCheckbox.onchange = function () {
         if (this.checked) {
             linkNewStylesheet("dsPrint");
-            if (document.querySelector("#osPrint") !== null) {
-                document.querySelector("#osPrint").remove();
+            const osPrint = document.querySelector("#osPrint");
+            if (isExists(osPrint)) {
+                osPrint.remove();
             }
         } else {
             linkNewStylesheet("osPrint");
-            if (document.querySelector("#dsPrint") !== null) {
-                document.querySelector("#dsPrint").remove();
+            const dsPrint = document.querySelector("#dsPrint");
+            if (isExists(dsPrint)) {
+                dsPrint.remove();
             }
         }
     }
     dsPrintCheckbox.dispatchEvent(new Event('change'));
-    createSwitchContainer(printCheckboxContainer, {}, {id: "signaturesPrintCheckbox", file: "cb", checked: ""}, {id: "signaturesPrintLabel"}, tehpasStringList);
+    createSwitchContainer(printCheckboxContainer, {}, {
+        id: "signaturesPrintCheckbox",
+        file: "cb",
+        checked: ""
+    }, {id: "signaturesPrintLabel"}, moduleVar.tehpasStringList);
 
-    let formPassButton = createElement(printControlContainer, "button", {id: "formPassButton"}, tehpasStringList);
+    const formPassButton = createElement(printControlContainer, "button", {id: "formPassButton"}, moduleVar.tehpasStringList);
     formPassButton.onclick = function () {
 
         let error = createPassport();
         if (error === false) {
             window.print();
         } else {
-            appAlert("Ошибка", error);
+            appAlert("Ошибка", error).then();
         }
     }
 }
 
 function createPassport() {
-    if (document.querySelector("#passportContainer") !== null) {
-        document.querySelector("#passportContainer").remove();
+    let passportContainer = document.querySelector("#passportContainer");
+    if (isExists(passportContainer)) {
+        passportContainer.remove();
     }
 
     let error = false;
 
-    let passportContainer = createElement(document.body, "div", {id: "passportContainer", class: "print"});
+    passportContainer = createElement(document.body, "div", {id: "passportContainer", class: "print"});
     addTempElement(passportContainer.id);
 
     createElement(passportContainer, "div", {id: "frame"});
 
-    if (passportHeaderImage !== undefined) {
-        passportContainer.appendChild(passportHeaderImage);
+    if (isExists(moduleVar.passportHeaderImage)) {
+        passportContainer.appendChild(moduleVar.passportHeaderImage);
     }
 
-    let passportHeaderContainer = createElement(passportContainer, "div", {id: "passportHeaderContainer"});
+    const passportHeaderContainer = createElement(passportContainer, "div", {id: "passportHeaderContainer"});
 
-    let passportHeaderSpan = createElement(passportHeaderContainer, "span", {id: "passportHeaderSpan"}, tehpasStringList);
+    const passportHeaderSpan = createElement(passportHeaderContainer, "span", {id: "passportHeaderSpan"}, moduleVar.tehpasStringList);
 
-    createElement(passportHeaderContainer, "span", {id: "passportUnderHeaderSpan"}, tehpasStringList);
+    createElement(passportHeaderContainer, "span", {id: "passportUnderHeaderSpan"}, moduleVar.tehpasStringList);
 
-    for (let i = 0; i < passportMap.length; i++) {
+    for (let i = 0; i < moduleVar.passportMap.length; i++) {
         let hideBlock = false;
-        if (passportMap[i].displayBlockCheckbox) {
-            if (!document.querySelector("#" + passportMap[i].header + "BlockCheckbox").checked) {
+        if (moduleVar.passportMap[i].displayBlockCheckbox) {
+            if (!document.querySelector("#" + moduleVar.passportMap[i].header + "BlockCheckbox").checked) {
                 hideBlock = true;
             }
         }
         if (!hideBlock) {
-            let tableBlock = createElement(passportContainer, "table", {class: "tableBlock"});
-            if(passportMap[i].toNextPageCheckbox){
-                if(document.querySelector("#" + passportMap[i].header + "BlockToNextPageCheckbox").checked){
+            const tableBlock = createElement(passportContainer, "table", {class: "tableBlock"});
+            if (moduleVar.passportMap[i].toNextPageCheckbox) {
+                if (document.querySelector("#" + moduleVar.passportMap[i].header + "BlockToNextPageCheckbox").checked) {
                     tableBlock.className = "tableBlock breakBefore";
                 }
             }
@@ -177,45 +275,45 @@ function createPassport() {
             createElement(tableBlock, "col");
             createElement(tableBlock, "col");
 
-            createElement(tableBlock, "caption", {class: "tableCaption"}, tehpasStringList[passportMap[i].header + "Header"]);
+            createElement(tableBlock, "caption", {class: "tableCaption"}, moduleVar.tehpasStringList[moduleVar.passportMap[i].header + "Header"]);
 
-            for (let j = 0; j < passportMap[i].input.length; j++) {
-                if (passportMap[i].input[j].name === "passNumber") {
-                    if (document.querySelector("#" + passportMap[i].input[j].name + "Checkbox").checked) {
-                        if (document.querySelector("#" + passportMap[i].input[j].name).value === "") {
+            for (let j = 0; j < moduleVar.passportMap[i].input.length; j++) {
+                if (moduleVar.passportMap[i].input[j].name === "passNumber") {
+                    if (document.querySelector("#" + moduleVar.passportMap[i].input[j].name + "Checkbox").checked) {
+                        if (document.querySelector("#" + moduleVar.passportMap[i].input[j].name).value === "") {
                             passportHeaderSpan.innerHTML += " №_____";
                         } else {
-                            passportHeaderSpan.innerHTML += " №" + document.querySelector("#" + passportMap[i].input[j].name).value;
+                            passportHeaderSpan.innerHTML += " №" + document.querySelector("#" + moduleVar.passportMap[i].input[j].name).value;
                         }
                     }
-                } else if (passportMap[i].input[j].checkbox) {
-                    if (!document.querySelector("#" + passportMap[i].input[j].name + "Checkbox").checked) {
-                        passportMap[i].input[j].passportDisplay = false;
-                        if (passportMap[i].header === "wb") {
+                } else if (moduleVar.passportMap[i].input[j].checkbox) {
+                    if (!document.querySelector("#" + moduleVar.passportMap[i].input[j].name + "Checkbox").checked) {
+                        moduleVar.passportMap[i].input[j].passportDisplay = false;
+                        if (moduleVar.passportMap[i].header === "wb") {
                             tableBlock.remove();
                         }
                     } else {
-                        passportMap[i].input[j].passportDisplay = true;
+                        moduleVar.passportMap[i].input[j].passportDisplay = true;
                     }
                 }
 
-                if (passportMap[i].input[j].passportDisplay) {
-                    if (passportMap[i].input[j].inTableVision.includes("default")) {
-                        let row = tableBlock.insertRow();
+                if (moduleVar.passportMap[i].input[j].passportDisplay) {
+                    if (moduleVar.passportMap[i].input[j].inTableVision.includes("default")) {
+                        const row = tableBlock.insertRow();
                         let cell = row.insertCell();
-                        cell.innerHTML = tehpasStringList[passportMap[i].input[j].name + "Span"];
+                        cell.innerHTML = moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"];
                         cell = row.insertCell();
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
-                    } else if (passportMap[i].input[j].inTableVision.includes("noSpan")) {
-                        let row = tableBlock.insertRow();
-                        let cell = row.insertCell();
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
+                    } else if (moduleVar.passportMap[i].input[j].inTableVision.includes("noSpan")) {
+                        const row = tableBlock.insertRow();
+                        const cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
-                    } else if (passportMap[i].input[j].inTableVision.includes("upperSpan")) {
-                        let row = tableBlock.insertRow();
-                        let cell = row.insertCell();
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
+                    } else if (moduleVar.passportMap[i].input[j].inTableVision.includes("upperSpan")) {
+                        const row = tableBlock.insertRow();
+                        const cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = "<b>" + tehpasStringList[passportMap[i].input[j].name + "Span"] + "</b><br>" + getValueFromElement(document.querySelector("#" + passportMap[i].input[j].name));
+                        cell.innerHTML = "<b>" + moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"] + "</b><br>" + getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
                     }
                 }
             }
@@ -257,11 +355,11 @@ function createPassport() {
 }
 
 function createSignaturesTable(container) {
-    let signTable = createElement(container, "table", {id: "signTable"});
+    const signTable = createElement(container, "table", {id: "signTable"});
 
-    createElement(signTable, "caption", {}, tehpasStringList["signaturesTableHeader"]);
+    createElement(signTable, "caption", {}, moduleVar.tehpasStringList["signaturesTableHeader"]);
 
-    let tableScheme = [
+    const tableScheme = [
         ["jobDone / leftText", null, null],
         ["drillMasterSpan / noBreak leftText", "signatureField / noBreak", "drillMaster / noBreak"],
         [null, null, "dateField"],
@@ -275,22 +373,22 @@ function createSignaturesTable(container) {
     createElement(signTable, "col", {style: "width: 50%;"});
 
     for (let i = 0; i < tableScheme.length; i++) {
-        let signTableRow = signTable.insertRow();
+        const signTableRow = signTable.insertRow();
         for (let j = 0; j < tableScheme[i].length; j++) {
-            let signTableCell = signTableRow.insertCell();
-            if (tableScheme[i][j] !== null) {
+            const signTableCell = signTableRow.insertCell();
+            if (isExists(tableScheme[i][j])) {
                 if (tableScheme[i][j].includes(" / ")) {
-                    let spanName = tableScheme[i][j].split(" / ")[0];
-                    let spanClass = tableScheme[i][j].split(" / ")[1];
+                    const spanName = tableScheme[i][j].split(" / ")[0];
+                    const spanClass = tableScheme[i][j].split(" / ")[1];
                     if (spanName === "drillMaster" || spanName === "customer") {
                         if (document.querySelector("#" + spanName).value.trim() !== "") {
                             signTableCell.innerHTML = document.querySelector("#" + spanName).value.trim();
                         } else {
-                            signTableCell.innerHTML = tehpasStringList["transcriptField"];
+                            signTableCell.innerHTML = moduleVar.tehpasStringList["transcriptField"];
                         }
                         signTableCell.className = spanClass;
                     } else {
-                        signTableCell.innerHTML = tehpasStringList[spanName];
+                        signTableCell.innerHTML = moduleVar.tehpasStringList[spanName];
                         signTableCell.className = spanClass;
                     }
                 } else {
@@ -298,10 +396,10 @@ function createSignaturesTable(container) {
                         if (document.querySelector("#" + tableScheme[i][j]).value.trim() !== "") {
                             signTableCell.innerHTML = document.querySelector("#" + tableScheme[i][j]).value.trim();
                         } else {
-                            signTableCell.innerHTML = tehpasStringList["transcriptField"];
+                            signTableCell.innerHTML = moduleVar.tehpasStringList["transcriptField"];
                         }
                     } else {
-                        signTableCell.innerHTML = tehpasStringList[tableScheme[i][j]];
+                        signTableCell.innerHTML = moduleVar.tehpasStringList[tableScheme[i][j]];
                     }
 
                 }
@@ -312,32 +410,32 @@ function createSignaturesTable(container) {
 
 function createGeoSectionTable(container) {
     let error = false;
-    let gsTable = createElement(container, "table", {id: "gsTable"});
-    if(document.querySelector("#gsBlockToNextPageCheckbox").checked){
+    const gsTable = createElement(container, "table", {id: "gsTable"});
+    if (document.querySelector("#gsBlockToNextPageCheckbox").checked) {
         gsTable.className = "breakBefore";
     }
 
-    let colWidth = [21, 25, 2, 3, 2, 3, 2, 3, 2, 37];
+    const colWidth = [21, 25, 2, 3, 2, 3, 2, 3, 2, 37];
     for (let i = 0; i < colWidth.length; i++) {
-        let col = createElement(gsTable, "col", {});
+        const col = createElement(gsTable, "col", {});
         col.width = colWidth[i] + "%";
     }
 
-    createElement(gsTable, "caption", {}, tehpasStringList["geoSectionHeader"]);
-    let headerRow = gsTable.insertRow();
+    createElement(gsTable, "caption", {}, moduleVar.tehpasStringList["geoSectionHeader"]);
+    const headerRow = gsTable.insertRow();
     headerRow.className = "headerRow";
     let headerCell;
-    for (let i = 0; i < tehpasStringList["gsTableHeader"].length; i++) {
+    for (let i = 0; i < moduleVar.tehpasStringList["gsTableHeader"].length; i++) {
         headerCell = headerRow.insertCell();
-        headerCell.innerHTML = tehpasStringList["gsTableHeader"][i];
+        headerCell.innerHTML = moduleVar.tehpasStringList["gsTableHeader"][i];
     }
     headerCell.colSpan = 8;
 
-    let layersContainer = document.querySelector("#layersContainer");
+    const layersContainer = document.querySelector("#layersContainer");
     const wellScheme = ["firstCasing", "firstCasingVoid", "firstWaterIntakePipe", "waterIntakePipeVoid", "secondWaterIntakePipe", "secondCasingVoid", "secondCasing"];
 
-    let staticLevelNum = tryFormatToNumber(document.querySelector("#staticLevel").value);
-    let lastDepth = tryFormatToNumber(layersContainer.lastElementChild.querySelector("#endDepth").value);
+    const staticLevelNum = tryFormatToNumber(document.querySelector("#staticLevel").value);
+    const lastDepth = tryFormatToNumber(layersContainer.lastElementChild.querySelector("#endDepth").value);
 
     if (staticLevelNum === false && document.querySelector("#gsDrawSLCheckbox").checked) {
         return "Параметры скважины: Статический уровень должен быть записан числом!";
@@ -348,11 +446,10 @@ function createGeoSectionTable(container) {
     }
 
     for (let i = 0; i < layersContainer.children.length; i++) {
-        let startDepthNum = tryFormatToNumber(layersContainer.children[i].querySelector("#startDepth").value);
-        let endDepthNum = tryFormatToNumber(layersContainer.children[i].querySelector("#endDepth").value);
+        const startDepthNum = tryFormatToNumber(layersContainer.children[i].querySelector("#startDepth").value);
+        const endDepthNum = tryFormatToNumber(layersContainer.children[i].querySelector("#endDepth").value);
         if (startDepthNum !== false && endDepthNum !== false) {
             if (document.querySelector("#gsDrawSLCheckbox").checked) {
-                //console.log(staticLevelNum + " >= " + startDepthNum + "; " + staticLevelNum + " < " + endDepthNum + " : ", staticLevelNum >= startDepthNum && staticLevelNum < endDepthNum);
                 if (staticLevelNum >= startDepthNum && staticLevelNum < endDepthNum) {
                     addRow(gsTable, layersContainer, i, startDepthNum, staticLevelNum);
                     addRow(gsTable, layersContainer, i, staticLevelNum, endDepthNum);
@@ -372,7 +469,7 @@ function createGeoSectionTable(container) {
     error = drawWellConstruction(gsTable);
 
     function addRow(table, layersContainer, i, startDepth, endDepth) {
-        let tableLayerRow = table.insertRow();
+        const tableLayerRow = table.insertRow();
         for (let j = 0; j < 10; j++) {
             tableLayerRow.insertCell();
         }
@@ -532,9 +629,9 @@ function drawWellConstruction(table) {
 
     function drawStaticLevel(depthCell, cell) {
         if (document.querySelector("#gsDrawSLCheckbox").checked) {
-            let staticLevel = tryFormatToNumber(document.querySelector("#staticLevel").value);
-            let start = tryFormatToNumber(depthCell.innerHTML.split("-")[0].trim());
-            let end = tryFormatToNumber(depthCell.innerHTML.split("-")[1].trim());
+            const staticLevel = tryFormatToNumber(document.querySelector("#staticLevel").value);
+            const start = tryFormatToNumber(depthCell.innerHTML.split("-")[0].trim());
+            const end = tryFormatToNumber(depthCell.innerHTML.split("-")[1].trim());
             if (start !== false && end !== false) {
                 if (start >= staticLevel || (start >= staticLevel && end < staticLevel)) {
                     cell.style.backgroundColor = "DodgerBlue";
@@ -552,235 +649,253 @@ function drawWellConstruction(table) {
 }
 
 function createControls(container) {
-    let controlsDiv = createElement(container, "section", {id: "controlsDiv"});
+    const controlsDiv = createElement(container, "section", {id: "controlsDiv"});
 
-    let headerUploadButton = createElement(controlsDiv, "input", {id: "headerUploadButton", type: "file", accept: "image/*"});
+    const headerUploadButton = createElement(controlsDiv, "input", {
+        id: "headerUploadButton",
+        type: "file",
+        accept: "image/*"
+    });
     headerUploadButton.onchange = function () {
         if (this.value.trim() !== "") {
-            let imageFile = this.files[0];
+            const imageFile = this.files[0];
             if (imageFile.type.includes("image/")) {
-                let img = new Image();
+                const img = new Image();
                 img.src = URL.createObjectURL(imageFile);
                 img.onload = function () {
                     if (img.naturalWidth !== 900 || img.naturalHeight > 150) {
-                        appAlert("Ошибка", "Недопустимые размеры изображения. Размеры для шапки техпаспорта:<br>Ширина: 900px<br>Высота: не более 150px");
+                        appAlert("Ошибка", "Недопустимые размеры изображения. Размеры для шапки техпаспорта:<br>Ширина: 900px<br>Высота: не более 150px").then();
                     } else {
                         img.id = "passportHeaderImage";
-                        passportHeaderImage = img;
+                        moduleVar.passportHeaderImage = img;
                         headerUploadLabel.style.backgroundColor = appTheme_getColor("ready");
                         headerUploadButton.value = "";
                         URL.revokeObjectURL(img.src);
                     }
                 }
             } else {
-                appAlert("Ошибка", "Файл \"" + imageFile.name + "\" не является изображением");
+                appAlert("Ошибка", "Файл \"" + imageFile.name + "\" не является изображением").then();
             }
         }
     }
-    let headerUploadLabel = createElement(controlsDiv, "label", {id: "headerUploadLabel", for: "headerUploadButton", class: "of"}, tehpasStringList);
+    const headerUploadLabel = createElement(controlsDiv, "label", {
+        id: "headerUploadLabel",
+        for: "headerUploadButton",
+        class: "of"
+    }, moduleVar.tehpasStringList);
     headerUploadLabel.onclick = function () {
         this.style.backgroundColor = appTheme_getColor("button");
     }
 
-    let openFileButton = createElement(controlsDiv, "input", {id: "openFileButton", type: "file", accept: ".tehpas"});
+    const openFileButton = createElement(controlsDiv, "input", {id: "openFileButton", type: "file", accept: ".tehpas"});
     openFileButton.onchange = function () {
         if (this.value.trim() !== "") {
-            let inputFile = this.files[0];
+            const inputFile = this.files[0];
             if (inputFile.name.split(".").pop() === "tehpas") {
-                let fr = new FileReader();
+                const fr = new FileReader();
                 fr.onloadend = function () {
                     openFileLabel.style.backgroundColor = appTheme_getColor("ready");
-                    currentFile = inputFile.name.replace(".tehpas", "");
-                    let fileText = this.result;
-                    setReadedData(fileText);
+                    moduleVar.currentFile = inputFile.name.replace(".tehpas", "");
+                    isJSON(this.result) ? setReadedData(this.result) : appAlert("Ошибка", "Ошибка преобразования данных файла в JSON").then();
                     openFileButton.value = "";
                 }
                 fr.onerror = function () {
-                    appAlert("Ошибка", "Ошибка чтения файла \"" + inputFile.name + "\"");
+                    appAlert("Ошибка", "Ошибка чтения файла \"" + inputFile.name + "\"").then();
                 }
                 fr.readAsText(inputFile);
             } else {
-                appAlert("Ошибка", "Файл \"" + inputFile.name + "\" не имеет расширения \".tehpas\"");
+                appAlert("Ошибка", "Файл \"" + inputFile.name + "\" не имеет расширения \".tehpas\"").then();
             }
         }
     }
-    let openFileLabel = createElement(controlsDiv, "label", {id: "openFileLabel", for: "openFileButton", class: "of"}, tehpasStringList);
+    const openFileLabel = createElement(controlsDiv, "label", {
+        id: "openFileLabel",
+        for: "openFileButton",
+        class: "of"
+    }, moduleVar.tehpasStringList);
     openFileLabel.onclick = function () {
         this.style.backgroundColor = appTheme_getColor("button");
-        currentFile = "";
+        moduleVar.currentFile = "";
     }
 
-    let saveButton = createElement(controlsDiv, "button", {id: "saveFileButton"}, tehpasStringList);
+    const saveButton = createElement(controlsDiv, "button", {id: "saveFileButton"}, moduleVar.tehpasStringList);
     saveButton.onclick = function () {
         showFileSaveDialog();
     }
 }
 
-function setReadedData(content) {
-    let rowData = content.split("\n");
-    let newLayer = null, layerElements = false, cleanContainer = false;
-    let layersContainer = document.querySelector("#layersContainer");
-    for (let i = 0; i < rowData.length; i++) {
-        if (rowData[i] !== "") {
-            if (rowData[i] === "#LAYER#") {
-                if (!cleanContainer) {
-                    cleanContainer = true;
-                    layersContainer.innerHTML = "";
-                }
-                newLayer = addLayer(null, layersContainer);
-                layerElements = true;
-            } else if (layerElements) {
-                let element = newLayer.querySelector("#" + rowData[i].split("#:# ")[0]);
-                element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
-                if (element.id === "layerColor") element.dispatchEvent(new Event('change'));
-            } else {
-                layerElements = false;
-                let element = document.querySelector("#" + rowData[i].split("#:# ")[0]);
-                if (element !== null) {
-                    if (element.getAttribute("file") === "cb") {
-                        element.checked = JSON.parse(rowData[i].split("#:# ")[1]);
-                        element.dispatchEvent(new Event('change'));
-                    } else if (element.getAttribute("file") === "inp") {
-                        element.value = rowData[i].split("#:# ")[1].replaceAll("<br>", "\n");
-                    }
+function setReadedData(JSONString) {
+    const data = JSON.parse(JSONString);
+    for (let field in data.fields) {
+        const element = document.querySelector("#" + field);
+        if (element) {
+            const loadAsAttr = element.getAttribute("file")
+            loadAsAttr === "cb" ? element.checked = JSON.parse(data.fields[field]) : null;
+            loadAsAttr === "inp" ? element.value = data.fields[field] : null;
+        }
+    }
+
+    const layersContainer = document.querySelector("#layersContainer");
+    layersContainer.innerHTML = "";
+    if (data.layers !== []) {
+        data.layers.forEach(fileLayer => {
+            const newLayer = addLayer(null, layersContainer);
+            for (let fileLayerField in fileLayer) {
+                const layerField = newLayer.querySelector("#" + fileLayerField);
+                if (layerField) {
+                    layerField.value = fileLayer[fileLayerField];
+                    layerField.id === "layerColor" ? layerField.dispatchEvent(new Event("change")) : null;
                 }
             }
-        }
+        });
     }
 }
 
 function showFileSaveDialog() {
-    scrollController.disableBodyScrolling();
-    let fileSaveContainer = createElement(document.body, "div", {id: "fileSaveContainer", class: "unPadContainer popUp"});
+    scrollController.disableBodyScrolling().then();
+    const fileSaveContainer = createElement(document.body, "div", {
+        id: "fileSaveContainer",
+        class: "unPadContainer popUp"
+    });
 
-    createElement(fileSaveContainer, "div", {id: "fileSaveHeader", class: "defaultContainer"}, tehpasStringList);
+    createElement(fileSaveContainer, "div", {id: "fileSaveHeader", class: "defaultContainer"}, moduleVar.tehpasStringList);
 
-    let itemsContainer = createElement(fileSaveContainer, "div", {class: "itemsContainer"});
+    const itemsContainer = createElement(fileSaveContainer, "div", {class: "itemsContainer"});
 
-    let inpContainer = createElement(itemsContainer, "div", {class: "inpContainer"});
+    const inpContainer = createElement(itemsContainer, "div", {class: "inpContainer"});
 
-    createElement(inpContainer, "span", {id: "fileNameSpan"}, tehpasStringList);
-    let fileName = createElement(inpContainer, "input", {id: "fileName", type: "text"});
-    fileName.value = currentFile;
-    fileName.placeholder = tehpasStringList[fileName.id + "Hint"];
+    createElement(inpContainer, "span", {id: "fileNameSpan"}, moduleVar.tehpasStringList);
+    const fileName = createElement(inpContainer, "input", {id: "fileName", type: "text"});
+    fileName.value = moduleVar.currentFile;
+    fileName.placeholder = moduleVar.tehpasStringList[fileName.id + "Hint"];
 
-    let buttonsContainer = createElement(itemsContainer, "div", {id: "buttonsContainer"});
+    const buttonsContainer = createElement(itemsContainer, "div", {id: "buttonsContainer"});
 
-    let saveFileButton = createElement(buttonsContainer, "button", {id: "saveFileButton"}, tehpasStringList);
+    const saveFileButton = createElement(buttonsContainer, "button", {id: "saveFileButton"}, moduleVar.tehpasStringList);
     saveFileButton.onclick = function () {
-        if (fileName.value.trim() !== "") {
-            saveFile(fileName.value, getDataToSave());
-        } else {
-            saveFile("drillmate_tehpas", getDataToSave());
-        }
+        fileName.value.trim() !== "" ? saveFile(fileName.value, getDataToSave()) : saveFile("drillmate_tehpas", getDataToSave());
         closeButton.onclick();
     }
 
-    let closeButton = createElement(buttonsContainer, "button", {id: "closeButton"}, "Закрыть");
+    const closeButton = createElement(buttonsContainer, "button", {id: "closeButton"}, "Закрыть");
     closeButton.onclick = function () {
-        scrollController.enableBodyScrolling();
+        scrollController.enableBodyScrolling().then();
         fileSaveContainer.remove();
     }
 
 }
 
 function getDataToSave() {
-    let data = "";
-    let elements = Array.from(document.querySelectorAll("[file]"));
+    const data = {};
+    const fieldsToSave = document.querySelectorAll("[file]");
 
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].getAttribute("file") === "cb") {
-            data += elements[i].id + "#:# " + elements[i].checked + "\n";
-        } else if (elements[i].getAttribute("file") === "inp" && elements[i].value !== "") {
-            data += elements[i].id + "#:# " + elements[i].value.replaceAll("\n", "<br>") + "\n";
-        }
+    data.fields = {};
+    fieldsToSave.forEach(field => {
+        const saveAsAttr = field.getAttribute("file");
+        saveAsAttr === "cb" ? data.fields[field.id] = field.checked : null;
+        saveAsAttr === "inp" ? data.fields[field.id] = field.value : null;
+    });
+
+    const geoLayersContainer = document.querySelector("#layersContainer");
+    data.layers = [];
+    for (let i = 0; i < geoLayersContainer.children.length; i++) {
+        data.layers[i] = {};
+        const geoLayerFields = geoLayersContainer.children[i].querySelectorAll("[file]");
+        geoLayerFields.forEach(gLField => {
+            data.layers[i][gLField.id] = gLField.value;
+        });
     }
-    data += "\n";
 
-    let layers = document.querySelector("#layersContainer");
-    for (let i = 0; i < layers.children.length; i++) {
-        data += "#LAYER#\n";
-        let elements = Array.from(layers.children[i].querySelectorAll("[file]"));
-        for (let j = 0; j < elements.length; j++) {
-            data += elements[j].id + "#:# " + elements[j].value + "\n";
-        }
-    }
-
-    return data.trim();
+    return JSON.stringify(data);
 }
 
 function saveFile(fileName, data) {
-    let a = document.createElement("a");
-    let file = new Blob([data], {
+    const a = document.createElement("a");
+    const file = new Blob([data], {
         type: 'plain/text'
     });
     a.href = URL.createObjectURL(file);
     a.download = fileName.trim() + ".tehpas";
     a.click();
     a.remove();
-    currentFile = fileName.trim();
+    moduleVar.currentFile = fileName.trim();
 }
 
 function createGeoSectionBlock(container) {
-    let geoSectionContainer = createElement(container, "section", {id: "geoSectionContainer", class: "unPadContainer"});
+    const geoSectionContainer = createElement(container, "section", {id: "geoSectionContainer", class: "unPadContainer"});
 
-    createElement(geoSectionContainer, "div", {id: "geoSectionHeader", class: "defaultContainer blockHeader"}, tehpasStringList);
+    createElement(geoSectionContainer, "div", {
+        id: "geoSectionHeader",
+        class: "defaultContainer blockHeader"
+    }, moduleVar.tehpasStringList);
 
-    let gsCheckboxContainer = createElement(geoSectionContainer, "div", {id: "gsCheckboxContainer", class: "blockCheckboxContainer"});
-    createSwitchContainer(gsCheckboxContainer, {}, {id: "gsBlockShowCheckbox", file: "cb"}, {id: "gsBlockShowLabel"}, tehpasStringList);
-    createSwitchContainer(gsCheckboxContainer, {}, {id: "gsBlockToNextPageCheckbox", file: "cb"}, {id: "toNextPageCheckboxLabel"}, tehpasStringList);
-    createSwitchContainer(gsCheckboxContainer, {}, {id: "gsDrawSLCheckbox", file: "cb"}, {id: "gsDrawSLLabel"}, tehpasStringList);
+    const gsCheckboxContainer = createElement(geoSectionContainer, "div", {
+        id: "gsCheckboxContainer",
+        class: "blockCheckboxContainer"
+    });
+    createSwitchContainer(gsCheckboxContainer, {}, {
+        id: "gsBlockShowCheckbox",
+        file: "cb"
+    }, {id: "gsBlockShowLabel"}, moduleVar.tehpasStringList);
+    createSwitchContainer(gsCheckboxContainer, {}, {
+        id: "gsBlockToNextPageCheckbox",
+        file: "cb"
+    }, {id: "toNextPageCheckboxLabel"}, moduleVar.tehpasStringList);
+    createSwitchContainer(gsCheckboxContainer, {}, {
+        id: "gsDrawSLCheckbox",
+        file: "cb"
+    }, {id: "gsDrawSLLabel"}, moduleVar.tehpasStringList);
 
-    let itemsContainer = createElement(geoSectionContainer, "div", {id: "layersContainer", class: "itemsContainer"});
+    const itemsContainer = createElement(geoSectionContainer, "div", {id: "layersContainer", class: "itemsContainer"});
 
     addLayer(null, itemsContainer);
 }
 
 function addLayer(prevLayer, container) {
-    let layer = createElement(null, "div", {class: "layer"});
-    if (prevLayer !== null) {
+    const layer = createElement(null, "div", {class: "layer"});
+    if (isExists(prevLayer)) {
         prevLayer.insertAdjacentElement("afterend", layer);
     } else {
         container.appendChild(layer);
     }
     animateElement(layer, ["layerShow_start"], ["layerShow_end"]).then();
 
-    createElement(layer, "span", {id: "depthSpan"}, tehpasStringList);
+    createElement(layer, "span", {id: "depthSpan"}, moduleVar.tehpasStringList);
 
-    let startDepthContainer = createElement(layer, "div", {id: "startDepthContainer", class: "inpContainer"});
+    const startDepthContainer = createElement(layer, "div", {id: "startDepthContainer", class: "inpContainer"});
 
-    createElement(startDepthContainer, "span", {id: "startDepthSpan"}, tehpasStringList);
-    let startDepth = createElement(startDepthContainer, "input", {id: "startDepth", type: "tel", file: ""});
-    startDepth.placeholder = tehpasStringList[startDepth.id + "Hint"];
-    if (layer.previousElementSibling !== null) {
+    createElement(startDepthContainer, "span", {id: "startDepthSpan"}, moduleVar.tehpasStringList);
+    const startDepth = createElement(startDepthContainer, "input", {id: "startDepth", type: "tel", file: ""});
+    startDepth.placeholder = moduleVar.tehpasStringList[startDepth.id + "Hint"];
+    if (isExists(layer.previousElementSibling)) {
         startDepth.value = layer.previousElementSibling.children[2].children[1].value;
     }
     startDepth.oninput = function () {
-        if (layer.previousElementSibling !== null) {
+        if (isExists(layer.previousElementSibling)) {
             layer.previousElementSibling.children[2].children[1].value = startDepth.value;
         }
     }
 
-    let endDepthContainer = createElement(layer, "div", {id: "endDepthContainer", class: "inpContainer"});
+    const endDepthContainer = createElement(layer, "div", {id: "endDepthContainer", class: "inpContainer"});
 
-    createElement(endDepthContainer, "span", {id: "endDepthSpan"}, tehpasStringList);
-    let endDepth = createElement(endDepthContainer, "input", {id: "endDepth", type: "tel", file: ""});
-    endDepth.placeholder = tehpasStringList[endDepth.id + "Hint"];
+    createElement(endDepthContainer, "span", {id: "endDepthSpan"}, moduleVar.tehpasStringList);
+    const endDepth = createElement(endDepthContainer, "input", {id: "endDepth", type: "tel", file: ""});
+    endDepth.placeholder = moduleVar.tehpasStringList[endDepth.id + "Hint"];
     endDepth.oninput = function () {
-        if (layer.nextElementSibling !== null) {
+        if (isExists(layer.nextElementSibling)) {
             layer.nextElementSibling.children[1].children[1].value = this.value;
         }
     }
 
-    let layerNameContainer = createElement(layer, "div", {id: "layerNameContainer", class: "inpContainer"});
+    const layerNameContainer = createElement(layer, "div", {id: "layerNameContainer", class: "inpContainer"});
 
-    createElement(layerNameContainer, "span", {id: "layerNameSpan"}, tehpasStringList);
-    createElement(layerNameContainer, "select", {id: "layerName", file: ""}, tehpasStringList);
+    createElement(layerNameContainer, "span", {id: "layerNameSpan"}, moduleVar.tehpasStringList);
+    createElement(layerNameContainer, "select", {id: "layerName", file: ""}, moduleVar.tehpasStringList);
 
-    let layerColorContainer = createElement(layer, "div", {id: "layerColorContainer", class: "inpContainer"});
+    const layerColorContainer = createElement(layer, "div", {id: "layerColorContainer", class: "inpContainer"});
 
-    createElement(layerColorContainer, "span", {id: "layerColorSpan"}, tehpasStringList);
-    let layerColor = createElement(layerColorContainer, "select", {id: "layerColor", file: ""}, tehpasStringList);
+    createElement(layerColorContainer, "span", {id: "layerColorSpan"}, moduleVar.tehpasStringList);
+    const layerColor = createElement(layerColorContainer, "select", {id: "layerColor", file: ""}, moduleVar.tehpasStringList);
     layerColor.style.backgroundColor = layerColor.value;
     layerColor.onchange = function () {
         if (layerColor.value === "Khaki" || layerColor.value === "AliceBlue") {
@@ -791,21 +906,24 @@ function addLayer(prevLayer, container) {
         layerColor.style.backgroundColor = layerColor.value;
     }
 
-    let wellConstructionContainer = createElement(layer, "div", {id: "wellConstructionContainer", class: "inpContainer"});
+    const wellConstructionContainer = createElement(layer, "div", {
+        id: "wellConstructionContainer",
+        class: "inpContainer"
+    });
 
-    createElement(wellConstructionContainer, "span", {id: "wellConstructionSpan"}, tehpasStringList);
-    createElement(wellConstructionContainer, "select", {id: "wellConstruction", file: ""}, tehpasStringList);
+    createElement(wellConstructionContainer, "span", {id: "wellConstructionSpan"}, moduleVar.tehpasStringList);
+    createElement(wellConstructionContainer, "select", {id: "wellConstruction", file: ""}, moduleVar.tehpasStringList);
     changeWellConstructionOptions(false);
 
-    let addLayerButton = createElement(layer, "button", {id: "addLayerButton"}, tehpasStringList);
+    const addLayerButton = createElement(layer, "button", {id: "addLayerButton"}, moduleVar.tehpasStringList);
     addLayerButton.onclick = function () {
         addLayer(layer);
     }
 
-    let removeLayerButton = createElement(layer, "button", {id: "removeLayerButton"}, tehpasStringList);
+    const removeLayerButton = createElement(layer, "button", {id: "removeLayerButton"}, moduleVar.tehpasStringList);
     removeLayerButton.onclick = function () {
         animateElement(layer, ["layerHide_start"], ["layerHide_end"]).then(() => {
-            let itemsContainer = layer.parentElement;
+            const itemsContainer = layer.parentElement;
             layer.remove();
             checkMinimumLayer(itemsContainer);
         });
@@ -825,8 +943,8 @@ function checkMinimumLayer(container) {
 }
 
 function changeWellConstructionOptions(refresh) {
-    let wellConstruction = document.querySelectorAll("#wellConstruction");
-    let wellType = document.querySelector("#wellType");
+    const wellConstruction = document.querySelectorAll("#wellConstruction");
+    const wellType = document.querySelector("#wellType");
     for (let i = 0; i < wellConstruction.length; i++) {
         enableAllSelectOptions(wellConstruction[i]);
         if (refresh) wellConstruction[i].options[0].selected = true;
