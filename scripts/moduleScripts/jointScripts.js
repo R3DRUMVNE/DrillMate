@@ -392,11 +392,6 @@ export function randomInt(min, max, previousInt) {
     return randomInt;
 }
 
-export function isJSON(json) {
-    try{
-        JSON.parse(json);
-    } catch{
-        return false;
-    }
-    return true;
+export function isJSON(JSONString) {
+    return Object.prototype.toString.call(JSON.parse(JSONString)) === "[object Object]";
 }

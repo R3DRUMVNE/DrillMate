@@ -50,7 +50,7 @@ async function checkSavedHistory() {
 
     if (appSettings_get("tehpasSaveHistory")) {
         moduleVar.tehpasHistory.get();
-        if(Object.prototype.toString.call(JSON.parse(moduleVar.tehpasHistory.list)) === "[object Object]" && moduleVar.tehpasHistory.list !== moduleVar.tehpasHistory.emptyList){
+        if(isJSON(moduleVar.tehpasHistory.list) && moduleVar.tehpasHistory.list !== moduleVar.tehpasHistory.emptyList){
             const answer = await appDialog("Восстановление сеанса", "Хотите восстановить данные последнего сеанса?", [{text: "Да", value: "yes"}, {text: "Нет", value: "no"}]);
             switch (answer) {
                 case "yes":
@@ -730,7 +730,10 @@ function setReadedData(JSONString) {
         const element = document.querySelector("#" + field);
         if (element) {
             const loadAsAttr = element.getAttribute("file")
-            loadAsAttr === "cb" ? element.checked = JSON.parse(data.fields[field]) : null;
+            if(loadAsAttr === "cb") {
+                element.checked = JSON.parse(data.fields[field]);
+                element.dispatchEvent(new Event("change"));
+            }
             loadAsAttr === "inp" ? element.value = data.fields[field] : null;
         }
     }
