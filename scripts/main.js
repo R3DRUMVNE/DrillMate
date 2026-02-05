@@ -111,9 +111,9 @@ const menuController = {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
                     if(menuController.gesture.startX - menuController.gesture.endX > 150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown){
-                        menuController.menu.toggle();
+                        menuController.menu.button.onclick();
                     } else if(menuController.gesture.startX - menuController.gesture.endX < -150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown){
-                        menuController.menu.toggle();
+                        menuController.menu.button.onclick();
                     }
                 });
             }
