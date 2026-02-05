@@ -11,13 +11,13 @@ import {
 } from "./moduleScripts/jointScripts.js";
 import {addTempElement, moduleVar, setTimer} from "./moduleScripts/buffer.js";
 
-export async function startTehPasModule(container, moduleName, moduleID) {
+export async function startTehPasModule(tehpasArticle, moduleName, moduleID) {
     moduleVar.currentFile = "";
     moduleVar.passportHeaderImage = undefined;
     moduleVar.tehpasStringList = await getJSONData("./objects/tehpasStringList.json");
     moduleVar.passportMap = await getJSONData("./objects/passportMap.json");
 
-    const tehpasArticle = createElement(container, "article", {id: "tehpasArticle"});
+    tehpasArticle.setAttribute("id", "tehpasArticle");
     createModuleHeader(moduleName, moduleID, tehpasArticle).then();
     createControls(tehpasArticle);
     createInputBlocks(tehpasArticle);

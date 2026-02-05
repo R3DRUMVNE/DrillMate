@@ -1,5 +1,5 @@
 {
-  "version": "1.2",
+  "version": "1.3",
   "minPerfFactor": [
     [
       0,
@@ -1103,28 +1103,6 @@
       "forLowStaticLevel": true,
       "accumulator": "50"
     },
-    "Джилекс Джамбо 70/50 П-К (2.0)": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Релейное",
-      "bodyMaterial": "Пластик",
-      "capacity": 1100,
-      "maxPerfLPM": 70,
-      "maxPerfLPH": null,
-      "liftingHeight": 50,
-      "forLowStaticLevel": true,
-      "accumulator": "Нет"
-    },
-    "Джилекс Джамбо 60/35 П-К (2.0)": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Релейное",
-      "bodyMaterial": "Пластик",
-      "capacity": 600,
-      "maxPerfLPM": 60,
-      "maxPerfLPH": null,
-      "liftingHeight": 35,
-      "forLowStaticLevel": true,
-      "accumulator": "Нет"
-    },
     "Джилекс Джамбо 70/50 П (2.0)": {
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
@@ -1155,6 +1133,83 @@
       "maxPerfLPM": 70,
       "maxPerfLPH": null,
       "liftingHeight": 50,
+      "forLowStaticLevel": true,
+      "accumulator": "Нет"
+    },
+    "Shimge JET-G2 1100": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 1100,
+      "maxPerfLPM": 83,
+      "maxPerfLPH": null,
+      "liftingHeight": 48,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Shimge JET-G2 1100 +24L": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 1100,
+      "maxPerfLPM": 83,
+      "maxPerfLPH": null,
+      "liftingHeight": 48,
+      "forLowStaticLevel": false,
+      "accumulator": "24"
+    },
+    "Shimge JET-G2 750": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 750,
+      "maxPerfLPM": 83,
+      "maxPerfLPH": null,
+      "liftingHeight": 44,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Shimge JET-G2 750 +24L": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 750,
+      "maxPerfLPM": 83,
+      "maxPerfLPH": null,
+      "liftingHeight": 44,
+      "forLowStaticLevel": false,
+      "accumulator": "24"
+    },
+    "Shimge JET-G2 550": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 550,
+      "maxPerfLPM": 67,
+      "maxPerfLPH": null,
+      "liftingHeight": 38,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Shimge JET-G2 550 +24L": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Нержавеющая сталь",
+      "capacity": 550,
+      "maxPerfLPM": 67,
+      "maxPerfLPH": null,
+      "liftingHeight": 38,
+      "forLowStaticLevel": false,
+      "accumulator": "24"
+    },
+    "Quattro Elementi Giardino 1101 FL": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Пластик",
+      "capacity": 1100,
+      "maxPerfLPM": null,
+      "maxPerfLPH": 4200,
+      "liftingHeight": 45,
       "forLowStaticLevel": true,
       "accumulator": "Нет"
     }

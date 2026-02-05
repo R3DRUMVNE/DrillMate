@@ -8,7 +8,7 @@ import {
 import {destroyTimer, setTimer, moduleVar} from "./moduleScripts/buffer.js";
 import {loadModule} from "./main.js";
 
-export async function startSchetoVodModule(container, moduleName, moduleID) {
+export async function startSchetoVodModule(schetovodArticle, moduleName, moduleID) {
     moduleVar.flowRate = {
         volume: 0,
         litresPerMinute: 0,
@@ -22,7 +22,7 @@ export async function startSchetoVodModule(container, moduleName, moduleID) {
     };
     moduleVar.schetovodStringList = await getJSONData("./objects/schetovodStringList.json");
 
-    const schetovodArticle = createElement(container, "article", {id: "schetovodArticle"});
+    schetovodArticle.setAttribute("id", "schetovodArticle");
     createModuleHeader(moduleName, moduleID, schetovodArticle).then();
     createInputBlock(schetovodArticle);
     createOutputBlock(schetovodArticle);
@@ -67,7 +67,7 @@ function createInputBlock(blockDiv) {
                 class: "selectPumpButton"
             }, moduleVar.schetovodStringList);
             selectPumpButton.onclick = function () {
-                loadModule("prokachaika", {flowRateLPH: moduleVar.flowRate.litresPerHour});
+                loadModule(document.querySelector("#prokachaika"), {flowRateLPH: moduleVar.flowRate.litresPerHour}, true);
             }
             setTimeout(() => {
                 clearTimeout(this);

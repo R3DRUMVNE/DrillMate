@@ -1,7 +1,16 @@
-#camlockImage{
-    grid-area: camlockImage;
+#camlockImageContainer {
+    grid-area: camlockImageContainer;
+    aspect-ratio: 1554/1011;
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 var(--shadow);
+    overflow: hidden;
+}
+
+#camlockImage{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .camlockImageOut_start{

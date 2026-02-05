@@ -7,11 +7,11 @@ import {
     filterValueByNumber, getJSONData,
     scrollController,
     share,
-    tryFormatToNumber, createSwitchContainer, isExists
+    tryFormatToNumber, createSwitchContainer, isExists, updateURL
 } from "./moduleScripts/jointScripts.js";
 import {moduleVar} from "./moduleScripts/buffer.js";
 
-export async function startProkachaikaModule(container, moduleName, moduleID, addons) {
+export async function startProkachaikaModule(prokachaikaArticle, moduleName, moduleID, addons) {
     moduleVar.compareList = {
         list: {},
         listLengthSpan: null,
@@ -36,7 +36,7 @@ export async function startProkachaikaModule(container, moduleName, moduleID, ad
     };
 
     moduleVar.compareList.getFromLS();
-    const prokachaikaArticle = createElement(container, "article", {id: "prokachaikaArticle"});
+    prokachaikaArticle.setAttribute("id", "prokachaikaArticle");
     moduleVar.prokachaikaStringList = await getJSONData("./objects/prokachaikaStringList.json");
     await createPumpList(prokachaikaArticle, addons.URLPumpModel);
     createAdditionalPanel(prokachaikaArticle);
@@ -351,21 +351,24 @@ function openCompareList() {
     animateElement(compareListContainer, ["popUp_open_start"], ["popUp_open_end"]).then();
 }
 
-function checkPumpListVersion(newPumps) {
+function checkPumpListVersion(pumpListChanges) {
     return new Promise(async resolve => {
         if (!isExists(localStorage.getItem("prokachaika.pumpListVersion")) || localStorage.getItem("prokachaika.pumpListVersion") !== moduleVar.pumpList.version) {
-            const newPumpsString = Object.keys(newPumps).toString().replaceAll(",", "<br>");
+            let addedPumpsString = "";
+            Object.keys(pumpListChanges.added) > 0 ? addedPumpsString = moduleVar.prokachaikaStringList["whatsNew"][2] + Object.keys(pumpListChanges.added).toString().replaceAll(",", "<br>") + "</p>" : null;
+            let deletedPumpsString = "";
+            pumpListChanges.deleted.length > 0 ? deletedPumpsString = moduleVar.prokachaikaStringList["whatsNew"][3] + pumpListChanges.deleted.toString().replaceAll(",", "<br>") + "</p>" : null;
             localStorage.setItem("prokachaika.pumpListVersion", moduleVar.pumpList.version);
-            await appAlert("Список насосов", moduleVar.prokachaikaStringList["whatsNew"][0] + moduleVar.pumpList.version + moduleVar.prokachaikaStringList["whatsNew"][1] + newPumpsString + "</p>");
+            await appAlert("Список насосов", moduleVar.prokachaikaStringList["whatsNew"][0] + moduleVar.pumpList.version + moduleVar.prokachaikaStringList["whatsNew"][1] + addedPumpsString + deletedPumpsString);
         }
         resolve();
     });
 }
 
 async function createPumpList(container, URLPumpModel) {
-    const newPumps = await getJSONData("./objects/newPumps.json");
+    const pumpListChanges = await getJSONData("./objects/pumpListChanges.json");
     moduleVar.pumpList = await getJSONData("./objects/pumpList.json");
-    moduleVar.pumpList.models = shuffleObject({...moduleVar.pumpList.models, ...newPumps});
+    moduleVar.pumpList.models = shuffleObject({...moduleVar.pumpList.models, ...pumpListChanges.added});
 
     const pumpListContainer = createElement(container, "section", {id: "pumpListContainer"});
 
@@ -384,7 +387,7 @@ async function createPumpList(container, URLPumpModel) {
         moduleVar.pumpList.models[model].maxPressure = Number((moduleVar.pumpList.models[model].liftingHeight * 0.098064).toFixed(1));
     }
 
-    checkPumpListVersion(newPumps).then(() => {
+    checkPumpListVersion(pumpListChanges).then(() => {
         if (isExists(URLPumpModel)) {
             moduleVar.pumpList.models.hasOwnProperty(URLPumpModel) ? openPumpInfo(URLPumpModel) : appToast("Ошибка: указанная модель насоса не найдена", 2000).then();
         }
@@ -426,6 +429,7 @@ async function createPumpList(container, URLPumpModel) {
 }
 
 function openPumpInfo(modelName) {
+    updateURL({module: "prokachaika", pumpModel: modelName.trim()});
     const pumpInfo = {
         pumpType: moduleVar.pumpList.models[modelName].pumpType,
         pumpVersion: moduleVar.pumpList.models[modelName].pumpControl === "Нет" ? "Насос" : "Насосная станция",
@@ -475,28 +479,23 @@ function openPumpInfo(modelName) {
 
     const ozonButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/ozon.png"});
     ozonButton.onclick = function () {
-        const str = modelName.replaceAll(" ", "+");
-        window.open("https://www.ozon.ru/search/?text=" + str + "&from_global=true", "_blank");
+        window.open("https://www.ozon.ru/search/?text=" + modelName.replaceAll(" ", "+") + "&from_global=true", "_blank");
     }
     const wbButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/wb.png"});
     wbButton.onclick = function () {
-        const str = modelName.replaceAll(" ", "%20");
-        window.open("https://www.wildberries.ru/catalog/0/search.aspx?search=" + str, "_blank");
+        window.open("https://www.wildberries.ru/catalog/0/search.aspx?search=" + modelName.replaceAll(" ", "%20"), "_blank");
     }
     const viButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/vi.png"});
     viButton.onclick = function () {
-        const str = modelName.replaceAll(" ", "%20");
-        window.open("https://www.vseinstrumenti.ru/search/?what=" + str, "_blank");
+        window.open("https://www.vseinstrumenti.ru/search/?what=" + modelName.replaceAll(" ", "%20"), "_blank");
     }
     const ymButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/ym.png"});
     ymButton.onclick = function () {
-        const str = modelName.replaceAll(" ", "%20");
-        window.open("https://market.yandex.ru/search?text=" + str, "_blank");
+        window.open("https://market.yandex.ru/search?text=" + modelName.replaceAll(" ", "%20"), "_blank");
     }
     const lpButton = createElement(getPumpContainer, "img", {class: "getItemButton", src: "./assets/shops/lp.png"});
     lpButton.onclick = function () {
-        const str = modelName.replaceAll(" ", "+");
-        window.open("https://lemanapro.ru/search/?q=" + str, "_blank");
+        window.open("https://lemanapro.ru/search/?q=" + modelName.replaceAll(" ", "+"), "_blank");
     }
 
     const pumpInfoControls = createElement(itemsContainer, "div", {id: "pumpInfoControls"});
@@ -536,6 +535,7 @@ function openPumpInfo(modelName) {
 
     const pI_closeButton = createElement(pumpInfoControls, "button", {id: "pI_closeButton"}, moduleVar.prokachaikaStringList);
     pI_closeButton.onclick = function () {
+        updateURL({module: "prokachaika"});
         animateElement(pumpInfoContainer, ["popUp_close_start"], ["popUp_close_end"]).then(() => {
             scrollController.enableBodyScrolling().then();
             pumpInfoContainer.remove();
