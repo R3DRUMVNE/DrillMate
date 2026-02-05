@@ -97,7 +97,7 @@ const menuController = {
         endX: null,
         endY: null,
         addListener: function () {
-            if(isMobile()){
+            if (isMobile()) {
                 document.body.addEventListener("touchstart", (e) => {
                     menuController.gesture.startX = e.touches[0].clientX;
                     menuController.gesture.startY = e.touches[0].clientY;
@@ -110,9 +110,9 @@ const menuController = {
                 document.body.addEventListener("touchend", () => {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
-                    if(menuController.gesture.startX - menuController.gesture.endX > 150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown){
+                    if (menuController.gesture.startX - menuController.gesture.endX > 150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
                         menuController.menu.button.onclick();
-                    } else if(menuController.gesture.startX - menuController.gesture.endX < -150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown){
+                    } else if (menuController.gesture.startX - menuController.gesture.endX < -150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
                         menuController.menu.button.onclick();
                     }
                 });
@@ -232,7 +232,7 @@ export async function loadModule(optionContainer, addons, skipMenuHiding) {
     menuController.menu.button.classList.remove("menuButton_active");
     menuController.menu.selectOption(optionContainer);
 
-    if (menuController.mode.desktop) {
+    if (skipMenuHiding) {
         if (menuController.module.shown) {
             menuController.hide(menuController.module).then(async () => {
                 await openModule();
@@ -241,13 +241,9 @@ export async function loadModule(optionContainer, addons, skipMenuHiding) {
             await openModule();
         }
     } else {
-        if (skipMenuHiding) {
+        menuController.hide(menuController.menu).then(async () => {
             await openModule();
-        } else {
-            menuController.hide(menuController.menu).then(async () => {
-                await openModule();
-            });
-        }
+        });
     }
 
     async function openModule() {

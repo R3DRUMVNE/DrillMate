@@ -423,6 +423,11 @@ main {
     }
 }
 
+.module_hide_endAnim > #assistantContainer > #assistantImage,
+.module_hide_endAnim > #assistantContainer > #assistantText{
+    animation-play-state: paused;
+}
+
 .menuOption {
     display: grid;
     grid-template-columns: max-content 1fr;
