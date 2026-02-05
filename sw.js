@@ -1,4 +1,4 @@
-const CACHE_NAME = "drillmate_cache(sw-1.3.0)";
+const CACHE_NAME = "drillmate_cache(sw-1.3.0a)";
 
 const static_assets = [
     ".",
