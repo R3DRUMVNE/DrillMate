@@ -3,14 +3,14 @@ import {
     appToast,
     share,
     getJSONData,
-    animateElement, scrollController, createElement, isExists
+    animateElement, scrollController, createElement, isExists, updateURL
 } from "./moduleScripts/jointScripts.js";
 import {moduleVar} from "./moduleScripts/buffer.js";
 
 //export const camlockThreadSizes = ["1/2\" | 20мм", "3/4\" | 25мм", "1\" | 32мм", "1-1/4\" | 40мм", "1-1/2\" | 46мм", "2\" | 58мм", "2-1/2\" |74мм", "3\" | 86мм", "4\" | 111мм", "5\" | 137мм", "6\" | 162мм"];
 //export const hoseFittingSizes = ["12мм | 1/2\"", "20мм | 3/4\"", "25мм | 1\"", "32мм | 1-1/4\"", "40мм | 1-1/2\"", "50мм | 2\"", "65мм | 2-1/2\"", "80мм | 3\"", "100мм | 4\"", "125мм | 5\"", "152мм | 6\""];
 
-export async function startDaiCamlockModule(container, moduleName, moduleID, addons) {
+export async function startDaiCamlockModule(daicamlockArticle, moduleName, moduleID, addons) {
     moduleVar.moduleLoaded = false;
     moduleVar.sizeSpans = [];
     moduleVar.camlockSizes = ["050", "075", "100", "125", "150", "200", "250", "300", "400", "500", "600"];
@@ -24,7 +24,7 @@ export async function startDaiCamlockModule(container, moduleName, moduleID, add
         extraConnection: "",
     };
 
-    const daicamlockArticle = createElement(container, "article", {id: "daicamlockArticle"});
+    daicamlockArticle.setAttribute("id", "daicamlockArticle");
     createModuleHeader(moduleName, moduleID, daicamlockArticle).then();
     createOutputBlock(daicamlockArticle);
     createSizesBlock(daicamlockArticle);
@@ -33,7 +33,8 @@ export async function startDaiCamlockModule(container, moduleName, moduleID, add
 }
 
 function createOutputBlock(blockDiv) {
-    moduleVar.camlockImage = createElement(blockDiv, "img", {id: "camlockImage", class: "camlockImageOut_end"});
+    const camlockImageContainer = createElement(blockDiv, "div", {id: "camlockImageContainer"});
+    moduleVar.camlockImage = createElement(camlockImageContainer, "img", {id: "camlockImage", class: "camlockImageOut_end"});
 
     const answerContainer = createElement(blockDiv, "section", {id: "answerContainer", class: "defaultContainer"});
     moduleVar.answer = createElement(answerContainer, "div", {id: "answer"}, moduleVar.daicamlockStringList);
@@ -122,7 +123,7 @@ function createInputBlock(blockDiv, URLCamlock) {
     if (isExists(URLCamlock)) {
         const URLCamlockFound = changeToCamlockFromURL(URLCamlock, connectionRadios);
         if (!URLCamlockFound) {
-            appToast("Указанный камлок не найден", 3000).then();
+            appToast("Ошибка: указанный камлок не найден", 3000).then();
             setDefaultCamlock();
         }
     } else {
@@ -130,8 +131,8 @@ function createInputBlock(blockDiv, URLCamlock) {
     }
 
     function setDefaultCamlock() {
-        connectionRadios.father.dispatchEvent(new Event('change'));
-        connectionRadios.hoseFitting.dispatchEvent(new Event('change'));
+        connectionRadios.father.dispatchEvent(new Event("change"));
+        connectionRadios.hoseFitting.dispatchEvent(new Event("change"));
     }
 
     animateElement(moduleVar.camlockImage, ["camlockImageIn_start"], ["camlockImageIn_end"]).then(() => {
@@ -176,6 +177,7 @@ function changeCamlock(connectionName, connectionValue) {
 function changeSizes() {
     moduleVar.currentCamlock.size = moduleVar.camlockSizes[moduleVar.DNSelect.selectedIndex];
     moduleVar.answer.innerHTML = "Ваш камлок: <u>" + moduleVar.currentCamlock.type + "-" + moduleVar.currentCamlock.size + "</u>";
+    updateURL({module: "daicamlock", camlock: moduleVar.currentCamlock.type + "-" + moduleVar.currentCamlock.size});
     let j = 0;
     for (let i = 0; i < moduleVar.sizeSpans.length; i++) {
         moduleVar.sizeSpans[i].innerHTML = "-";

@@ -1,4 +1,4 @@
-const CACHE_NAME = "drillmate_cache(sw-1.2.1d)";
+const CACHE_NAME = "drillmate_cache(sw-1.3.0)";
 
 const static_assets = [
     ".",
@@ -22,7 +22,6 @@ const static_assets = [
     "./assets/daicamlock.svg",
     "./assets/download.svg",
     "./assets/gidrohod.svg",
-    "./assets/menuButton.svg",
     "./assets/moduleHint.svg",
     "./assets/prokachaika.svg",
     "./assets/schetovod.svg",
@@ -35,7 +34,7 @@ const static_assets = [
     "./objects/mainStringList.json",
     "./objects/menuMap.json",
     "./objects/moduleHintStringList.json",
-    "./objects/newPumps.json",
+    "./objects/pumpListChanges.json",
     "./objects/passportMap.json",
     "./objects/prokachaikaStringList.json",
     "./objects/pumpList.json",

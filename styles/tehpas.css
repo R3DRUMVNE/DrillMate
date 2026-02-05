@@ -72,6 +72,7 @@ input.cb{
     flex-wrap: nowrap;
     gap: 10px;
     box-sizing: border-box;
+    overflow-y: hidden;
 }
 
 #printControlContainer{

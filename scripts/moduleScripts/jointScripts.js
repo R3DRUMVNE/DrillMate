@@ -126,29 +126,26 @@ export function appDialog(dialogHeader, dialogText, buttonsObject) {
 }
 
 export function share(shareHeaderText, URLParams, shareText) {
+    const dmURL = location.protocol + "//" + location.host + location.pathname + "?" + new URLSearchParams(URLParams);
+
     const shareContainer = createElement(document.body, "div", {id: "shareContainer", class: "unPadContainer popUp"});
 
     createElement(shareContainer, "div", {id: "shareHeader", class: "defaultContainer"}, shareHeaderText);
 
     const shareItemsContainer = createElement(shareContainer, "div", {id: "shareItemsContainer"});
-    const URLInput = createElement(shareItemsContainer, "input", {id: "URLInput", type: "text", readonly: ""});
-    const dmURL = new URL("https://r3drumvne.github.io/DrillMate/");
-    for (let key in URLParams) {
-        dmURL.searchParams.set(key, URLParams[key]);
-    }
-    URLInput.value = dmURL.href;
+    const URLInput = createElement(shareItemsContainer, "input", {id: "URLInput", type: "text", readonly: "", value: dmURL});
 
     const vkShareButton = createElement(shareItemsContainer, "img", {id: "vkShareButton", src: "./assets/share/vk.png"});
     vkShareButton.onclick = function () {
-        window.open("https://vk.com/share.php?url=" + encodeURIComponent(dmURL.href) + "&title=" + shareText, "_blank");
+        window.open("https://vk.com/share.php?url=" + encodeURIComponent(URLInput.value) + "&title=" + shareText, "_blank");
     }
     const tgShareButton = createElement(shareItemsContainer, "img", {id: "tgShareButton", src: "./assets/share/tg.png"});
     tgShareButton.onclick = function () {
-        window.open("https://t.me/share/url/?text=" + shareText + "&url=" + encodeURIComponent(dmURL.href), "_blank");
+        window.open("https://t.me/share/url/?text=" + shareText + "&url=" + encodeURIComponent(URLInput.value), "_blank");
     }
     const copyURLButton = createElement(shareItemsContainer, "button", {id: "copyURLButton"}, "Скопировать ссылку");
     copyURLButton.onclick = function () {
-        navigator.clipboard.writeText(dmURL.href).then(async function () {
+        navigator.clipboard.writeText(URLInput.value).then(async function () {
             appToast("Скопировано в буфер обмена", 3000).then();
         }, function () {
             appToast("Произошла ошибка при копировании текста", 1500).then();
@@ -203,8 +200,8 @@ export const scrollController = {
 };
 
 export function linkNewStylesheet(cssName) {
-    !isExists(document.querySelector("#" + cssName)) ? createElement(document.head, "link", {
-        id: cssName,
+    !isExists(document.querySelector("#" + cssName + "CSS")) ? createElement(document.head, "link", {
+        id: cssName + "CSS",
         rel: "stylesheet",
         href: "./styles/" + cssName + ".css"
     }) : null;
@@ -394,4 +391,9 @@ export function randomInt(min, max, previousInt) {
 
 export function isJSON(JSONString) {
     return Object.prototype.toString.call(JSON.parse(JSONString)) === "[object Object]";
+}
+
+export function updateURL(params) {
+    const URLParams = new URLSearchParams(params);
+    history.pushState(null, null, window.location.pathname + "?" + URLParams);
 }

@@ -9,7 +9,7 @@ import {
     animateElement,
     appSettings,
     createElement,
-    createSwitchContainer, isExists
+    createSwitchContainer, isExists, updateURL
 } from "./moduleScripts/jointScripts.js";
 import {startSchetoVodModule} from "./schetovod.js";
 import {startDaiCamlockModule} from "./daicamlock.js";
@@ -17,53 +17,137 @@ import {startTehPasModule} from "./tehpas.js";
 import {startProkachaikaModule} from "./prokachaika.js";
 
 const title = document.querySelector("#programTitle");
-const menuButton = document.querySelector("#menuButton");
 const settingsInfoButton = document.querySelector("#settingsInfoButton");
-const main = document.querySelector("main");
 
-const version = "1.2.1";
+const version = "1.3.0";
 let mainStringList = null;
 
-const menu = {
-    map: null,
-    alreadyIn: null,
-    createMenuButtons: function () {
-        if (!isExists(this.alreadyIn)) {
-            createButtons();
-        } else if (!this.alreadyIn) {
-            animateElement(main, ["main_close_startAnim"], ["main_close_endAnim"]).then(() => {
-                createButtons();
-            });
+const menuController = {
+    mode: {
+        desktop: false,
+        get: function () {
+            menuController.mode.desktop = window.innerWidth >= 1024;
         }
+    },
+    module: {
+        container: document.querySelector("#moduleContainer"),
+        shown: false,
+        scrollPosY: null,
+        animation: ["module_hide", "module_show"],
+    },
+    menu: {
+        button: document.querySelector("#menuButton"),
+        container: document.querySelector("#menu"),
+        map: null,
+        shown: false,
+        selectedOption: null,
+        animation: ["menu_hide", "menu_show"],
+        create: function (withInit) {
+            if (!menuController.menu.created) {
+                for (let key in menuController.menu.map) {
+                    const menuOptionContainer = createElement(menuController.menu.container, "section", {
+                        id: key,
+                        class: "menuOption"
+                    });
 
-        function createButtons() {
-            menu.alreadyIn = true;
-            window.scrollTo(0, 0);
-            main.innerHTML = "";
-            const menuDiv = createElement(main, "article", {id: "menu"});
+                    createElement(menuOptionContainer, "img", {
+                        class: "image",
+                        src: "./assets/" + key + ".svg",
+                        alt: menuController.menu.map[key].name
+                    });
 
-            for (let key in menu.map) {
-                const menuOptionContainer = createElement(menuDiv, "section", {id: key, class: "menuOption"});
+                    createElement(menuOptionContainer, "div", {class: "header"}, menuController.menu.map[key].name);
 
-                createElement(menuOptionContainer, "img", {
-                    class: "image",
-                    src: "./assets/" + key + ".svg",
-                    alt: menu.map[key].name
-                });
+                    createElement(menuOptionContainer, "div", {class: "description"}, menuController.menu.map[key].description);
 
-                createElement(menuOptionContainer, "div", {class: "header"}, menu.map[key].name);
-
-                createElement(menuOptionContainer, "div", {class: "description"}, menu.map[key].description);
-
-                menuOptionContainer.onclick = function () {
-                    menu.alreadyIn = false;
-                    loadModule(this.id, addons.list).then();
+                    menuOptionContainer.onclick = function () {
+                        addons.clear();
+                        loadModule(this, addons.list, menuController.mode.desktop).then();
+                    }
                 }
+                menuController.menu.created = true;
+                withInit ? menuController.init(menuController.menu).then() : null;
             }
-            animateElement(main, ["main_open_startAnim"], ["main_open_endAnim"]).then();
+        },
+        toggle: function () {
+            if (menuController.menu.shown) {
+                menuController.menu.button.classList.remove("menuButton_active");
+                menuController.hide(menuController.menu).then(() => {
+                    menuController.show(menuController.module).then();
+                    window.scrollTo(0, menuController.module.scrollPosY);
+                });
+            } else {
+                menuController.menu.button.classList.add("menuButton_active");
+                menuController.module.scrollPosY = window.scrollY;
+                menuController.hide(menuController.module).then(() => {
+                    window.scrollTo(0, 0);
+                    menuController.show(menuController.menu).then();
+                });
+            }
+        },
+        selectOption: function (optionContainer) {
+            isExists(menuController.menu.selectedOption) ? menuController.menu.selectedOption.classList.remove("menuOption_active") : null;
+            menuController.menu.selectedOption = optionContainer;
+            menuController.menu.selectedOption.classList.add("menuOption_active");
         }
-    }
+    },
+    gesture: {
+        startX: null,
+        startY: null,
+        endX: null,
+        endY: null,
+        addListener: function () {
+            if(isMobile()){
+                document.body.addEventListener("touchstart", (e) => {
+                    menuController.gesture.startX = e.touches[0].clientX;
+                    menuController.gesture.startY = e.touches[0].clientY;
+                    //console.log("startX: " + menuController.gesture.startX + "\nstartY: " + menuController.gesture.startY);
+                });
+                document.body.addEventListener("touchmove", (e) => {
+                    menuController.gesture.endX = e.touches[0].clientX;
+                    menuController.gesture.endY = e.touches[0].clientY;
+                });
+                document.body.addEventListener("touchend", () => {
+                    //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
+                    //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
+                    if(menuController.gesture.startX - menuController.gesture.endX > 150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown){
+                        menuController.menu.toggle();
+                    } else if(menuController.gesture.startX - menuController.gesture.endX < -150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown){
+                        menuController.menu.toggle();
+                    }
+                });
+            }
+        }
+    },
+    init: function (object) {
+        return new Promise((resolve) => {
+            animateElement(object.container, ["menuController_init_startAnim"], ["menuController_init_endAnim"]).then(() => {
+                object.shown = true;
+                resolve();
+            });
+        });
+    },
+    show: function (object) {
+        return new Promise((resolve) => {
+            animateElement(object.container, [object.animation[1] + "_startAnim"], [object.animation[1] + "_endAnim"]).then(() => {
+                object.shown = true;
+                resolve();
+            });
+        });
+    },
+    hide: function (object) {
+        return new Promise((resolve) => {
+            animateElement(object.container, [object.animation[0] + "_startAnim"], [object.animation[0] + "_endAnim"]).then(() => {
+                object.shown = false;
+                resolve();
+            });
+        });
+    },
 };
+
+menuController.menu.button.onclick = function () {
+    menuController.module.container.id !== "moduleContainer" ? menuController.menu.toggle() : null;
+}
 
 const addons = {
     clear: function () {
@@ -77,10 +161,10 @@ const addons = {
     }
 };
 
-function menuButtonChange(parameter){
-    if(parameter){
+function menuButtonChange(parameter) {
+    if (parameter) {
         menuButton.classList.add("menuButtonFixed");
-    }else{
+    } else {
         menuButton.classList.remove("menuButtonFixed_end");
         menuButton.classList.remove("menuButtonFixed");
     }
@@ -91,26 +175,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     await appTheme_getThemes("./objects/themesList.json");
     appTheme_change(appSettings.keys.appTheme);
     mainStringList = await getJSONData("./objects/mainStringList.json");
-    menu.map = await getJSONData("./objects/menuMap.json");
+    menuController.menu.map = await getJSONData("./objects/menuMap.json");
+    menuController.mode.get();
+    menuController.gesture.addListener();
     menuButtonChange(appSettings.keys.menuButtonFixed);
     animateElement(document.querySelector("#programHeader"), ["programHeader_startAnim"], ["programHeader_endAnim"]).then(() => {
         checkURL();
         appSettings.keys.menuButtonFixed ? animateElement(menuButton, ["menuButtonFixed_start"], ["menuButtonFixed_end"]).then() : null;
+
     });
 });
 window.onbeforeunload = function () {
     window.scrollTo(0, 0);
 };
-
-menuButton.onclick = function () {
-    clearModuleVariables();
-    destroyAllTempElements();
-    destroyAllTimers();
-    addons.clear();
-    menu.createMenuButtons();
-    title.innerHTML = "DrillMate";
-    history.replaceState(null, null, "/DrillMate/");
-}
 
 settingsInfoButton.onclick = function () {
     showSettingsInfo();
@@ -118,48 +195,82 @@ settingsInfoButton.onclick = function () {
 
 function checkURL() {
     const URLParams = new URLSearchParams(window.location.search);
-    if (isExists(URLParams.get("module"))) {
+    const URLModule = URLParams.get("module");
+    if (isExists(URLModule)) {
         let moduleFound = false;
-        for (let key in menu.map) {
-            if (key === URLParams.get("module")) {
+        for (let key in menuController.menu.map) {
+            if (key === URLModule) {
                 moduleFound = true;
                 addons.list.URLCamlock = URLParams.get("camlock");
                 addons.list.URLPumpModel = URLParams.get("pumpModel");
-                loadModule(key, addons.list, true).then();
+                menuController.menu.create(menuController.mode.desktop);
+                loadModule(menuController.menu.container.querySelector("#" + key), addons.list, true).then();
             }
         }
         if (!moduleFound) {
-            appToast("Ошибка: указанный модуль не найден", 3000).then();
-            menuButton.click();
+            appToast("Ошибка: указанный раздел не найден", 3000).then();
+            loadDefault();
         }
     } else {
-        menuButton.click();
+        loadDefault();
+    }
+
+    function loadDefault() {
+        menuController.menu.create(true);
+        menuController.mode.desktop ? loadModule(menuController.menu.container.querySelector("#schetovod"), addons.list, true).then() : null;
     }
 }
 
-export async function loadModule(id, addons, skipAnimations) {
-    if(!skipAnimations) await animateElement(main, ["main_close_startAnim"], ["main_close_endAnim"]);
-    main.innerHTML = "";
-    title.innerHTML = "DrillMate - " + menu.map[id].name;
-    linkNewStylesheet(id + "Adaptive");
-    linkNewStylesheet(id);
-    switch (id) {
-        case "schetovod":
-            startSchetoVodModule(main, menu.map[id].name, id).then();
-            break;
-        case "daicamlock":
-            startDaiCamlockModule(main, menu.map[id].name, id, addons).then();
-            break;
-        case "tehpas":
-            linkNewStylesheet(id + "Print");
-            startTehPasModule(main, menu.map[id].name, id).then();
-            break;
-        case "prokachaika":
-            startProkachaikaModule(main, menu.map[id].name, id, addons).then();
-            break;
+export async function loadModule(optionContainer, addons, skipMenuHiding) {
+    title.innerHTML = "DrillMate - " + menuController.menu.map[optionContainer.id].name;
+    linkNewStylesheet(optionContainer.id);
+    linkNewStylesheet(optionContainer.id + "Adaptive");
+
+    clearModuleVariables();
+    destroyAllTempElements();
+    destroyAllTimers();
+    menuController.menu.button.classList.remove("menuButton_active");
+    menuController.menu.selectOption(optionContainer);
+
+    if (menuController.mode.desktop) {
+        if (menuController.module.shown) {
+            menuController.hide(menuController.module).then(async () => {
+                await openModule();
+            });
+        } else {
+            await openModule();
+        }
+    } else {
+        if (skipMenuHiding) {
+            await openModule();
+        } else {
+            menuController.hide(menuController.menu).then(async () => {
+                await openModule();
+            });
+        }
     }
-    window.scrollTo(0, 0);
-    animateElement(main, ["main_open_startAnim"], ["main_open_endAnim"]).then();
+
+    async function openModule() {
+        updateURL({module: optionContainer.id});
+        menuController.module.container.innerHTML = "";
+        switch (optionContainer.id) {
+            case "schetovod":
+                await startSchetoVodModule(menuController.module.container, menuController.menu.map[optionContainer.id].name, optionContainer.id);
+                break;
+            case "daicamlock":
+                await startDaiCamlockModule(menuController.module.container, menuController.menu.map[optionContainer.id].name, optionContainer.id, addons);
+                break;
+            case "tehpas":
+                linkNewStylesheet(optionContainer.id + "Print");
+                await startTehPasModule(menuController.module.container, menuController.menu.map[optionContainer.id].name, optionContainer.id);
+                break;
+            case "prokachaika":
+                await startProkachaikaModule(menuController.module.container, menuController.menu.map[optionContainer.id].name, optionContainer.id, addons);
+                break;
+        }
+        window.scrollTo(0, 0);
+        skipMenuHiding ? menuController.init(menuController.module).then() : menuController.show(menuController.module).then();
+    }
 }
 
 function showSettingsInfo() {
@@ -180,7 +291,10 @@ function showSettingsInfo() {
     createElement(settingsContainer, "span", {id: "settingsHeader"}, mainStringList);
     const settingsItems = createElement(settingsContainer, "div", {id: "settingsItems"});
 
-    const themeSelectContainer = createElement(settingsItems, "div", {id: "themeSelectContainer", class: "inpContainer"});
+    const themeSelectContainer = createElement(settingsItems, "div", {
+        id: "themeSelectContainer",
+        class: "inpContainer"
+    });
     createElement(themeSelectContainer, "span", {id: "themeSelectSpan"}, mainStringList);
     const themeSelect = createElement(themeSelectContainer, "select", {id: "themeSelect"}, mainStringList);
     themeSelect.value = appSettings.keys.appTheme;
@@ -208,7 +322,7 @@ function showSettingsInfo() {
         appSettings.set("tehpasSaveHistory", tehpasSaveHistoryCheckbox.checked);
     }
 
-    if(isMobile()){
+    if (isMobile()) {
         const menuButtonFixedCheckbox = createSwitchContainer(settingsItems, {}, {id: "menuButtonFixedCheckbox"}, {id: "menuButtonFixedCheckboxLabel"}, mainStringList);
         menuButtonFixedCheckbox.checked = appSettings.keys.menuButtonFixed;
         menuButtonFixedCheckbox.onchange = function () {
