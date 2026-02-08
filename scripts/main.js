@@ -110,9 +110,9 @@ const menuController = {
                 document.body.addEventListener("touchend", () => {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
-                    if (menuController.gesture.startX - menuController.gesture.endX > 150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
+                    if (menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
                         menuController.menu.button.onclick();
-                    } else if (menuController.gesture.startX - menuController.gesture.endX < -150 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
+                    } else if (menuController.gesture.startX - menuController.gesture.endX < -100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
                         menuController.menu.button.onclick();
                     }
                 });

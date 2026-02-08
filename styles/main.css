@@ -355,76 +355,66 @@ main {
 
 .menu_hide_startAnim{
     transform: translateX(0);
-    opacity: 1;
     pointer-events: none;
     animation: menu_toggle 0.25s linear;
 }
 .menu_hide_endAnim{
     transform: translateX(100%);
-    opacity: 0;
     display: none;
 }
 
 .menu_show_startAnim{
     transform: translateX(100%);
-    opacity: 0;
     pointer-events: none;
     animation: menu_toggle 0.25s linear reverse;
 }
 .menu_show_endAnim{
     transform: translateX(0);
-    opacity: 1;
     pointer-events: auto;
 }
 
 @keyframes menu_toggle {
     from{
         transform: translateX(0);
-        opacity: 1;
     }
     to{
         transform: translateX(100%);
-        opacity: 0;
     }
 }
 
 .module_hide_startAnim{
     transform: translateX(0);
-    opacity: 1;
     pointer-events: none;
     animation: module_toggle 0.25s linear;
 }
 .module_hide_endAnim{
     transform: translateX(-100%);
-    opacity: 0;
     display: none !important;
 }
 
 .module_show_startAnim{
     transform: translateX(-100%);
-    opacity: 0;
     pointer-events: none;
     animation: module_toggle 0.25s linear reverse;
 }
 .module_show_endAnim{
     transform: translateX(0);
-    opacity: 1;
     pointer-events: auto;
 }
 
 @keyframes module_toggle {
     from{
         transform: translateX(0);
-        opacity: 1;
     }
     to{
         transform: translateX(-100%);
-        opacity: 0;
     }
 }
 
 .module_hide_endAnim > #assistantContainer > #assistantImage,
-.module_hide_endAnim > #assistantContainer > #assistantText{
+.module_hide_endAnim > #assistantContainer > #assistantText,
+.module_hide_endAnim > #assistantContainer > #inputBlock > .buttonsContainer > .startButton > .liquid_animate:before,
+.module_hide_endAnim > #assistantContainer > #inputBlock > .buttonsContainer > .startButton > .liquid_animate:after{
     animation-play-state: paused;
 }
 
