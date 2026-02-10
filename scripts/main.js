@@ -19,7 +19,7 @@ import {startProkachaikaModule} from "./prokachaika.js";
 const title = document.querySelector("#programTitle");
 const settingsInfoButton = document.querySelector("#settingsInfoButton");
 
-const version = "1.3.0";
+const version = "1.3.1";
 let mainStringList = null;
 
 const menuController = {
@@ -99,21 +99,27 @@ const menuController = {
         addListener: function () {
             if (isMobile()) {
                 document.body.addEventListener("touchstart", (e) => {
-                    menuController.gesture.startX = e.touches[0].clientX;
-                    menuController.gesture.startY = e.touches[0].clientY;
+                    if(!scrollController.ignoreMenuControllerGestures){
+                        menuController.gesture.startX = e.touches[0].clientX;
+                        menuController.gesture.startY = e.touches[0].clientY;
+                    }
                     //console.log("startX: " + menuController.gesture.startX + "\nstartY: " + menuController.gesture.startY);
                 });
                 document.body.addEventListener("touchmove", (e) => {
-                    menuController.gesture.endX = e.touches[0].clientX;
-                    menuController.gesture.endY = e.touches[0].clientY;
+                    if(!scrollController.ignoreMenuControllerGestures){
+                        menuController.gesture.endX = e.touches[0].clientX;
+                        menuController.gesture.endY = e.touches[0].clientY;
+                    }
                 });
                 document.body.addEventListener("touchend", () => {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
-                    if (menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
-                        menuController.menu.button.onclick();
-                    } else if (menuController.gesture.startX - menuController.gesture.endX < -100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
-                        menuController.menu.button.onclick();
+                    if(!scrollController.ignoreMenuControllerGestures){
+                        if (menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
+                            menuController.menu.button.onclick();
+                        } else if (menuController.gesture.startX - menuController.gesture.endX < -100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
+                            menuController.menu.button.onclick();
+                        }
                     }
                 });
             }
