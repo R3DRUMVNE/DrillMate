@@ -166,11 +166,13 @@ export const scrollController = {
     scrollPos: 0,
     workElement: null,
     fakeBody: document.querySelector("#fakeBody"),
+    ignoreMenuControllerGestures: false,
     disableBodyScrolling() {
         return new Promise(resolve => {
             this.scrollPos = window.scrollY;
             document.body.style.overflowY = "hidden";
             document.body.style.top = this.scrollPos + "px";
+            this.ignoreMenuControllerGestures = true;
             animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then(() => {
                 resolve();
             });
@@ -180,6 +182,7 @@ export const scrollController = {
         return new Promise(resolve => {
             document.body.style.overflowY = "scroll";
             window.scrollTo(0, this.scrollPos);
+            this.ignoreMenuControllerGestures = false;
             animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then(() =>{
                 resolve();
             });
@@ -187,6 +190,7 @@ export const scrollController = {
     },
     disableElementScrolling(element) {
         this.workElement = element;
+        this.ignoreMenuControllerGestures = true;
         animateElement(this.workElement, ["blur_start"], ["blur_end"]).then();
     },
     enableElementScrolling() {
