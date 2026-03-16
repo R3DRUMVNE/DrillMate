@@ -118,7 +118,6 @@ input.cb{
     opacity: 1;
     max-height: 270px;
     padding: 10px;
-    pointer-events: auto;
 }
 
 .layerHide_start{

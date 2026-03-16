@@ -167,11 +167,17 @@ export const scrollController = {
     workElement: null,
     fakeBody: document.querySelector("#fakeBody"),
     ignoreMenuControllerGestures: false,
+    toggleAllCheckboxes: function (flag){
+        this.fakeBody.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
+            flag ? checkbox.setAttribute("disabled", "") : checkbox.removeAttribute("disabled", "");
+        });
+    },
     disableBodyScrolling() {
         return new Promise(resolve => {
             this.scrollPos = window.scrollY;
             document.body.style.overflowY = "hidden";
             document.body.style.top = this.scrollPos + "px";
+            this.toggleAllCheckboxes(true);
             this.ignoreMenuControllerGestures = true;
             animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then(() => {
                 resolve();
@@ -182,6 +188,7 @@ export const scrollController = {
         return new Promise(resolve => {
             document.body.style.overflowY = "scroll";
             window.scrollTo(0, this.scrollPos);
+            this.toggleAllCheckboxes(false);
             this.ignoreMenuControllerGestures = false;
             animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then(() =>{
                 resolve();

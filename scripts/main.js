@@ -19,7 +19,7 @@ import {startProkachaikaModule} from "./prokachaika.js";
 const title = document.querySelector("#programTitle");
 const settingsInfoButton = document.querySelector("#settingsInfoButton");
 
-const version = "1.3.1";
+const version = "1.3.2";
 let mainStringList = null;
 
 const menuController = {
@@ -115,8 +115,10 @@ const menuController = {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
                     if(!scrollController.ignoreMenuControllerGestures){
-                        if (menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
+                        if (isExists(menuController.gesture.endX) && menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
                             menuController.menu.button.onclick();
+                            console.log(menuController.gesture.startX, menuController.gesture.endX);
+                            console.log(Math.abs(menuController.gesture.startY - menuController.gesture.endY));
                         } else if (menuController.gesture.startX - menuController.gesture.endX < -100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
                             menuController.menu.button.onclick();
                         }

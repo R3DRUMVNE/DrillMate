@@ -26,12 +26,12 @@ html, body {
 }
 .blur_start{
     filter: blur(0);
-    pointer-events: none;
+    pointer-events: none !important;
     animation: blur 0.3s linear;
 }
 .blur_end{
     filter: blur(2px);
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
 .unblur_start{
@@ -41,7 +41,6 @@ html, body {
 }
 .unblur_end{
     filter: blur(0);
-    pointer-events: auto;
 }
 
 @keyframes blur {
@@ -341,7 +340,6 @@ main {
 }
 .menuController_init_endAnim{
     opacity: 1;
-    pointer-events: auto;
 }
 
 @keyframes menuController {
@@ -370,7 +368,6 @@ main {
 }
 .menu_show_endAnim{
     transform: translateX(0);
-    pointer-events: auto;
 }
 
 @keyframes menu_toggle {
@@ -399,7 +396,6 @@ main {
 }
 .module_show_endAnim{
     transform: translateX(0);
-    pointer-events: auto;
 }
 
 @keyframes module_toggle {
