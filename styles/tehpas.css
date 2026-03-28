@@ -104,7 +104,6 @@ input.cb{
     opacity: 0;
     max-height: 0;
     padding: 0;
-    pointer-events: none;
 }
 
 .layerShow_start{
