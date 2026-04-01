@@ -355,7 +355,7 @@ function checkPumpListVersion(pumpListChanges) {
     return new Promise(async resolve => {
         if (!isExists(localStorage.getItem("prokachaika.pumpListVersion")) || localStorage.getItem("prokachaika.pumpListVersion") !== moduleVar.pumpList.version) {
             let addedPumpsString = "";
-            Object.keys(pumpListChanges.added) > 0 ? addedPumpsString = moduleVar.prokachaikaStringList["whatsNew"][2] + Object.keys(pumpListChanges.added).toString().replaceAll(",", "<br>") + "</p>" : null;
+            Object.keys(pumpListChanges.added).length > 0 ? addedPumpsString = moduleVar.prokachaikaStringList["whatsNew"][2] + Object.keys(pumpListChanges.added).toString().replaceAll(",", "<br>") + "</p>" : null;
             let deletedPumpsString = "";
             pumpListChanges.deleted.length > 0 ? deletedPumpsString = moduleVar.prokachaikaStringList["whatsNew"][3] + pumpListChanges.deleted.toString().replaceAll(",", "<br>") + "</p>" : null;
             localStorage.setItem("prokachaika.pumpListVersion", moduleVar.pumpList.version);

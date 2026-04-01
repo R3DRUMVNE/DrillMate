@@ -1,4 +1,71 @@
 {
-  "added": {},
-  "deleted": ["Джилекс Джамбо 70/50 П-К (2.0)", "Джилекс Джамбо 60/35 П-К (2.0)"]
+  "added": {
+    "Grandfar SGJW 37": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 35,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Grandfar SGJW 55": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 60,
+      "maxPerfLPH": null,
+      "liftingHeight": 44,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Grandfar SGJW 75": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 90,
+      "maxPerfLPH": null,
+      "liftingHeight": 46,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Grandfar SGJW 110": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Нет",
+      "bodyMaterial": "Чугун",
+      "capacity": 1100,
+      "maxPerfLPM": 100,
+      "maxPerfLPH": null,
+      "liftingHeight": 52,
+      "forLowStaticLevel": false,
+      "accumulator": "Нет"
+    },
+    "Grandfar AUTO JSWm75 (SGJW)": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 90,
+      "maxPerfLPH": null,
+      "liftingHeight": 46,
+      "forLowStaticLevel": false,
+      "accumulator": "24"
+    },
+    "Grandfar AUTO JSWm110 (SGJW)": {
+      "pumpType": "Центробежный",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 1100,
+      "maxPerfLPM": 100,
+      "maxPerfLPH": null,
+      "liftingHeight": 52,
+      "forLowStaticLevel": false,
+      "accumulator": "24"
+    }
+  },
+  "deleted": []
 }
