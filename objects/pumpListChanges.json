@@ -1,70 +1,169 @@
 {
   "added": {
-    "Grandfar SGJW 37": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Нет",
+    "Shimge PW 125 Z": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 125,
+      "maxPerfLPM": 33,
+      "maxPerfLPH": null,
+      "liftingHeight": 24,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 250 Z": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370 Z": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
       "capacity": 370,
-      "maxPerfLPM": 50,
+      "maxPerfLPM": 40,
       "maxPerfLPH": null,
-      "liftingHeight": 35,
+      "liftingHeight": 36,
       "forLowStaticLevel": false,
-      "accumulator": "Нет"
+      "accumulator": "2"
     },
-    "Grandfar SGJW 55": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Нет",
+    "Shimge PW 550 Z": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
       "capacity": 550,
-      "maxPerfLPM": 60,
+      "maxPerfLPM": 50,
       "maxPerfLPH": null,
-      "liftingHeight": 44,
+      "liftingHeight": 42,
       "forLowStaticLevel": false,
-      "accumulator": "Нет"
+      "accumulator": "2"
     },
-    "Grandfar SGJW 75": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Нет",
-      "bodyMaterial": "Чугун",
-      "capacity": 750,
-      "maxPerfLPM": 90,
-      "maxPerfLPH": null,
-      "liftingHeight": 46,
-      "forLowStaticLevel": false,
-      "accumulator": "Нет"
-    },
-    "Grandfar SGJW 110": {
-      "pumpType": "Центробежный",
-      "pumpControl": "Нет",
-      "bodyMaterial": "Чугун",
-      "capacity": 1100,
-      "maxPerfLPM": 100,
-      "maxPerfLPH": null,
-      "liftingHeight": 52,
-      "forLowStaticLevel": false,
-      "accumulator": "Нет"
-    },
-    "Grandfar AUTO JSWm75 (SGJW)": {
-      "pumpType": "Центробежный",
+    "Shimge PW 750 Z": {
+      "pumpType": "Вихревой",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
       "capacity": 750,
-      "maxPerfLPM": 90,
+      "maxPerfLPM": 57,
       "maxPerfLPH": null,
-      "liftingHeight": 46,
+      "liftingHeight": 50,
       "forLowStaticLevel": false,
-      "accumulator": "24"
+      "accumulator": "2"
     },
-    "Grandfar AUTO JSWm110 (SGJW)": {
-      "pumpType": "Центробежный",
+    "Shimge PW 125 F": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 125,
+      "maxPerfLPM": 33,
+      "maxPerfLPH": null,
+      "liftingHeight": 24,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 250 F": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370 F": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 40,
+      "maxPerfLPH": null,
+      "liftingHeight": 36,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 550 F": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 42,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 750 F": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 57,
+      "maxPerfLPH": null,
+      "liftingHeight": 50,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 125": {
+      "pumpType": "Вихревой",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
-      "capacity": 1100,
-      "maxPerfLPM": 100,
+      "capacity": 125,
+      "maxPerfLPM": 33,
       "maxPerfLPH": null,
-      "liftingHeight": 52,
+      "liftingHeight": 24,
       "forLowStaticLevel": false,
-      "accumulator": "24"
+      "accumulator": "2"
+    },
+    "Shimge PW 250": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 40,
+      "maxPerfLPH": null,
+      "liftingHeight": 36,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 550": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 42,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 750": {
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 57,
+      "maxPerfLPH": null,
+      "liftingHeight": 50,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
     }
   },
   "deleted": []
