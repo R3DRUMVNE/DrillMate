@@ -167,17 +167,11 @@ export const scrollController = {
     workElement: null,
     fakeBody: document.querySelector("#fakeBody"),
     ignoreMenuControllerGestures: false,
-    toggleAllCheckboxes: function (flag){
-        this.fakeBody.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-            flag ? checkbox.setAttribute("disabled", "") : checkbox.removeAttribute("disabled", "");
-        });
-    },
     disableBodyScrolling() {
         return new Promise(resolve => {
             this.scrollPos = window.scrollY;
             document.body.style.overflowY = "hidden";
             document.body.style.top = this.scrollPos + "px";
-            this.toggleAllCheckboxes(true);
             this.ignoreMenuControllerGestures = true;
             animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then(() => {
                 resolve();
@@ -188,7 +182,6 @@ export const scrollController = {
         return new Promise(resolve => {
             document.body.style.overflowY = "scroll";
             window.scrollTo(0, this.scrollPos);
-            this.toggleAllCheckboxes(false);
             this.ignoreMenuControllerGestures = false;
             animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then(() =>{
                 resolve();
@@ -220,7 +213,7 @@ export function linkNewStylesheet(cssName) {
 
 export function tryFormatToNumber(value) {
     if (value !== "") {
-        let newValue = value;
+        let newValue = value.toString();
         if (newValue.includes(",")) {
             newValue = newValue.replace(",", ".");
         }
@@ -334,6 +327,119 @@ export function createSwitchContainer(parentContainer, containerAttributes, swit
     const sw = createElement(container, "input", {type: "checkbox", ...switchAttributes});
     createElement(container, "label", {for: sw.id, ...labelAttributes}, stringObj);
     return sw;
+}
+
+export class singleRangeInput {
+    constructor(parentContainer, containerAttributes, stringObj, rangeStart, rangeEnd, rangeStep, defaultValue) {
+        const srGeneral = createElement(parentContainer, "div", {class: "singleRangeInputGeneral inpContainer", ...containerAttributes});
+        createElement(srGeneral, "span", {id: srGeneral.id + "Span"}, stringObj);
+        const container = createElement(srGeneral, "div", {class: "singleRangeInputContainer"});
+
+        const bar = createElement(container, "div", {class: "bar"});
+        const selectedRange = createElement(container, "div", {class: "selectedRange"});
+
+        const rangeInput = createElement(container, "input", {
+            id: srGeneral.id + "Input",
+            type: "range",
+            min: rangeStart,
+            max: rangeEnd,
+            step: rangeStep,
+            value: defaultValue
+        });
+        const rangeOutput = createElement(container, "output", {for: rangeInput.id});
+
+        rangeInput.addEventListener("input", () => {
+            const rangeInputValue = tryFormatToNumber(rangeInput.value);
+            rangeOutput.value = "-" + rangeInputValue.toFixed(1);
+            const pMaxPx = (rangeInputValue - rangeStart) / (rangeEnd - rangeStart) * bar.clientWidth;
+            selectedRange.style.width = pMaxPx + 12.5 + "px";
+            rangeOutput.style.left = pMaxPx - 6 + "px";
+        });
+
+        this.input = rangeInput;
+        this.refresh();
+    }
+    refresh(){
+            setTimeout(() => {
+                const refreshBar = new Event("input");
+                this.input.dispatchEvent(refreshBar);
+            }, 50);
+    }
+}
+
+export class doubleRangeInput {
+    constructor(parentContainer, containerAttributes, stringObj, rangeStart, rangeEnd, rangeStep, minValue, maxValue, minimalRange) {
+        const drGeneral = createElement(parentContainer, "div", {class: "doubleRangeInputGeneral inpContainer", ...containerAttributes});
+        createElement(drGeneral, "span", {id: drGeneral.id + "Span"}, stringObj);
+        const container = createElement(drGeneral, "div", {class: "doubleRangeInputContainer"});
+
+        const bar = createElement(container, "div", {class: "bar"});
+        const selectedRange = createElement(container, "div", {class: "selectedRange"});
+
+        const minInput = createElement(container, "input", {
+            id: drGeneral.id + "Min",
+            type: "range",
+            min: rangeStart,
+            max: rangeEnd,
+            step: rangeStep,
+            value: minValue
+        });
+        const minOutput = createElement(container, "output", {for: minInput.id});
+
+        const maxInput = createElement(container, "input", {
+            id: drGeneral.id + "Max",
+            type: "range",
+            min: rangeStart,
+            max: rangeEnd,
+            step: rangeStep,
+            value: maxValue
+        });
+        const maxOutput = createElement(container, "output", {for: maxInput.id});
+
+        minInput.addEventListener("input", () => {
+            const minInputValue = tryFormatToNumber(minInput.value);
+            const maxInputValue = tryFormatToNumber(maxInput.value);
+            if (minInputValue - rangeStep < maxInputValue - minimalRange) {
+                minOutput.value = minInputValue.toFixed(1);
+                changeSelectedRange(minInputValue, maxInputValue);
+            } else {
+                minInput.value = maxInputValue - minimalRange;
+            }
+        });
+
+        maxInput.addEventListener("input", () => {
+            const minInputValue = tryFormatToNumber(minInput.value);
+            const maxInputValue = tryFormatToNumber(maxInput.value);
+            if (maxInputValue + rangeStep > minInputValue + minimalRange) {
+                maxOutput.value = maxInputValue.toFixed(1);
+                changeSelectedRange(minInputValue, maxInputValue);
+            } else {
+                maxInput.value = minInputValue + minimalRange;
+            }
+        });
+
+        function changeSelectedRange(minInputValue, maxInputValue) {
+            const pMinPx = (minInputValue - rangeStart) / (rangeEnd - rangeStart) * bar.clientWidth;
+            selectedRange.style.left = pMinPx + 12.5 + 'px';
+            selectedRange.style.left = pMinPx + 12.5 + "px";
+            minOutput.style.left = pMinPx + "px";
+
+            const pMaxPx = (maxInputValue - rangeStart) / (rangeEnd - rangeStart) * bar.clientWidth;
+            selectedRange.style.width = pMaxPx - pMinPx + "px";
+            maxOutput.style.left = pMaxPx + "px";
+        }
+
+        this.minInput = minInput;
+        this.maxInput = maxInput;
+        this.refresh();
+    }
+    refresh(){
+            setTimeout(() => {
+                const refreshBar = new Event("input");
+                this.minInput.dispatchEvent(refreshBar);
+                this.maxInput.dispatchEvent(refreshBar);
+            }, 50);
+    }
 }
 
 export function getJSONData(path) {

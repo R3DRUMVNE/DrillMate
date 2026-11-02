@@ -19,7 +19,7 @@ import {startProkachaikaModule} from "./prokachaika.js";
 const title = document.querySelector("#programTitle");
 const settingsInfoButton = document.querySelector("#settingsInfoButton");
 
-const version = "1.3.2";
+const version = "1.4.0";
 let mainStringList = null;
 
 const menuController = {
@@ -377,7 +377,7 @@ function showBugReport() {
 
     createElement(itemsContainer, "span", {id: "bugReportInfo"}, mainStringList);
 
-    const clientInfo = "ОС: " + getOS() + "<br>Браузер: " + getBrowser().name + " ver " + getBrowser().version + "<br>Viewport: " + window.innerWidth + "x" + window.innerHeight + "<br>Режим: " + getStatus();
+    const clientInfo = "ОС: " + getOS() + "<br>Тачскрин: " + (isMobile() ? "Да" : "Нет") + "<br>Браузер: " + getBrowser().name + " ver " + getBrowser().version + "<br>Viewport: " + window.innerWidth + "x" + window.innerHeight + "<br>Режим: " + getStatus();
     const clientInfoContainer = createElement(itemsContainer, "div", {
         id: "clientInfoContainer",
         class: "defaultContainer"
@@ -387,9 +387,8 @@ function showBugReport() {
     copyButton.onclick = function () {
         navigator.clipboard.writeText(clientInfoContainer.innerHTML.replaceAll("<br>", "\n")).then(async function () {
             appToast("Скопировано в буфер обмена", 3000).then(() => {
-                window.open("https://t.me/r3drumvne/", '_blank');
+                window.open("tg://resolve?domain=r3drumvne", '_blank');
             });
-
         }, function () {
             appToast("Произошла ошибка при копировании текста", 1500).then();
         });

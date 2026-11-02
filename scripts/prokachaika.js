@@ -1,13 +1,15 @@
 import {
     createElement,
     animateElement,
-    appAlert, appTheme_getColor,
+    appAlert,
     appToast,
     createModuleHeader,
     filterValueByNumber, getJSONData,
     scrollController,
     share,
-    tryFormatToNumber, createSwitchContainer, isExists, updateURL
+    singleRangeInput,
+    doubleRangeInput,
+    tryFormatToNumber, isExists, updateURL, createSwitchContainer
 } from "./moduleScripts/jointScripts.js";
 import {moduleVar} from "./moduleScripts/buffer.js";
 
@@ -15,13 +17,32 @@ export async function startProkachaikaModule(prokachaikaArticle, moduleName, mod
     moduleVar.compareList = {
         list: {},
         listLengthSpan: null,
-        add: function (pumpName, pumpInfo) {
-            this.list[pumpName] = pumpInfo;
-            this.refreshListInfo();
+        withStatic: false,
+        set: function (pumpName, refresh) {
+            this.list[pumpName] = {
+                pumpType: moduleVar.pumpList.models[pumpName].pumpType,
+                pumpVersion: moduleVar.pumpList.models[pumpName].pumpControl === "Нет" ? "Насос" : "Насосная станция",
+                pumpControl: moduleVar.pumpList.models[pumpName].pumpControl,
+                bodyMaterial: moduleVar.pumpList.models[pumpName].bodyMaterial,
+                capacity: moduleVar.pumpList.models[pumpName].capacity,
+                maxPerf: moduleVar.pumpList.models[pumpName].maxPerfLPM + " л/мин | " + moduleVar.pumpList.models[pumpName].maxPerfLPH + " л/час",
+                liftingHeight: moduleVar.pumpList.models[pumpName].liftingHeight,
+                maxPressure: moduleVar.pumpList.models[pumpName].maxPressure,
+                maxPressureWithStatic: moduleVar.pumpList.models[pumpName].maxPressureWithStatic,
+                forLowStaticLevel: moduleVar.pumpList.models[pumpName].forLowStaticLevel ? "Да" : "Нет",
+                accumulator: moduleVar.pumpList.models[pumpName].accumulator,
+            };
+            refresh ? this.refreshListInfo() : null;
         },
         remove: function (pumpName) {
             Reflect.deleteProperty(this.list, pumpName);
             this.refreshListInfo();
+        },
+        refreshPumpInfo: function (){
+            for(let model in this.list){
+                this.set(model);
+                Object.defineProperty(this.list[model], "maxPressureWithStatic", {enumerable: !document.querySelector("#ignoreStaticFlowrateCheckbox").checked});
+            }
         },
         refreshListInfo: function () {
             localStorage.setItem("prokachaika.compareList", JSON.stringify(this.list));
@@ -47,13 +68,14 @@ export async function startProkachaikaModule(prokachaikaArticle, moduleName, mod
 function createFilterBlock(container, flowRateLPH) {
     const filters = {
         name: "",
-        pumpType: "Любой",
+        pumpType: "Центробежный",
         pumpControl: "Любое",
         bodyMaterial: "Любой",
+        pressureMin: 1,
+        pressureMax: 3,
+        staticLevel: 6,
         wellFlowRate: "",
-        pressure: "any",
-        lowStatic: false,
-        hideExcessPump: false,
+        ignoreStaticFlowrate: false,
     }
     const resetFilters = {};
     Object.assign(resetFilters, filters);
@@ -85,6 +107,7 @@ function createFilterBlock(container, flowRateLPH) {
     createElement(pumpTypeContainer, "span", {id: "pumpTypeSpan"}, moduleVar.prokachaikaStringList);
     const pumpTypeSelect = createElement(pumpTypeContainer, "select", {id: "pumpTypeSelect"}, moduleVar.prokachaikaStringList);
     pumpTypeSelect.onchange = function () {
+        pumpTypeSelect.options[pumpTypeSelect.selectedIndex].value !== "Центробежный" ? appToast(moduleVar.prokachaikaStringList["alertPump"], 2000).then() : null;
         filters.pumpType = pumpTypeSelect.options[pumpTypeSelect.selectedIndex].value;
         filterPumpList(filters);
     }
@@ -111,12 +134,28 @@ function createFilterBlock(container, flowRateLPH) {
         filterPumpList(filters);
     }
 
+    const pressureInputs = new doubleRangeInput(filterFieldsContainer, {id: "pressureInput"}, moduleVar.prokachaikaStringList, 1, 7, 0.1, filters.pressureMin, filters.pressureMax, 0.6);
+    pressureInputs.minInput.addEventListener("change", function () {
+        filters.pressureMin = tryFormatToNumber(pressureInputs.minInput.value);
+        filterPumpList(filters);
+    });
+    pressureInputs.maxInput.addEventListener("change", function () {
+        filters.pressureMax = tryFormatToNumber(pressureInputs.maxInput.value);
+        filterPumpList(filters);
+    });
+
+    const staticLevelInput = new singleRangeInput(filterFieldsContainer, {id: "staticLevel"}, moduleVar.prokachaikaStringList, 1, 8, 0.5, 6);
+    staticLevelInput.input.addEventListener("change", function () {
+        filters.staticLevel = tryFormatToNumber(staticLevelInput.input.value);
+        filterPumpList(filters);
+    });
+
     const wellFlowRateContainer = createElement(filterFieldsContainer, "div", {
         id: "wellFlowRateContainer",
         class: "inpContainer"
     });
     createElement(wellFlowRateContainer, "span", {id: "wellFlowRateSpan"}, moduleVar.prokachaikaStringList);
-    const wellFlowRate = createElement(wellFlowRateContainer, "input", {id: "wellFlowRate", type: "tel"});
+    const wellFlowRate = createElement(wellFlowRateContainer, "input", {id: "wellFlowRate", type: "text", inputmode: "decimal"});
     wellFlowRate.placeholder = moduleVar.prokachaikaStringList["wellFlowRateHint"];
     wellFlowRate.oninput = function () {
         filterValueByNumber(wellFlowRate);
@@ -124,51 +163,36 @@ function createFilterBlock(container, flowRateLPH) {
         filterPumpList(filters);
     }
 
-    const pressureContainer = createElement(filterFieldsContainer, "div", {
-        id: "pressureContainer",
-        class: "inpContainer"
-    });
-    createElement(pressureContainer, "span", {id: "pressureSpan"}, moduleVar.prokachaikaStringList);
-    const pressureSelect = createElement(pressureContainer, "select", {id: "pressure"}, moduleVar.prokachaikaStringList);
-    pressureSelect.onchange = function () {
-        filters.pressure = pressureSelect.value;
-        filterPumpList(filters);
-    }
-
-    const checkboxFiltersContainer = createElement(itemsContainer, "div", {id: "checkboxFiltersContainer"});
-
-    const lowStatic = createSwitchContainer(checkboxFiltersContainer, {}, {id: "lowStatic"}, {id: "lowStaticLabel"}, moduleVar.prokachaikaStringList);
-    lowStatic.onchange = function () {
-        filters.lowStatic = lowStatic.checked;
-        filterPumpList(filters);
-    }
-
-    const hideExcessPump = createSwitchContainer(checkboxFiltersContainer, {}, {id: "hideExcessPump"}, {id: "hideExcessPumpLabel"}, moduleVar.prokachaikaStringList);
-    hideExcessPump.onchange = function () {
-        filters.hideExcessPump = hideExcessPump.checked;
+    const ignoreStaticFlowrateCheckbox = createSwitchContainer(filterFieldsContainer, {id: "ignoreStaticFlowrateContainer"}, {id: "ignoreStaticFlowrateCheckbox"}, {id: "ignoreStaticFlowrateLabel"}, moduleVar.prokachaikaStringList);
+    ignoreStaticFlowrateCheckbox.checked = filters.ignoreStaticFlowrate;
+    ignoreStaticFlowrateCheckbox.onchange = function () {
+        filters.ignoreStaticFlowrate = ignoreStaticFlowrateCheckbox.checked;
         filterPumpList(filters);
     }
 
     const filtersResetButton = createElement(itemsContainer, "button", {id: "filtersResetButton"}, moduleVar.prokachaikaStringList);
-    filtersResetButton.onclick = function () {
+    filtersResetButton.onclick = async function () {
         Object.assign(filters, resetFilters);
         findPump.value = filters.name;
         pumpTypeSelect.value = filters.pumpType;
         pumpControlSelect.value = filters.pumpControl;
         bodyMaterialSelect.value = filters.bodyMaterial;
+        pressureInputs.minInput.value = filters.pressureMin;
+        pressureInputs.maxInput.value = filters.pressureMax;
+        staticLevelInput.input.value = filters.staticLevel;
         wellFlowRate.value = filters.wellFlowRate;
-        pressureSelect.value = filters.pressure;
-        lowStatic.checked = filters.lowStatic;
-        hideExcessPump.checked = filters.hideExcessPump;
+        ignoreStaticFlowrateCheckbox.checked = filters.ignoreStaticFlowrate;
+
+        pressureInputs.refresh();
+        staticLevelInput.refresh();
         filterPumpList(filters);
     }
 
     if (isExists(flowRateLPH)) {
         wellFlowRate.value = flowRateLPH;
         wellFlowRate.oninput();
-        hideExcessPump.checked = true;
-        hideExcessPump.onchange();
     }
+    filterPumpList(filters);
 }
 
 function filterPumpList(filters) {
@@ -186,54 +210,30 @@ function filterPumpList(filters) {
         if (filters.bodyMaterial !== "Любой") {
             moduleVar.pumpList.models[model].bodyMaterial !== filters.bodyMaterial ? hidePump = true : null;
         }
-        if (filters.pressure !== "any") {
-            const pressureRange = filters.pressure.split("-");
-            if (!(moduleVar.pumpList.models[model].maxPressure >= tryFormatToNumber(pressureRange[0]) && moduleVar.pumpList.models[model].maxPressure < tryFormatToNumber(pressureRange[1]))) {
-                hidePump = true;
-            }
-        }
 
-        if (filters.lowStatic && moduleVar.pumpList.models[model].forLowStaticLevel !== filters.lowStatic) {
-            hidePump = true;
+        moduleVar.pumpList.models[model].maxPressureWithStatic = tryFormatToNumber(((moduleVar.pumpList.models[model].maxPressure - 0.5 - (filters.staticLevel * 0.1))).toFixed(1));
+        if(!filters.ignoreStaticFlowrate){
+            (moduleVar.pumpList.models[model].maxPressureWithStatic < filters.pressureMin || moduleVar.pumpList.models[model].maxPressureWithStatic > filters.pressureMax) ? hidePump = true : null;
+            if((filters.staticLevel).toFixed(1) >= 7){
+                !moduleVar.pumpList.models[model].forLowStaticLevel ? hidePump = true : null;
+            }
         }
 
         !isExists(moduleVar.pumpList.models[model].pumpPoints) ? moduleVar.pumpList.models[model].pumpPoints = {} : null;
         moduleVar.pumpList.models[model].container.children[0].style = "width: 0; background-color: none";
-        if (filters.wellFlowRate !== "" && !hidePump) {
-            if (filters.wellFlowRate * 1.05 > moduleVar.pumpList.models[model].maxPerfLPH) {
-                hidePump = true;
-            } else if (moduleVar.pumpList.models[model].pumpControl !== "Частотное") {
-                for (let j = 0; j < moduleVar.pumpList.minPerfFactor.length; j++) {
-                    if (moduleVar.pumpList.models[model].maxPerfLPH > moduleVar.pumpList.minPerfFactor[j][1] && moduleVar.pumpList.models[model].maxPerfLPH <= moduleVar.pumpList.minPerfFactor[j][2]) {
-                        moduleVar.pumpList.models[model].pumpPoints.factor = moduleVar.pumpList.minPerfFactor[j][0];
-                        moduleVar.pumpList.models[model].pumpPoints.minPerfLPH = Math.round(moduleVar.pumpList.models[model].maxPerfLPH * moduleVar.pumpList.models[model].pumpPoints.factor / 100) * 100;
-
-                        if (filters.wellFlowRate < moduleVar.pumpList.models[model].pumpPoints.minPerfLPH) {
-                            if (!filters.hideExcessPump) {
-                                moduleVar.pumpList.models[model].pumpPoints.perfPoints = "ИЗБ";
-                                moduleVar.pumpList.models[model].pumpPoints.pointsColor = appTheme_getColor("excessPump");
-                            } else {
-                                hidePump = true;
-                            }
-                        } else {
-                            moduleVar.pumpList.models[model].pumpPoints.perfPoints = Math.round(filters.wellFlowRate / moduleVar.pumpList.models[model].maxPerfLPH * 100);
-                        }
-                    }
-                }
-                if (moduleVar.pumpList.models[model].pumpPoints.perfPoints === "ИЗБ") {
-                    moduleVar.pumpList.models[model].container.children[0].style = "width: 100%; background-color: var(--secondaryColor)"
-                } else if (moduleVar.pumpList.models[model].pumpPoints.perfPoints > 10) {
+        if (filters.wellFlowRate !== "" && !filters.ignoreStaticFlowrate && !hidePump) {
+            if (moduleVar.pumpList.models[model].pumpControl !== "Частотное") {
+                if(filters.wellFlowRate * 1.05 > moduleVar.pumpList.models[model].maxPerfLPH){
+                    hidePump = true;
+                } else{
+                    moduleVar.pumpList.models[model].pumpPoints.perfPoints = Math.round(filters.wellFlowRate / moduleVar.pumpList.models[model].maxPerfLPH * 100);
                     moduleVar.pumpList.models[model].container.children[0].style = "width: " + moduleVar.pumpList.models[model].pumpPoints.perfPoints + "%; background-color: var(--primaryColor)";
                 }
-            } else {
-                if (isExists(moduleVar.pumpList.models[model].pumpPoints.minPerfLPH) && filters.wellFlowRate < moduleVar.pumpList.models[model].pumpPoints.minPerfLPH) {
-                    hidePump = true;
-                }
-                moduleVar.pumpList.models[model].pumpPoints.perfPoints = "";
             }
         } else {
             moduleVar.pumpList.models[model].pumpPoints.perfPoints = "";
         }
+
         moduleVar.pumpList.models[model].container.children[1].children[1].innerHTML = moduleVar.pumpList.models[model].pumpPoints.perfPoints;
 
         hidePump ? moduleVar.pumpList.models[model].container.className = "pumpContainerHide" : moduleVar.pumpList.models[model].container.className = "pumpContainer";
@@ -247,6 +247,7 @@ function createAdditionalPanel(container) {
     moduleVar.compareList.listLengthSpan = createElement(compareButton, "span", {id: "listLengthSpan"}, Object.keys(moduleVar.compareList.list).length.toString());
     compareButton.onclick = function () {
         if (Object.keys(moduleVar.compareList.list).length > 0) {
+            moduleVar.compareList.withStatic = document.querySelector("#ignoreStaticFlowrateCheckbox").checked;
             openCompareList();
         } else {
             appToast("Таблица сравнения пуста", 2000).then();
@@ -256,6 +257,9 @@ function createAdditionalPanel(container) {
 
 function openCompareList() {
     scrollController.disableBodyScrolling().then();
+
+    moduleVar.compareList.refreshPumpInfo();
+
     const compareListContainer = createElement(document.body, "div", {
         id: "compareListContainer",
         class: "unPadContainer popUp"
@@ -439,9 +443,12 @@ function openPumpInfo(modelName) {
         maxPerf: moduleVar.pumpList.models[modelName].maxPerfLPM + " л/мин | " + moduleVar.pumpList.models[modelName].maxPerfLPH + " л/час",
         liftingHeight: moduleVar.pumpList.models[modelName].liftingHeight,
         maxPressure: moduleVar.pumpList.models[modelName].maxPressure,
+        maxPressureWithStatic: moduleVar.pumpList.models[modelName].maxPressureWithStatic,
         forLowStaticLevel: moduleVar.pumpList.models[modelName].forLowStaticLevel ? "Да" : "Нет",
         accumulator: moduleVar.pumpList.models[modelName].accumulator,
     };
+
+    !isExists(document.querySelector("#ignoreStaticFlowrateCheckbox")) || document.querySelector("#ignoreStaticFlowrateCheckbox").checked ? delete pumpInfo.maxPressureWithStatic : null;
 
     scrollController.disableBodyScrolling().then();
     const pumpInfoContainer = createElement(document.body, "div", {
@@ -452,6 +459,8 @@ function openPumpInfo(modelName) {
     createElement(pumpInfoContainer, "div", {id: "pumpNameContainer", class: "defaultContainer"}, modelName);
 
     const itemsContainer = createElement(pumpInfoContainer, "div", {id: "pumpInfoItems", class: "itemsContainer"});
+
+    createElement(itemsContainer, "img", {id: "pumpImage", src: moduleVar.pumpList.models[modelName].image, alt: ""});
 
     const paramsTableBody = createElement(itemsContainer, "div", {id: "paramsTableBody", class: "unPadContainer"});
 
@@ -469,7 +478,7 @@ function openPumpInfo(modelName) {
         const relayHAButton = createElement(pumpInfoButtons, "button", {id: "relayHAButton"}, moduleVar.prokachaikaStringList);
         relayHAButton.onclick = function () {
             scrollController.disableElementScrolling(pumpInfoContainer);
-            openRelayHASettings(pumpInfo.maxPressure);
+            isExists(pumpInfo.maxPressureWithStatic) ? openRelayHASettings(pumpInfo.maxPressureWithStatic - 0.2) : openRelayHASettings(pumpInfo.maxPressure * 0.9);
         }
     }
 
@@ -521,7 +530,7 @@ function openPumpInfo(modelName) {
     goComparePumpButton.onclick = function () {
         let mode = this.getAttribute("mode");
         if (mode === "_add") {
-            moduleVar.compareList.add(modelName, pumpInfo);
+            moduleVar.compareList.set(modelName, true);
             appToast("Насос добавлен в таблицу сравнения", 2000).then();
             mode = "_remove";
         } else if (mode === "_remove") {
@@ -553,7 +562,7 @@ function openRelayHASettings(maxPressure) {
 
     const pressureOnContainer = createElement(itemsContainer, "div", {id: "pressureOnContainer", class: "inpContainer"});
     createElement(pressureOnContainer, "span", {id: "pressureOnSpan"}, moduleVar.prokachaikaStringList);
-    const pressureOnInput = createElement(pressureOnContainer, "input", {id: "pressureOnInput", type: "tel"});
+    const pressureOnInput = createElement(pressureOnContainer, "input", {id: "pressureOnInput", type: "text", inputmode: "decimal"});
     pressureOnInput.value = moduleVar.prokachaikaStringList["pressureOnInput"];
     let pressureHA = tryFormatToNumber(pressureOnInput.value);
     pressureOnInput.oninput = function () {
@@ -567,7 +576,7 @@ function openRelayHASettings(maxPressure) {
     createElement(pressureHAContainer, "span", {id: "pressureHASpan"}, moduleVar.prokachaikaStringList);
     const pressureHAInput = createElement(pressureHAContainer, "input", {
         id: "pressureHAInput",
-        type: "tel",
+        type: "text", inputmode: "decimal",
         disabled: ""
     });
 
@@ -580,11 +589,11 @@ function openRelayHASettings(maxPressure) {
     createElement(pressureOffContainer, "span", {id: "pressureOffSpan"}, moduleVar.prokachaikaStringList);
     const pressureOffInput = createElement(pressureOffContainer, "input", {
         id: "pressureOffInput",
-        type: "tel",
+        type: "text", inputmode: "decimal",
         disabled: ""
     });
 
-    pressureOffInput.value = (maxPressure * 0.82).toFixed(1);
+    pressureOffInput.value = maxPressure.toFixed(1);
 
     const rHA_closeButton = createElement(itemsContainer, "button", {id: "rHA_closeButton"}, moduleVar.prokachaikaStringList);
     rHA_closeButton.onclick = function () {

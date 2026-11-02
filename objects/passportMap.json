@@ -1,182 +1,216 @@
-[
-  {
-    "header": "generalInfo",
+{
+  "generalInfo": {
     "displayBlockCheckbox": false,
     "toNextPageCheckbox": false,
-    "input": [
+    "elements": [
       {
-        "name": "passNumber",
+        "tag": "input",
+        "attributes": {
+          "id": "passNumber",
+          "type": "text"
+        },
         "passportDisplay": false,
-        "kind": "input",
-        "type": "text",
         "checkbox": true,
         "inTableVision": "default"
       },
       {
-        "name": "wellLocation",
+        "tag": "textarea",
+        "attributes": {
+          "id": "wellLocation"
+        },
         "passportDisplay": true,
-        "kind": "textarea",
-        "type": null,
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "drillMaster",
+        "tag": "input",
+        "attributes": {
+          "id": "drillMaster",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "drillMasterContacts",
+        "tag": "input",
+        "attributes": {
+          "id": "drillMasterContacts",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "customer",
+        "tag": "input",
+        "attributes": {
+          "id": "customer",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "customerContacts",
+        "tag": "input",
+        "attributes": {
+          "id": "customerContacts",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "startWork",
+        "tag": "input",
+        "attributes": {
+          "id": "startWork",
+          "type": "datetime-local"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "datetime-local",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "endWork",
+        "tag": "input",
+        "attributes": {
+          "id": "endWork",
+          "type": "datetime-local"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "datetime-local",
         "checkbox": false,
         "inTableVision": "default"
       }
     ]
   },
-  {
-    "header": "wellParams",
+  "wellParams":{
     "displayBlockCheckbox": false,
     "toNextPageCheckbox": true,
-    "input": [
+    "elements": [
       {
-        "name": "wellType",
+        "tag": "select",
+        "attributes": {
+          "id": "wellType"
+        },
         "passportDisplay": true,
-        "kind": "select",
-        "type": null,
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "pipesUsed",
+        "tag": "input",
+        "attributes": {
+          "id": "pipesUsed",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "wellDepth",
+        "tag": "input",
+        "attributes": {
+          "id": "wellDepth",
+          "type": "text",
+          "inputmode": "decimal"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "tel",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "appliedFilter",
+        "tag": "input",
+        "attributes": {
+          "id": "appliedFilter",
+          "type": "text"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "text",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "filterLength",
+        "tag": "input",
+        "attributes": {
+          "id": "filterLength",
+          "type": "text",
+          "inputmode": "decimal"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "tel",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "staticLevel",
+        "tag": "input",
+        "attributes": {
+          "id": "staticLevel",
+          "type": "text",
+          "inputmode": "decimal"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "tel",
         "checkbox": false,
         "inTableVision": "default"
       },
       {
-        "name": "dynamicLevel",
+        "tag": "input",
+        "attributes": {
+          "id": "dynamicLevel",
+          "type": "text",
+          "inputmode": "decimal"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "tel",
         "checkbox": true,
         "inTableVision": "default"
       },
       {
-        "name": "flowRate",
+        "tag": "input",
+        "attributes": {
+          "id": "flowRate",
+          "type": "text",
+          "inputmode": "decimal"
+        },
         "passportDisplay": true,
-        "kind": "input",
-        "type": "tel",
         "checkbox": false,
         "inTableVision": "default"
       }
     ]
   },
-  {
-    "header": "wb",
+  "wb": {
     "displayBlockCheckbox": true,
     "toNextPageCheckbox": true,
-    "input": [
+    "elements": [
       {
-        "name": "wb",
+        "tag": "textarea",
+        "attributes": {
+          "id": "wb"
+        },
         "passportDisplay": true,
-        "kind": "textarea",
-        "type": null,
         "checkbox": false,
         "inTableVision": "noSpan"
       }
     ]
   },
-  {
-    "header": "rb",
+  "rb": {
     "displayBlockCheckbox": false,
     "toNextPageCheckbox": true,
-    "input": [
+    "elements": [
       {
-        "name": "pump",
+        "tag": "textarea",
+        "attributes": {
+          "id": "pump"
+        },
         "passportDisplay": true,
-        "kind": "textarea",
-        "type": null,
         "checkbox": false,
         "inTableVision": "upperSpan"
       },
       {
-        "name": "extraRecommend",
+        "tag": "textarea",
+        "attributes": {
+          "id": "extraRecommend"
+        },
         "passportDisplay": true,
-        "kind": "textarea",
-        "type": null,
         "checkbox": true,
         "inTableVision": "upperSpan"
       }
     ]
   }
-]
+}

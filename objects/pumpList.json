@@ -1,39 +1,8 @@
 {
-  "version": "1.5",
-  "minPerfFactor": [
-    [
-      0,
-      0,
-      2000
-    ],
-    [
-      0.17,
-      2000,
-      3000
-    ],
-    [
-      0.2,
-      3000,
-      3600
-    ],
-    [
-      0.23,
-      3600,
-      3800
-    ],
-    [
-      0.26,
-      3800,
-      4200
-    ],
-    [
-      0.29,
-      4200,
-      10000
-    ]
-  ],
+  "version": "1.6",
   "models": {
     "Sterwins 900 JET-3": {
+      "image": "assets/prokachaika/sterwins-900-jet-3.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -45,6 +14,7 @@
       "accumulator": "Нет"
     },
     "Sterwins 900 WT 24-4": {
+      "image": "assets/prokachaika/sterwins-900-wt24-4.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -56,6 +26,7 @@
       "accumulator": "24"
     },
     "Aquastrong EKJ-602PA": {
+      "image": "assets/prokachaika/as-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -67,6 +38,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-802PA": {
+      "image": "assets/prokachaika/as-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -78,6 +50,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1002PA": {
+      "image": "assets/prokachaika/as-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -89,6 +62,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1202PA": {
+      "image": "assets/prokachaika/as-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -100,6 +74,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-602IA": {
+      "image": "assets/prokachaika/as-802ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -111,6 +86,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-802IA": {
+      "image": "assets/prokachaika/as-802ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -122,6 +98,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1002IA": {
+      "image": "assets/prokachaika/as-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -133,6 +110,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1202IA": {
+      "image": "assets/prokachaika/as-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -144,6 +122,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-802SA": {
+      "image": "assets/prokachaika/as-802sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -155,6 +134,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1002SA": {
+      "image": "assets/prokachaika/as-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -166,6 +146,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-1202SA": {
+      "image": "assets/prokachaika/as-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -177,6 +158,7 @@
       "accumulator": "19"
     },
     "Aquastrong EKJ-602P": {
+      "image": "assets/prokachaika/as-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -188,6 +170,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-802P": {
+      "image": "assets/prokachaika/as-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -199,6 +182,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1002P": {
+      "image": "assets/prokachaika/as-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -210,6 +194,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1202P": {
+      "image": "assets/prokachaika/as-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -221,6 +206,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-602S": {
+      "image": "assets/prokachaika/as-802s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -232,6 +218,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-802S": {
+      "image": "assets/prokachaika/as-802s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -243,6 +230,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1002S": {
+      "image": "assets/prokachaika/as-1002s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -254,6 +242,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1202S": {
+      "image": "assets/prokachaika/as-1002s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -265,6 +254,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-602I": {
+      "image": "assets/prokachaika/as-802i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -276,6 +266,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-802I": {
+      "image": "assets/prokachaika/as-802i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -287,6 +278,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1002I": {
+      "image": "assets/prokachaika/as-1002i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -298,6 +290,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EKJ-1202I": {
+      "image": "assets/prokachaika/as-1002i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -309,6 +302,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm75H": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -320,6 +314,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm75": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -331,6 +326,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm60": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -342,6 +338,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm45": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -353,6 +350,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm90H": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -364,6 +362,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm90": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -375,6 +374,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong EAJm150H": {
+      "image": "assets/prokachaika/as-eajm.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -386,6 +386,7 @@
       "accumulator": "Нет"
     },
     "Gidrox PKJ-602PА": {
+      "image": "assets/prokachaika/g-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -397,6 +398,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-802PА": {
+      "image": "assets/prokachaika/g-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -408,6 +410,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1002PА": {
+      "image": "assets/prokachaika/g-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -419,6 +422,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1202PА": {
+      "image": "assets/prokachaika/g-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -430,6 +434,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-802IA": {
+      "image": "aassets/prokachaika/g-802ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -441,6 +446,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1002IA": {
+      "image": "assets/prokachaika/g-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -452,6 +458,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1202IA": {
+      "image": "assets/prokachaika/g-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -463,6 +470,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-802SA": {
+      "image": "assets/prokachaika/g-802sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -474,6 +482,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1002SA": {
+      "image": "assets/prokachaika/g-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -485,6 +494,7 @@
       "accumulator": "19"
     },
     "Gidrox PKJ-1202SA": {
+      "image": "assets/prokachaika/g-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -496,6 +506,7 @@
       "accumulator": "19"
     },
     "Gidrox JET602P": {
+      "image": "assets/prokachaika/g-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -507,6 +518,7 @@
       "accumulator": "Нет"
     },
     "Gidrox JET802P": {
+      "image": "assets/prokachaika/g-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -518,6 +530,7 @@
       "accumulator": "Нет"
     },
     "Gidrox JET1002P": {
+      "image": "assets/prokachaika/g-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -529,6 +542,7 @@
       "accumulator": "Нет"
     },
     "Gidrox JET800 Inox": {
+      "image": "assets/prokachaika/g-jet800-inox.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -540,6 +554,7 @@
       "accumulator": "Нет"
     },
     "Gidrox JET1002 Inox": {
+      "image": "assets/prokachaika/g-jet800-inox.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -551,6 +566,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-602PA": {
+      "image": "assets/prokachaika/leo-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -562,6 +578,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-802PA": {
+      "image": "assets/prokachaika/leo-802pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -573,6 +590,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1002PA": {
+      "image": "assets/prokachaika/leo-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -584,6 +602,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1202PA": {
+      "image": "assets/prokachaika/leo-1002pa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -595,6 +614,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-602SA": {
+      "image": "assets/prokachaika/leo-802sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -606,6 +626,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-802SA": {
+      "image": "assets/prokachaika/leo-802sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -617,6 +638,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1002SA": {
+      "image": "assets/prokachaika/leo-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -628,6 +650,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1202SA": {
+      "image": "assets/prokachaika/leo-1002sa.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -639,6 +662,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-602IA": {
+      "image": "assets/prokachaika/leo-802ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -650,6 +674,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-802IA": {
+      "image": "assets/prokachaika/leo-802ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -661,6 +686,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1002IA": {
+      "image": "assets/prokachaika/leo-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -672,6 +698,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-1202IA": {
+      "image": "assets/prokachaika/leo-1002ia.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -683,6 +710,7 @@
       "accumulator": "19"
     },
     "Leo EKJ-602P": {
+      "image": "assets/prokachaika/leo-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -694,6 +722,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-802P": {
+      "image": "assets/prokachaika/leo-802p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -705,6 +734,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1002P": {
+      "image": "assets/prokachaika/leo-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -716,6 +746,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1202P": {
+      "image": "assets/prokachaika/leo-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -727,6 +758,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-602I": {
+      "image": "assets/prokachaika/leo-802i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -738,6 +770,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-802I": {
+      "image": "assets/prokachaika/leo-802i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -749,6 +782,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1002I": {
+      "image": "assets/prokachaika/leo-1002i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -760,6 +794,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1202I": {
+      "image": "assets/prokachaika/leo-1002i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -771,6 +806,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-602S": {
+      "image": "assets/prokachaika/leo-802s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -782,6 +818,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-802S": {
+      "image": "assets/prokachaika/leo-802s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -793,6 +830,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1002S": {
+      "image": "assets/prokachaika/leo-1002s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -804,6 +842,7 @@
       "accumulator": "Нет"
     },
     "Leo EKJ-1202S": {
+      "image": "assets/prokachaika/leo-1002s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -815,6 +854,7 @@
       "accumulator": "Нет"
     },
     "Leo AJm-60 1829": {
+      "image": "assets/prokachaika/leo-ajm-75.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -826,6 +866,7 @@
       "accumulator": "Нет"
     },
     "Leo AJm-75 1110": {
+      "image": "assets/prokachaika/leo-ajm-75.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -837,6 +878,7 @@
       "accumulator": "Нет"
     },
     "Leo AJm-90 1830": {
+      "image": "assets/prokachaika/leo-ajm-75.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -848,6 +890,7 @@
       "accumulator": "Нет"
     },
     "Acquaer RGJ-1002P": {
+      "image": "assets/prokachaika/acquaer-1002p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -859,6 +902,7 @@
       "accumulator": "Нет"
     },
     "Acquaer RGJ-602S": {
+      "image": "assets/prokachaika/acquaer-802s.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -870,6 +914,7 @@
       "accumulator": "Нет"
     },
     "Acquaer RGJ-602I": {
+      "image": "assets/prokachaika/acquaer-602i.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -881,6 +926,7 @@
       "accumulator": "Нет"
     },
     "Ресанта ПСН-3600П": {
+      "image": "assets/prokachaika/resanta-3600p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -892,6 +938,7 @@
       "accumulator": "Нет"
     },
     "Aquario AJC-60С": {
+      "image": "assets/prokachaika/aquario-60c.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -903,6 +950,7 @@
       "accumulator": "Нет"
     },
     "Aquario AJC-61С": {
+      "image": "assets/prokachaika/aquario-60c.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -914,6 +962,7 @@
       "accumulator": "Нет"
     },
     "Aquario AJC-110С": {
+      "image": "assets/prokachaika/aquario-60c.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -925,6 +974,7 @@
       "accumulator": "Нет"
     },
     "FGP400J": {
+      "image": "assets/prokachaika/fgp400j.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -936,6 +986,7 @@
       "accumulator": "Нет"
     },
     "Jemix SGJ-100": {
+      "image": "assets/prokachaika/jemix-sgj100.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -947,6 +998,7 @@
       "accumulator": "Нет"
     },
     "Aquastrong Aqua SMART 2-42Z": {
+      "image": "assets/prokachaika/as-smart-z.png",
       "pumpType": "Центробежный",
       "pumpControl": "Частотное",
       "bodyMaterial": "Пластик",
@@ -961,6 +1013,7 @@
       }
     },
     "P.I.T. POG370-P1": {
+      "image": "assets/prokachaika/pit-pog370-p1.png",
       "pumpType": "Вихревой",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -972,6 +1025,7 @@
       "accumulator": "2"
     },
     "Verton AQUA APS500MS": {
+      "image": "assets/prokachaika/verton-500.png",
       "pumpType": "Вихревой",
       "pumpControl": "Частотное",
       "bodyMaterial": "Чугун",
@@ -983,6 +1037,7 @@
       "accumulator": "2"
     },
     "Aquor 1AWZB750": {
+      "image": "assets/prokachaika/aquor-750.png",
       "pumpType": "Вихревой",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -994,6 +1049,7 @@
       "accumulator": "1"
     },
     "Сармат WZBS-35": {
+      "image": "assets/prokachaika/sarmat-wzbs-35.png",
       "pumpType": "Вихревой",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -1005,6 +1061,7 @@
       "accumulator": "2"
     },
     "Джилекс Джамбо 60/35 П-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-p-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -1016,6 +1073,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 70/50 П-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-p-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -1027,6 +1085,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 55/35 П-18 (2.0)": {
+      "image": "assets/prokachaika/jeelex-p-18.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -1038,6 +1097,7 @@
       "accumulator": "18"
     },
     "Джилекс Джамбо 60/35 Н-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-n-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1049,6 +1109,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 70/50 Н-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-n-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1060,6 +1121,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 70/50 Ч-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-ch-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -1071,6 +1133,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 60/35 Ч-24 (2.0)": {
+      "image": "assets/prokachaika/jeelex-ch-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -1082,6 +1145,7 @@
       "accumulator": "24"
     },
     "Джилекс Джамбо 70/50 П-50 (2.0)": {
+      "image": "assets/prokachaika/jeelex-p-50.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Пластик",
@@ -1093,6 +1157,7 @@
       "accumulator": "50"
     },
     "Джилекс Джамбо 70/50 Н-50 (2.0)": {
+      "image": "assets/prokachaika/jeelex-n-50.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1104,6 +1169,7 @@
       "accumulator": "50"
     },
     "Джилекс Джамбо 70/50 П (2.0)": {
+      "image": "assets/prokachaika/jeelex-p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -1115,6 +1181,7 @@
       "accumulator": "Нет"
     },
     "Джилекс Джамбо 60/35 П (2.0)": {
+      "image": "assets/prokachaika/jeelex-p.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -1126,6 +1193,7 @@
       "accumulator": "Нет"
     },
     "Джилекс Джамбо 70/50 Ч (2.0)": {
+      "image": "assets/prokachaika/jeelex-ch.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -1137,6 +1205,7 @@
       "accumulator": "Нет"
     },
     "Shimge JET-G2 1100": {
+      "image": "assets/prokachaika/shimge-jet.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1148,6 +1217,7 @@
       "accumulator": "Нет"
     },
     "Shimge JET-G2 1100 +24L": {
+      "image": "assets/prokachaika/shimge-jet-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1159,6 +1229,7 @@
       "accumulator": "24"
     },
     "Shimge JET-G2 750": {
+      "image": "assets/prokachaika/shimge-jet.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1170,6 +1241,7 @@
       "accumulator": "Нет"
     },
     "Shimge JET-G2 750 +24L": {
+      "image": "assets/prokachaika/shimge-jet-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1181,6 +1253,7 @@
       "accumulator": "24"
     },
     "Shimge JET-G2 550": {
+      "image": "assets/prokachaika/shimge-jet.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1192,6 +1265,7 @@
       "accumulator": "Нет"
     },
     "Shimge JET-G2 550 +24L": {
+      "image": "assets/prokachaika/shimge-jet-24.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Нержавеющая сталь",
@@ -1203,6 +1277,7 @@
       "accumulator": "24"
     },
     "Quattro Elementi Giardino 1101 FL": {
+      "image": "assets/prokachaika/qe-1101-fl.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Пластик",
@@ -1214,6 +1289,7 @@
       "accumulator": "Нет"
     },
     "Grandfar SGJW 37": {
+      "image": "assets/prokachaika/grandfar-sgjw.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -1225,6 +1301,7 @@
       "accumulator": "Нет"
     },
     "Grandfar SGJW 55": {
+      "image": "assets/prokachaika/grandfar-sgjw.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -1236,6 +1313,7 @@
       "accumulator": "Нет"
     },
     "Grandfar SGJW 75": {
+      "image": "assets/prokachaika/grandfar-sgjw.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -1247,6 +1325,7 @@
       "accumulator": "Нет"
     },
     "Grandfar SGJW 110": {
+      "image": "assets/prokachaika/grandfar-sgjw.png",
       "pumpType": "Центробежный",
       "pumpControl": "Нет",
       "bodyMaterial": "Чугун",
@@ -1258,6 +1337,7 @@
       "accumulator": "Нет"
     },
     "Grandfar AUTO JSWm75 (SGJW)": {
+      "image": "assets/prokachaika/grandfar-sgjw-auto.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -1269,6 +1349,7 @@
       "accumulator": "24"
     },
     "Grandfar AUTO JSWm110 (SGJW)": {
+      "image": "assets/prokachaika/grandfar-sgjw-auto.png",
       "pumpType": "Центробежный",
       "pumpControl": "Релейное",
       "bodyMaterial": "Чугун",
@@ -1278,6 +1359,186 @@
       "liftingHeight": 52,
       "forLowStaticLevel": false,
       "accumulator": "24"
+    },
+    "Shimge PW 125 Z": {
+      "image": "assets/prokachaika/shimge-pw-z.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 125,
+      "maxPerfLPM": 33,
+      "maxPerfLPH": null,
+      "liftingHeight": 24,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 250 Z": {
+      "image": "assets/prokachaika/shimge-pw-z.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370 Z": {
+      "image": "assets/prokachaika/shimge-pw-z.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 40,
+      "maxPerfLPH": null,
+      "liftingHeight": 36,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 550 Z": {
+      "image": "assets/prokachaika/shimge-pw-z.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 42,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 750 Z": {
+      "image": "assets/prokachaika/shimge-pw-z.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 57,
+      "maxPerfLPH": null,
+      "liftingHeight": 50,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 125 F": {
+      "image": "assets/prokachaika/shimge-pw-f.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 125,
+      "maxPerfLPM": 33,
+      "maxPerfLPH": null,
+      "liftingHeight": 24,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 250 F": {
+      "image": "assets/prokachaika/shimge-pw-f.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370 F": {
+      "image": "assets/prokachaika/shimge-pw-f.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 40,
+      "maxPerfLPH": null,
+      "liftingHeight": 36,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 550 F": {
+      "image": "assets/prokachaika/shimge-pw-f.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 42,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 750 F": {
+      "image": "assets/prokachaika/shimge-pw-f.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Частотное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 57,
+      "maxPerfLPH": null,
+      "liftingHeight": 50,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 125": {
+      "image": "assets/prokachaika/shimge-pw.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 125,
+      "maxPerfLPM": 33,
+      "maxPerfLPH": null,
+      "liftingHeight": 24,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 250": {
+      "image": "assets/prokachaika/shimge-pw.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 250,
+      "maxPerfLPM": 37,
+      "maxPerfLPH": null,
+      "liftingHeight": 30,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 370": {
+      "image": "assets/prokachaika/shimge-pw.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 370,
+      "maxPerfLPM": 40,
+      "maxPerfLPH": null,
+      "liftingHeight": 36,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 550": {
+      "image": "assets/prokachaika/shimge-pw.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 550,
+      "maxPerfLPM": 50,
+      "maxPerfLPH": null,
+      "liftingHeight": 42,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
+    },
+    "Shimge PW 750": {
+      "image": "assets/prokachaika/shimge-pw.png",
+      "pumpType": "Вихревой",
+      "pumpControl": "Релейное",
+      "bodyMaterial": "Чугун",
+      "capacity": 750,
+      "maxPerfLPM": 57,
+      "maxPerfLPH": null,
+      "liftingHeight": 50,
+      "forLowStaticLevel": false,
+      "accumulator": "2"
     }
   }
 }
