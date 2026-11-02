@@ -165,7 +165,7 @@
     }
 }
 
-/*сенсор, стилус*/
+/*курсор*/
 @media (hover: hover) and (pointer: fine) {
     input[type="file"] + label.of:hover,
     button:hover,
@@ -184,3 +184,8 @@
         scrollbar-width: none;
     }
 }
+
+/*сенсор
+@media (pointer: coarse) and (hover: none) {
+
+}*/

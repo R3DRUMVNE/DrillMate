@@ -95,9 +95,10 @@
     #wellParamsBlockItems{
         display: grid;
         gap: 10px;
-        grid-template-columns: 1fr 1.2fr;
+        grid-template-columns: 1fr 1fr;
         grid-auto-rows: auto;
         grid-template-areas:
+        "depthFromGeoContainer depthFromGeoContainer"
         "wellTypeContainer filterLengthContainer"
         "pipesUsedContainer staticLevelContainer"
         "wellDepthContainer dynamicLevelContainer"
@@ -236,5 +237,18 @@
 
     #gsCheckboxContainer{
         align-self: center;
+    }
+}
+
+@media screen and (min-width: 1000px){
+    #gsCheckboxContainer{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        flex-grow: 1;
+        column-gap: 20px;
+        row-gap: 10px;
+        margin-left: 7px;
+        margin-right: 7px;
+        align-self: auto;
     }
 }

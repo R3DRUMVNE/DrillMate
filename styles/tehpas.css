@@ -253,6 +253,9 @@ input.cb{
 #wellDepthContainer{
     grid-area: wellDepthContainer;
 }
+#depthFromGeoContainer{
+    grid-area: depthFromGeoContainer;
+}
 #appliedFilterContainer{
     grid-area: appliedFilterContainer;
 }

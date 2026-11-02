@@ -4,17 +4,16 @@
   "findPumpSpan": "Название модели:",
   "findPumpHint": "Sterwins 900 JET-3",
   "pumpTypeSelectSpan": "Тип насоса:",
-  "pumpTypeSelect": ["Любой", "Центробежный", "Вихревой"],
+  "pumpTypeSelect": ["Центробежный", "Вихревой", "Любой"],
   "pumpControlSelectSpan": "Управление насосом:",
   "pumpControlSelect": ["Любое", "Нет", "Релейное", "Частотное"],
   "bodyMaterialSelectSpan": "Материал корпуса:",
   "bodyMaterialSelect": ["Любой", "Пластик", "Нержавеющая сталь", "Чугун"],
   "wellFlowRateSpan": "Дебит скважины, л/ч:",
   "wellFlowRateHint": "1000",
-  "pressureSpan": "Макс. давление:",
-  "pressure": [["Любое", "any"], ["≤3 бар", "0-3"], ["3 ÷ 4 бар", "3-4"], ["4 ÷ 6 бар", "4-6"], [">6 бар", "6-100"]],
-  "lowStaticLabel": "Статика ≤-6м",
-  "hideExcessPumpLabel": "Скрывать \"ИЗБ\"",
+  "pressureInputSpan": "Макс. давление, бар:",
+  "staticLevelSpan": "Статический уровень, м:",
+  "ignoreStaticFlowrateLabel": "Без параметров скважины",
   "filtersResetButton": "Сбросить фильтры",
   "compareButton": "Таблица сравнения",
   "cL_deleteButton": "Удалить",
@@ -29,6 +28,7 @@
   "maxPerfSpan": "Макс. производительность:",
   "liftingHeightSpan": "Высота подъёма, м:",
   "maxPressureSpan": "Макс. давление, бар:",
+  "maxPressureWithStaticSpan": "Макс. давление (&#8209;статика), бар:",
   "forLowStaticLevelSpan": "Для низких статик:",
   "accumulatorSpan": "Гидроаккумулятор, л:",
   "relayHAButton": "Настройки реле-гидроаккумулятор",
@@ -43,5 +43,7 @@
   "pressureOnInput": "1,4",
   "pressureHASpan": "Давление воздуха в ГА, бар:",
   "pressureOffSpan": "Давление выключения насоса, не более, бар:",
-  "rHA_closeButton": "Закрыть"
+  "rHA_closeButton": "Закрыть",
+
+  "alertPump": "Внимание: вихревые насосные станции могут выдавать меньший дебит в отличие от центробежных!"
 }

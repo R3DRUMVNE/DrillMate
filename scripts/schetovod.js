@@ -37,7 +37,7 @@ function createInputBlock(blockDiv) {
     createElement(volumeInputContainer, "span", {id: "volumeText"}, moduleVar.schetovodStringList);
     const volumeInput = createElement(volumeInputContainer, "input", {
         id: "volumeInput",
-        type: "tel",
+        type: "text", inputmode: "decimal",
         placeholder: moduleVar.schetovodStringList.volumeInputHint
     });
     const buttonsContainer = createElement(inputBlock, "div", {class: "buttonsContainer"});

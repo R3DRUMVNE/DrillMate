@@ -7,7 +7,7 @@ import {
     getJSONData,
     appTheme_getColor,
     animateElement,
-    createElement, createSwitchContainer, isJSON, appSettings_get, appDialog, isExists
+    createElement, createSwitchContainer, isJSON, appSettings_get, appDialog, isExists, filterValueByNumber
 } from "./moduleScripts/jointScripts.js";
 import {addTempElement, moduleVar, setTimer} from "./moduleScripts/buffer.js";
 
@@ -23,7 +23,7 @@ export async function startTehPasModule(tehpasArticle, moduleName, moduleID) {
     createInputBlocks(tehpasArticle);
     createGeoSectionBlock(tehpasArticle);
     createFormPassportButton(tehpasArticle);
-    checkBrowserReminder().then(() =>{
+    checkBrowserReminder().then(() => {
         checkSavedHistory().then();
     });
 }
@@ -32,16 +32,16 @@ async function checkSavedHistory() {
     moduleVar.tehpasHistory = {
         list: null,
         emptyList: getDataToSave(),
-        get(){
+        get() {
             moduleVar.tehpasHistory.list = localStorage.getItem("tehpas.history");
         },
-        set(JSONString){
+        set(JSONString) {
             this.list = JSONString;
             localStorage.setItem("tehpas.history", this.list);
         },
-        refreshPeriodically: function (refreshDelay){
-            setTimer("tehpasHistoryRefresh", setInterval(function (){
-                if(appSettings_get("tehpasSaveHistory")){
+        refreshPeriodically: function (refreshDelay) {
+            setTimer("tehpasHistoryRefresh", setInterval(function () {
+                if (appSettings_get("tehpasSaveHistory")) {
                     moduleVar.tehpasHistory.set(getDataToSave());
                 }
             }, refreshDelay));
@@ -50,8 +50,11 @@ async function checkSavedHistory() {
 
     if (appSettings_get("tehpasSaveHistory")) {
         moduleVar.tehpasHistory.get();
-        if(isJSON(moduleVar.tehpasHistory.list) && moduleVar.tehpasHistory.list !== moduleVar.tehpasHistory.emptyList){
-            const answer = await appDialog("Восстановление сеанса", "Хотите восстановить данные последнего сеанса?", [{text: "Да", value: "yes"}, {text: "Нет", value: "no"}]);
+        if (isJSON(moduleVar.tehpasHistory.list) && moduleVar.tehpasHistory.list !== moduleVar.tehpasHistory.emptyList) {
+            const answer = await appDialog("Восстановление сеанса", "Хотите восстановить данные последнего сеанса?", [{
+                text: "Да",
+                value: "yes"
+            }, {text: "Нет", value: "no"}]);
             switch (answer) {
                 case "yes":
                     setReadedData(moduleVar.tehpasHistory.list);
@@ -83,7 +86,7 @@ function checkBrowserReminder() {
             return new Promise(resolve => {
                 browserReminderISODate = new Date().toISOString();
                 localStorage.setItem("tehpas.browserReminderISODate", browserReminderISODate);
-                appAlert("Внимание", moduleVar.tehpasStringList["browserReminder"]).then(() =>{
+                appAlert("Внимание", moduleVar.tehpasStringList["browserReminder"]).then(() => {
                     resolve();
                 });
             });
@@ -92,42 +95,52 @@ function checkBrowserReminder() {
 }
 
 function createInputBlocks(container) {
-    for (let i = 0; i < moduleVar.passportMap.length; i++) {
-        const block = createElement(container, "section", {id: moduleVar.passportMap[i].header + "Block", class: "unPadContainer"});
+    for (let block in moduleVar.passportMap) {
+        //создание блоков
+        const blockContainer = createElement(container, "section", {
+            id: block.toString() + "Block",
+            class: "unPadContainer"
+        });
 
-        createElement(block, "div", {
-            id: moduleVar.passportMap[i].header + "Header",
+        //создание заголовков блоков
+        createElement(blockContainer, "div", {
+            id: block.toString() + "Header",
             class: "defaultContainer blockHeader"
         }, moduleVar.tehpasStringList);
 
-        if (moduleVar.passportMap[i].displayBlockCheckbox || moduleVar.passportMap[i].toNextPageCheckbox) {
-            const blockCheckboxContainer = createElement(block, "div", {
-                id: block.id + "CheckboxContainer",
+        //создание чекбоксов у блоков
+        if (moduleVar.passportMap[block].displayBlockCheckbox || moduleVar.passportMap[block].toNextPageCheckbox) {
+            //создание контейнера под чекбоксы
+            const blockCheckboxContainer = createElement(blockContainer, "div", {
+                id: blockContainer.id + "CheckboxContainer",
                 class: "blockCheckboxContainer"
             });
-            if (moduleVar.passportMap[i].displayBlockCheckbox) {
+            //создание чекбоксов
+            if (moduleVar.passportMap[block].displayBlockCheckbox) {
                 createSwitchContainer(blockCheckboxContainer, {}, {
-                    id: block.id + "Checkbox",
+                    id: blockContainer.id + "Checkbox",
                     file: "cb"
-                }, {id: block.id + "CheckboxLabel"}, moduleVar.tehpasStringList);
+                }, {id: blockContainer.id + "CheckboxLabel"}, moduleVar.tehpasStringList);
             }
-            if (moduleVar.passportMap[i].toNextPageCheckbox) {
+            if (moduleVar.passportMap[block].toNextPageCheckbox) {
                 createSwitchContainer(blockCheckboxContainer, {}, {
-                    id: block.id + "ToNextPageCheckbox",
+                    id: blockContainer.id + "ToNextPageCheckbox",
                     file: "cb"
                 }, {id: "toNextPageCheckboxLabel"}, moduleVar.tehpasStringList);
             }
         }
 
-        const itemsContainer = createElement(block, "div", {id: block.id + "Items"});
+        //создание элементов в блоке
+        const itemsContainer = createElement(blockContainer, "div", {id: blockContainer.id + "Items"});
 
         let inputContainer;
-        for (let j = 0; j < moduleVar.passportMap[i].input.length; j++) {
-            if (moduleVar.passportMap[i].input[j].checkbox) {
+        moduleVar.passportMap[block].elements.forEach((element) => {
+            //создание чекбокса у элемента
+            if (element.checkbox) {
                 inputContainer = createElement(itemsContainer, "div", {class: "inputContainer"});
 
                 createElement(inputContainer, "input", {
-                    id: moduleVar.passportMap[i].input[j].name + "Checkbox",
+                    id: element.attributes.id + "Checkbox",
                     class: "cb",
                     type: "checkbox",
                     file: "cb",
@@ -137,35 +150,38 @@ function createInputBlocks(container) {
                 inputContainer = createElement(itemsContainer, "div", {class: "inputContainerNoCheckbox"});
             }
 
-            if (isExists(moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"])) {
+            //создание подписи к элементу
+            if (isExists(moduleVar.tehpasStringList[element.attributes.id + "Span"])) {
                 createElement(inputContainer, "span", {
-                    id: moduleVar.passportMap[i].input[j].name + "Span",
+                    id: element.attributes.id + "Span",
                     class: "lb"
                 }, moduleVar.tehpasStringList);
             }
 
-            if (moduleVar.passportMap[i].input[j].kind === "input" || moduleVar.passportMap[i].input[j].kind === "textarea") {
-                const input = createElement(inputContainer, moduleVar.passportMap[i].input[j].kind, {
-                    id: moduleVar.passportMap[i].input[j].name,
-                    class: "inp",
-                    file: "inp"
-                });
-                if (isExists(moduleVar.passportMap[i].input[j].type)) {
-                    input.setAttribute("type", moduleVar.passportMap[i].input[j].type);
+            //создание элементов
+            const input = createElement(inputContainer, element.tag, {
+                class: "inp",
+                file: "inp",
+                ...element.attributes
+            }, moduleVar.tehpasStringList);
+            if (input.id === "wellDepth") {
+                const depthFromGeo = createSwitchContainer(itemsContainer, {id: "depthFromGeoContainer"}, {
+                    id: "depthFromGeoCheckbox",
+                    file: "cb"
+                }, {id: "depthFromGeoLabel"}, moduleVar.tehpasStringList);
+                depthFromGeo.onchange = function () {
+                    if (depthFromGeo.checked) {
+                        input.setAttribute("disabled", "");
+                        input.value = document.querySelector("#layersContainer").lastElementChild.children[2].children[1].value;
+                    } else {
+                        input.removeAttribute("disabled", "");
+                    }
                 }
-                if (input.type !== "datetime-local") {
-                    input.placeholder = moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Hint"];
-                }
-                inputContainer.id = input.id + "Container";
-            } else if (moduleVar.passportMap[i].input[j].kind === "select") {
-                const select = createElement(inputContainer, moduleVar.passportMap[i].input[j].kind, {
-                    id: moduleVar.passportMap[i].input[j].name,
-                    class: "inp",
-                    file: "inp"
-                }, moduleVar.tehpasStringList);
-                inputContainer.id = select.id + "Container";
             }
-        }
+
+            input.type !== "datetime-local" ? input.placeholder = moduleVar.tehpasStringList[element.attributes.id + "Hint"] : null;
+            inputContainer.id = input.id + "Container";
+        });
     }
 
     document.querySelector("#wellType").onchange = function () {
@@ -257,17 +273,19 @@ function createPassport() {
 
     createElement(passportHeaderContainer, "span", {id: "passportUnderHeaderSpan"}, moduleVar.tehpasStringList);
 
-    for (let i = 0; i < moduleVar.passportMap.length; i++) {
+    for (let block in moduleVar.passportMap) {
         let hideBlock = false;
-        if (moduleVar.passportMap[i].displayBlockCheckbox) {
-            if (!document.querySelector("#" + moduleVar.passportMap[i].header + "BlockCheckbox").checked) {
+        //отображение блока в паспорте
+        if (moduleVar.passportMap[block].displayBlockCheckbox) {
+            if (!document.querySelector("#" + block.toString() + "BlockCheckbox").checked) {
                 hideBlock = true;
             }
         }
+
         if (!hideBlock) {
             const tableBlock = createElement(passportContainer, "table", {class: "tableBlock"});
-            if (moduleVar.passportMap[i].toNextPageCheckbox) {
-                if (document.querySelector("#" + moduleVar.passportMap[i].header + "BlockToNextPageCheckbox").checked) {
+            if (moduleVar.passportMap[block].toNextPageCheckbox) {
+                if (document.querySelector("#" + block.toString() + "BlockToNextPageCheckbox").checked) {
                     tableBlock.className = "tableBlock breakBefore";
                 }
             }
@@ -275,48 +293,48 @@ function createPassport() {
             createElement(tableBlock, "col");
             createElement(tableBlock, "col");
 
-            createElement(tableBlock, "caption", {class: "tableCaption"}, moduleVar.tehpasStringList[moduleVar.passportMap[i].header + "Header"]);
+            createElement(tableBlock, "caption", {class: "tableCaption"}, moduleVar.tehpasStringList[block.toString() + "Header"]);
 
-            for (let j = 0; j < moduleVar.passportMap[i].input.length; j++) {
-                if (moduleVar.passportMap[i].input[j].name === "passNumber") {
-                    if (document.querySelector("#" + moduleVar.passportMap[i].input[j].name + "Checkbox").checked) {
-                        if (document.querySelector("#" + moduleVar.passportMap[i].input[j].name).value === "") {
+            moduleVar.passportMap[block].elements.forEach((element) => {
+                if (element.attributes.id === "passNumber") {
+                    if (document.querySelector("#" + element.attributes.id + "Checkbox").checked) {
+                        if (document.querySelector("#" + element.attributes.id).value === "") {
                             passportHeaderSpan.innerHTML += " №_____";
                         } else {
-                            passportHeaderSpan.innerHTML += " №" + document.querySelector("#" + moduleVar.passportMap[i].input[j].name).value;
+                            passportHeaderSpan.innerHTML += " №" + document.querySelector("#" + element.attributes.id).value;
                         }
                     }
-                } else if (moduleVar.passportMap[i].input[j].checkbox) {
-                    if (!document.querySelector("#" + moduleVar.passportMap[i].input[j].name + "Checkbox").checked) {
-                        moduleVar.passportMap[i].input[j].passportDisplay = false;
-                        if (moduleVar.passportMap[i].header === "wb") {
+                } else if (element.checkbox) {
+                    if (!document.querySelector("#" + element.attributes.id + "Checkbox").checked) {
+                        element.passportDisplay = false;
+                        if (block.toString() === "wb") {
                             tableBlock.remove();
                         }
                     } else {
-                        moduleVar.passportMap[i].input[j].passportDisplay = true;
+                        element.passportDisplay = true;
                     }
                 }
 
-                if (moduleVar.passportMap[i].input[j].passportDisplay) {
-                    if (moduleVar.passportMap[i].input[j].inTableVision.includes("default")) {
+                if (element.passportDisplay) {
+                    if (element.inTableVision.includes("default")) {
                         const row = tableBlock.insertRow();
                         let cell = row.insertCell();
-                        cell.innerHTML = moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"];
+                        cell.innerHTML = moduleVar.tehpasStringList[element.attributes.id + "Span"];
                         cell = row.insertCell();
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
-                    } else if (moduleVar.passportMap[i].input[j].inTableVision.includes("noSpan")) {
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + element.attributes.id));
+                    } else if (element.inTableVision.includes("noSpan")) {
                         const row = tableBlock.insertRow();
                         const cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
-                    } else if (moduleVar.passportMap[i].input[j].inTableVision.includes("upperSpan")) {
+                        cell.innerHTML = getValueFromElement(document.querySelector("#" + element.attributes.id));
+                    } else if (element.inTableVision.includes("upperSpan")) {
                         const row = tableBlock.insertRow();
                         const cell = row.insertCell();
                         cell.colSpan = 2;
-                        cell.innerHTML = "<b>" + moduleVar.tehpasStringList[moduleVar.passportMap[i].input[j].name + "Span"] + "</b><br>" + getValueFromElement(document.querySelector("#" + moduleVar.passportMap[i].input[j].name));
+                        cell.innerHTML = "<b>" + moduleVar.tehpasStringList[element.attributes.id + "Span"] + "</b><br>" + getValueFromElement(document.querySelector("#" + element.attributes.id));
                     }
                 }
-            }
+            });
         }
     }
 
@@ -726,18 +744,6 @@ function createControls(container) {
 
 function setReadedData(JSONString) {
     const data = JSON.parse(JSONString);
-    for (let field in data.fields) {
-        const element = document.querySelector("#" + field);
-        if (element) {
-            const loadAsAttr = element.getAttribute("file")
-            if(loadAsAttr === "cb") {
-                element.checked = JSON.parse(data.fields[field]);
-                element.dispatchEvent(new Event("change"));
-            }
-            loadAsAttr === "inp" ? element.value = data.fields[field] : null;
-        }
-    }
-
     const layersContainer = document.querySelector("#layersContainer");
     layersContainer.innerHTML = "";
     if (data.layers !== []) {
@@ -752,6 +758,18 @@ function setReadedData(JSONString) {
             }
         });
     }
+
+    for (let field in data.fields) {
+        const element = document.querySelector("#" + field);
+        if (element) {
+            const loadAsAttr = element.getAttribute("file")
+            if (loadAsAttr === "cb") {
+                element.checked = JSON.parse(data.fields[field]);
+                element.dispatchEvent(new Event("change"));
+            }
+            loadAsAttr === "inp" ? element.value = data.fields[field] : null;
+        }
+    }
 }
 
 function showFileSaveDialog() {
@@ -761,7 +779,10 @@ function showFileSaveDialog() {
         class: "unPadContainer popUp"
     });
 
-    createElement(fileSaveContainer, "div", {id: "fileSaveHeader", class: "defaultContainer"}, moduleVar.tehpasStringList);
+    createElement(fileSaveContainer, "div", {
+        id: "fileSaveHeader",
+        class: "defaultContainer"
+    }, moduleVar.tehpasStringList);
 
     const itemsContainer = createElement(fileSaveContainer, "div", {class: "itemsContainer"});
 
@@ -825,7 +846,10 @@ function saveFile(fileName, data) {
 }
 
 function createGeoSectionBlock(container) {
-    const geoSectionContainer = createElement(container, "section", {id: "geoSectionContainer", class: "unPadContainer"});
+    const geoSectionContainer = createElement(container, "section", {
+        id: "geoSectionContainer",
+        class: "unPadContainer"
+    });
 
     createElement(geoSectionContainer, "div", {
         id: "geoSectionHeader",
@@ -868,12 +892,18 @@ function addLayer(prevLayer, container) {
     const startDepthContainer = createElement(layer, "div", {id: "startDepthContainer", class: "inpContainer"});
 
     createElement(startDepthContainer, "span", {id: "startDepthSpan"}, moduleVar.tehpasStringList);
-    const startDepth = createElement(startDepthContainer, "input", {id: "startDepth", type: "tel", file: ""});
+    const startDepth = createElement(startDepthContainer, "input", {
+        id: "startDepth",
+        type: "text",
+        inputmode: "decimal",
+        file: ""
+    });
     startDepth.placeholder = moduleVar.tehpasStringList[startDepth.id + "Hint"];
     if (isExists(layer.previousElementSibling)) {
         startDepth.value = layer.previousElementSibling.children[2].children[1].value;
     }
     startDepth.oninput = function () {
+        filterValueByNumber(this);
         if (isExists(layer.previousElementSibling)) {
             layer.previousElementSibling.children[2].children[1].value = startDepth.value;
         }
@@ -882,11 +912,19 @@ function addLayer(prevLayer, container) {
     const endDepthContainer = createElement(layer, "div", {id: "endDepthContainer", class: "inpContainer"});
 
     createElement(endDepthContainer, "span", {id: "endDepthSpan"}, moduleVar.tehpasStringList);
-    const endDepth = createElement(endDepthContainer, "input", {id: "endDepth", type: "tel", file: ""});
+    const endDepth = createElement(endDepthContainer, "input", {
+        id: "endDepth",
+        type: "text",
+        inputmode: "decimal",
+        file: ""
+    });
     endDepth.placeholder = moduleVar.tehpasStringList[endDepth.id + "Hint"];
     endDepth.oninput = function () {
+        filterValueByNumber(this);
         if (isExists(layer.nextElementSibling)) {
             layer.nextElementSibling.children[1].children[1].value = this.value;
+        } else {
+            refreshDepthFromGeo(document.querySelector("#wellDepth"), endDepth);
         }
     }
 
@@ -898,7 +936,10 @@ function addLayer(prevLayer, container) {
     const layerColorContainer = createElement(layer, "div", {id: "layerColorContainer", class: "inpContainer"});
 
     createElement(layerColorContainer, "span", {id: "layerColorSpan"}, moduleVar.tehpasStringList);
-    const layerColor = createElement(layerColorContainer, "select", {id: "layerColor", file: ""}, moduleVar.tehpasStringList);
+    const layerColor = createElement(layerColorContainer, "select", {
+        id: "layerColor",
+        file: ""
+    }, moduleVar.tehpasStringList);
     layerColor.style.backgroundColor = layerColor.value;
     layerColor.onchange = function () {
         if (layerColor.value === "Khaki" || layerColor.value === "AliceBlue") {
@@ -921,6 +962,7 @@ function addLayer(prevLayer, container) {
     const addLayerButton = createElement(layer, "button", {id: "addLayerButton"}, moduleVar.tehpasStringList);
     addLayerButton.onclick = function () {
         addLayer(layer);
+        refreshDepthFromGeo(document.querySelector("#wellDepth"), document.querySelector("#layersContainer").lastElementChild.children[2].children[1]);
     }
 
     const removeLayerButton = createElement(layer, "button", {id: "removeLayerButton"}, moduleVar.tehpasStringList);
@@ -929,6 +971,7 @@ function addLayer(prevLayer, container) {
             const itemsContainer = layer.parentElement;
             layer.remove();
             checkMinimumLayer(itemsContainer);
+            refreshDepthFromGeo(document.querySelector("#wellDepth"), document.querySelector("#layersContainer").lastElementChild.children[2].children[1]);
         });
     }
 
@@ -942,6 +985,12 @@ function checkMinimumLayer(container) {
         container.lastElementChild.children[1].children[1].value = "0";
     } else {
         container.children[container.children.length - 2].lastElementChild.disabled = false;
+    }
+}
+
+function refreshDepthFromGeo(wellDepth, endDepth){
+    if (document.querySelector("#depthFromGeoCheckbox").checked) {
+        wellDepth.value = endDepth.value;
     }
 }
 
