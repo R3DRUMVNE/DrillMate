@@ -44,7 +44,9 @@ export function destroyAllTempElements() {
     }
 }
 
-export const moduleVar = {};
+export const moduleVar = {
+    ignoreMenuControllerGestures: false,
+};
 
 export function clearModuleVariables(){
     Object.keys(moduleVar).forEach((key) => {
