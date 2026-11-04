@@ -1,4 +1,4 @@
-import {clearModuleVariables, destroyAllTempElements, destroyAllTimers} from "./moduleScripts/buffer.js";
+import {clearModuleVariables, destroyAllTempElements, destroyAllTimers, moduleVar} from "./moduleScripts/buffer.js";
 import {
     linkNewStylesheet,
     appToast,
@@ -9,7 +9,7 @@ import {
     animateElement,
     appSettings,
     createElement,
-    createSwitchContainer, isExists, updateURL
+    createSwitchContainer, isExists, updateURL, messageToSW
 } from "./moduleScripts/jointScripts.js";
 import {startSchetoVodModule} from "./schetovod.js";
 import {startDaiCamlockModule} from "./daicamlock.js";
@@ -19,7 +19,7 @@ import {startProkachaikaModule} from "./prokachaika.js";
 const title = document.querySelector("#programTitle");
 const settingsInfoButton = document.querySelector("#settingsInfoButton");
 
-const version = "1.4.0";
+const version = "1.4.1";
 let mainStringList = null;
 
 const menuController = {
@@ -99,14 +99,14 @@ const menuController = {
         addListener: function () {
             if (isMobile()) {
                 document.body.addEventListener("touchstart", (e) => {
-                    if(!scrollController.ignoreMenuControllerGestures){
+                    if (!moduleVar.ignoreMenuControllerGestures) {
                         menuController.gesture.startX = e.touches[0].clientX;
                         menuController.gesture.startY = e.touches[0].clientY;
                     }
                     //console.log("startX: " + menuController.gesture.startX + "\nstartY: " + menuController.gesture.startY);
                 });
                 document.body.addEventListener("touchmove", (e) => {
-                    if(!scrollController.ignoreMenuControllerGestures){
+                    if (!moduleVar.ignoreMenuControllerGestures) {
                         menuController.gesture.endX = e.touches[0].clientX;
                         menuController.gesture.endY = e.touches[0].clientY;
                     }
@@ -114,11 +114,11 @@ const menuController = {
                 document.body.addEventListener("touchend", () => {
                     //console.log("endX: " + menuController.gesture.endX + "\nendY: " + menuController.gesture.endY);
                     //console.log("deltaX:" + (menuController.gesture.startX - menuController.gesture.endX) + "\ndeltaY: " + Math.abs(menuController.gesture.startY - menuController.gesture.endY));
-                    if(!scrollController.ignoreMenuControllerGestures){
+                    if (!moduleVar.ignoreMenuControllerGestures) {
                         if (isExists(menuController.gesture.endX) && menuController.gesture.startX - menuController.gesture.endX > 100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && !menuController.menu.shown) {
                             menuController.menu.button.onclick();
-                            console.log(menuController.gesture.startX, menuController.gesture.endX);
-                            console.log(Math.abs(menuController.gesture.startY - menuController.gesture.endY));
+                            //console.log(menuController.gesture.startX, menuController.gesture.endX);
+                            //console.log(Math.abs(menuController.gesture.startY - menuController.gesture.endY));
                         } else if (menuController.gesture.startX - menuController.gesture.endX < -100 && Math.abs(menuController.gesture.startY - menuController.gesture.endY) <= 60 && menuController.menu.shown) {
                             menuController.menu.button.onclick();
                         }
@@ -178,6 +178,25 @@ function menuButtonChange(parameter) {
     }
 }
 
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.ready.then((registration) => {
+        const isFirstInstall = navigator.serviceWorker.controller === null;
+
+        isFirstInstall ? console.log("SW - NEW SW FOUND! INSTALLED!") : null;
+
+        registration.addEventListener("updatefound", () => {
+            const newSW = registration.installing;
+            if (newSW) {
+                newSW.addEventListener("statechange", () => {
+                    if (newSW.state === "installed" && !isFirstInstall) {
+                        appToast(mainStringList.updateFound, 4000).then();
+                    }
+                });
+            }
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     appSettings.check();
     await appTheme_getThemes("./objects/themesList.json");
@@ -190,7 +209,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     animateElement(document.querySelector("#programHeader"), ["programHeader_startAnim"], ["programHeader_endAnim"]).then(() => {
         checkURL();
         appSettings.keys.menuButtonFixed ? animateElement(menuButton, ["menuButtonFixed_start"], ["menuButtonFixed_end"]).then() : null;
-
+        appSettings.keys.prokachaikaSaveCache && "serviceWorker" in navigator ? messageToSW({
+            key: "PROKACHAIKA_CACHE",
+            value: true
+        }).then().catch(err => console.error(err)) : null;
     });
 });
 window.onbeforeunload = function () {
@@ -198,7 +220,7 @@ window.onbeforeunload = function () {
 };
 
 settingsInfoButton.onclick = function () {
-    showSettingsInfo();
+    showSettingsInfo().then();
 }
 
 function checkURL() {
@@ -216,7 +238,7 @@ function checkURL() {
             }
         }
         if (!moduleFound) {
-            appToast("Ошибка: указанный раздел не найден", 3000).then();
+            appToast(mainStringList.moduleNotFound, 3000).then();
             loadDefault();
         }
     } else {
@@ -277,7 +299,7 @@ export async function loadModule(optionContainer, addons, skipMenuHiding) {
     }
 }
 
-function showSettingsInfo() {
+async function showSettingsInfo() {
     scrollController.disableBodyScrolling().then();
     const settingsInfoContainer = createElement(document.body, "div", {
         id: "settingsInfoContainer",
@@ -317,7 +339,7 @@ function showSettingsInfo() {
     assistantCheckbox.checked = appSettings.keys.assistant;
     assistantCheckbox.onchange = function () {
         appSettings.set("assistant", assistantCheckbox.checked);
-        appToast("Изменения будут применены при следующем входе в раздел", 3000).then();
+        appToast(mainStringList.nextEntranceChanges, 3000).then();
     }
 
     const tehpasSaveHistoryCheckbox = createSwitchContainer(settingsItems, {}, {id: "tehpasSaveHistoryCheckbox"}, {id: "tehpasSaveHistoryCheckboxLabel"}, mainStringList);
@@ -325,6 +347,15 @@ function showSettingsInfo() {
     tehpasSaveHistoryCheckbox.onchange = function () {
         appSettings.set("tehpasSaveHistory", tehpasSaveHistoryCheckbox.checked);
     }
+
+    const prokachaikaSaveCacheCheckbox = createSwitchContainer(settingsItems, {}, {id: "prokachaikaSaveCacheCheckbox"}, {id: "prokachaikaSaveCacheCheckboxLabel"}, mainStringList);
+    prokachaikaSaveCacheCheckbox.checked = appSettings.keys.prokachaikaSaveCache;
+    prokachaikaSaveCacheCheckbox.addEventListener("change", async () => {
+        messageToSW({key: "PROKACHAIKA_CACHE", value: prokachaikaSaveCacheCheckbox.checked})
+            .then(response => appToast(response.answer, 3000).then())
+            .catch(err => console.error(err));
+        appSettings.set("prokachaikaSaveCache", prokachaikaSaveCacheCheckbox.checked);
+    });
 
     if (isMobile()) {
         const menuButtonFixedCheckbox = createSwitchContainer(settingsItems, {}, {id: "menuButtonFixedCheckbox"}, {id: "menuButtonFixedCheckboxLabel"}, mainStringList);

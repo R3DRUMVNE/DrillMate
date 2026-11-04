@@ -561,7 +561,6 @@ main {
     order: -1;
     cursor: pointer;
     margin-left: 5px;
-    width: max-content;
 }
 
 .doubleRangeInputGeneral,

@@ -11,6 +11,7 @@ export const appSettings = {
         assistant: JSON.parse(localStorage.getItem("settings.assistant")),
         tehpasSaveHistory: JSON.parse(localStorage.getItem("settings.tehpasSaveHistory")),
         menuButtonFixed: JSON.parse(localStorage.getItem("settings.menuButtonFixed")),
+        prokachaikaSaveCache: JSON.parse(localStorage.getItem("settings.prokachaikaSaveCache")),
     },
     check: function () {
         const defaultSettings = {
@@ -19,6 +20,7 @@ export const appSettings = {
             assistant: true,
             tehpasSaveHistory: false,
             menuButtonFixed: false,
+            prokachaikaSaveCache: false,
         };
         for (let key in this.keys) {
             if (!isExists(this.keys[key])) {
@@ -166,13 +168,12 @@ export const scrollController = {
     scrollPos: 0,
     workElement: null,
     fakeBody: document.querySelector("#fakeBody"),
-    ignoreMenuControllerGestures: false,
     disableBodyScrolling() {
         return new Promise(resolve => {
             this.scrollPos = window.scrollY;
             document.body.style.overflowY = "hidden";
             document.body.style.top = this.scrollPos + "px";
-            this.ignoreMenuControllerGestures = true;
+            moduleVar.ignoreMenuControllerGestures = true;
             animateElement(this.fakeBody, ["blur_start"], ["blur_end"]).then(() => {
                 resolve();
             });
@@ -182,7 +183,7 @@ export const scrollController = {
         return new Promise(resolve => {
             document.body.style.overflowY = "scroll";
             window.scrollTo(0, this.scrollPos);
-            this.ignoreMenuControllerGestures = false;
+            moduleVar.ignoreMenuControllerGestures = false;
             animateElement(this.fakeBody, ["unblur_start"], ["unblur_end"]).then(() =>{
                 resolve();
             });
@@ -190,7 +191,7 @@ export const scrollController = {
     },
     disableElementScrolling(element) {
         this.workElement = element;
-        this.ignoreMenuControllerGestures = true;
+        moduleVar.ignoreMenuControllerGestures = true;
         animateElement(this.workElement, ["blur_start"], ["blur_end"]).then();
     },
     enableElementScrolling() {
@@ -349,11 +350,16 @@ export class singleRangeInput {
         const rangeOutput = createElement(container, "output", {for: rangeInput.id});
 
         rangeInput.addEventListener("input", () => {
+            moduleVar.ignoreMenuControllerGestures = true;
             const rangeInputValue = tryFormatToNumber(rangeInput.value);
             rangeOutput.value = "-" + rangeInputValue.toFixed(1);
             const pMaxPx = (rangeInputValue - rangeStart) / (rangeEnd - rangeStart) * bar.clientWidth;
             selectedRange.style.width = pMaxPx + 12.5 + "px";
             rangeOutput.style.left = pMaxPx - 6 + "px";
+        });
+
+        rangeInput.addEventListener("change", () => {
+            moduleVar.ignoreMenuControllerGestures = false;
         });
 
         this.input = rangeInput;
@@ -397,6 +403,7 @@ export class doubleRangeInput {
         const maxOutput = createElement(container, "output", {for: maxInput.id});
 
         minInput.addEventListener("input", () => {
+            moduleVar.ignoreMenuControllerGestures = true;
             const minInputValue = tryFormatToNumber(minInput.value);
             const maxInputValue = tryFormatToNumber(maxInput.value);
             if (minInputValue - rangeStep < maxInputValue - minimalRange) {
@@ -407,7 +414,12 @@ export class doubleRangeInput {
             }
         });
 
+        minInput.addEventListener("change", () => {
+            moduleVar.ignoreMenuControllerGestures = false;
+        });
+
         maxInput.addEventListener("input", () => {
+            moduleVar.ignoreMenuControllerGestures = true;
             const minInputValue = tryFormatToNumber(minInput.value);
             const maxInputValue = tryFormatToNumber(maxInput.value);
             if (maxInputValue + rangeStep > minInputValue + minimalRange) {
@@ -416,6 +428,10 @@ export class doubleRangeInput {
             } else {
                 maxInput.value = minInputValue + minimalRange;
             }
+        });
+
+        maxInput.addEventListener("change", () => {
+            moduleVar.ignoreMenuControllerGestures = false;
         });
 
         function changeSelectedRange(minInputValue, maxInputValue) {
@@ -513,4 +529,24 @@ export function isJSON(JSONString) {
 export function updateURL(params) {
     const URLParams = new URLSearchParams(params);
     history.pushState(null, null, window.location.pathname + "?" + URLParams);
+}
+
+export function messageToSW(messageObj){
+    return new Promise((resolve, reject) => {
+        if (!navigator.serviceWorker.controller) {
+            return reject("SW не активен");
+        }
+
+        //ответ от sw
+        const mCh = new MessageChannel();
+        mCh.port1.onmessage = (event) => { //port[0]
+            if (event.data && event.data.error) {
+                reject(event.data.error);
+            } else {
+                resolve(event.data); // Получаем значение от SW
+            }
+        };
+
+        navigator.serviceWorker.controller.postMessage(messageObj, [mCh.port2]);
+    });
 }
